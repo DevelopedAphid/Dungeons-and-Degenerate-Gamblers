@@ -1,7 +1,7 @@
 extends Node2D
 
 #action frame
-var action_frame_resolution: Vector2 = Vector2(800,500)
+var action_frame_resolution: Vector2 = Vector2(800,512)
 var action_frame_offset: Vector2 = Vector2(15,15)
 
 #character info view
@@ -38,4 +38,4 @@ func _ready():
 	gui_button_2.margin_right = action_frame_resolution.x + 2*action_frame_offset.x + button_size.x
 	gui_button_2.margin_top = action_frame_offset.y + button_size.y
 	gui_button_2.margin_bottom = action_frame_offset.y + button_size.y + button_size.y
-
+	
