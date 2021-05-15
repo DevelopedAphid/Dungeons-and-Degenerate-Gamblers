@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://ActionFrame.gd" type="Script" id=1]
 [ext_resource path="res://GUI.gd" type="Script" id=2]
 [ext_resource path="res://icon.png" type="Texture" id=3]
 [ext_resource path="res://GridCreator.gd" type="Script" id=4]
 [ext_resource path="res://Character.gd" type="Script" id=5]
+[ext_resource path="res://MovementLine.gd" type="Script" id=6]
 
 [node name="GUI" type="Node2D"]
 script = ExtResource( 2 )
@@ -20,13 +21,15 @@ texture = ExtResource( 3 )
 script = ExtResource( 5 )
 
 [node name="Tween" type="Tween" parent="ActionFrame/Character"]
-playback_speed = 3.0
-playback/speed = 3.0
 
 [node name="GridCreator" type="Line2D" parent="ActionFrame"]
 width = 1.0
 default_color = Color( 1, 1, 1, 1 )
 script = ExtResource( 4 )
+
+[node name="MovementLine" type="Line2D" parent="ActionFrame"]
+scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 6 )
 
 [node name="CharacterInfoView" type="Node2D" parent="."]
 
@@ -74,3 +77,5 @@ __meta__ = {
 }
 
 [connection signal="tween_all_completed" from="ActionFrame/Character/Tween" to="ActionFrame/Character" method="_on_Tween_tween_all_completed"]
+[connection signal="tween_started" from="ActionFrame/Character/Tween" to="ActionFrame/MovementLine" method="_on_Tween_tween_started"]
+[connection signal="tween_step" from="ActionFrame/Character/Tween" to="ActionFrame/MovementLine" method="_on_Tween_tween_step"]
