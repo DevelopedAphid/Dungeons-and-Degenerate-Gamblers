@@ -29,6 +29,7 @@ script = ExtResource( 4 )
 
 [node name="MovementLine" type="Line2D" parent="ActionFrame"]
 scale = Vector2( 0.5, 0.5 )
+points = PoolVector2Array( 67.5, 135.5, 145.5, 273.5 )
 script = ExtResource( 6 )
 
 [node name="CharacterInfoView" type="Node2D" parent="."]
@@ -76,6 +77,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="tween_all_completed" from="ActionFrame/Character/Tween" to="ActionFrame/MovementLine" method="_on_Tween_tween_all_completed"]
 [connection signal="tween_all_completed" from="ActionFrame/Character/Tween" to="ActionFrame/Character" method="_on_Tween_tween_all_completed"]
 [connection signal="tween_started" from="ActionFrame/Character/Tween" to="ActionFrame/MovementLine" method="_on_Tween_tween_started"]
 [connection signal="tween_step" from="ActionFrame/Character/Tween" to="ActionFrame/MovementLine" method="_on_Tween_tween_step"]

@@ -2,7 +2,7 @@ extends Node2D
 
 #action frame
 var action_frame_resolution: Vector2 = Vector2(800,512)
-var action_frame_offset: Vector2 = Vector2(15,15)
+var action_frame_offset: Vector2 = Vector2(16,16)
 
 #character info view
 var character_sprite_pos: Vector2 = Vector2(action_frame_offset.x, action_frame_resolution.y + action_frame_offset.y + 5) + Vector2(32,32)
