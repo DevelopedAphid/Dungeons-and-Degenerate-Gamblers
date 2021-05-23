@@ -7,6 +7,9 @@ var action_frame_offset: Vector2 = Vector2(16,16)
 #character info view
 var character_sprite_pos: Vector2 = Vector2(action_frame_offset.x, action_frame_resolution.y + action_frame_offset.y + 5) + Vector2(32,32)
 
+#signals
+signal character_moved
+
 func _ready():
 	var character_sprite = get_node("CharacterInfoView/CharacterInfoSprite")
 	character_sprite.position = character_sprite_pos
@@ -39,3 +42,11 @@ func _ready():
 	gui_button_2.margin_top = action_frame_offset.y + button_size.y
 	gui_button_2.margin_bottom = action_frame_offset.y + button_size.y + button_size.y
 	
+
+
+func _on_Character_character_level_up(level):
+	get_node("CharacterInfoView/CharacterLevelLabel").text = str(level)
+
+
+func _on_Character_finished_moving(position):
+	emit_signal("character_moved")

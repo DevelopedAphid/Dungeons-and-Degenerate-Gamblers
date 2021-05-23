@@ -3,6 +3,10 @@ extends Sprite
 var move_step: int
 var tween: Tween
 var is_moving: bool
+var character_level: int = 1
+
+signal character_level_up(level)
+signal finished_moving(position)
 
 func _ready():
 	move_step = get_parent().grid_size
@@ -44,3 +48,6 @@ func _process(_delta):
 
 func _on_Tween_tween_all_completed():
 	is_moving = false
+	emit_signal("finished_moving", position)
+	character_level += 1
+	emit_signal("character_level_up", character_level)
