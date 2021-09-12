@@ -50,3 +50,21 @@ func _on_Character_character_level_up(level):
 
 func _on_Character_finished_moving(position):
 	emit_signal("character_moved")
+
+
+func _on_GUIButton2_pressed():
+	var deck_contents = []
+	var suits = ["Spades", "Clubs", "Diamonds", "Hearts"]
+	for n in 52:
+		deck_contents.append(n+1)
+	print(deck_contents)
+	
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	for i in deck_contents.size():
+		var random = i + rng.randi_range(0,51 - i)
+		var temp = deck_contents[random]
+		deck_contents[random] = deck_contents[i]
+		deck_contents[i] = temp
+	
+	print(deck_contents)
