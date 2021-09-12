@@ -68,3 +68,6 @@ func _on_GUIButton2_pressed():
 		deck_contents[i] = temp
 	
 	print(deck_contents)
+	
+	var card = "001"
+	print (CardList.card_dictionary.get(card).name)
