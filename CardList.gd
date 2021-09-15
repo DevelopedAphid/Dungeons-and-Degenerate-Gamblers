@@ -70,5 +70,55 @@ var card_dictionary = {
 		"name": "Ace of Clubs",
 		"suit": "clubs",
 		"value": "1"
+	},
+		"014": {
+		"name": "Two of Clubs",
+		"suit": "clubs",
+		"value": "2"
+	},
+		"015": {
+		"name": "Three of Clubs",
+		"suit": "clubs",
+		"value": "3"
+	},
+		"016": {
+		"name": "Four of Clubs",
+		"suit": "clubs",
+		"value": "4"
+	},
+		"017": {
+		"name": "Five of Clubs",
+		"suit": "clubs",
+		"value": "5"
+	},
+		"018": {
+		"name": "Six of Clubs",
+		"suit": "clubs",
+		"value": "6"
+	},
+		"019": {
+		"name": "Seven of Clubs",
+		"suit": "clubs",
+		"value": "7"
+	},
+		"020": {
+		"name": "Eight of Clubs",
+		"suit": "clubs",
+		"value": "8"
+	},
+		"021": {
+		"name": "Nine of Clubs",
+		"suit": "clubs",
+		"value": "9"
+	},
+		"022": {
+		"name": "Ten of Clubs",
+		"suit": "clubs",
+		"value": "10"
+	},
+		"023": {
+		"name": "Jack of Clubs",
+		"suit": "clubs",
+		"value": "J"
 	}
 }
