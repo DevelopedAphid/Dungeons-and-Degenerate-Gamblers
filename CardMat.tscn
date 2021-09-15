@@ -1,0 +1,22 @@
+[gd_scene format=2]
+
+[node name="Main" type="Node2D"]
+
+[node name="ShuffleButton" type="Button" parent="."]
+margin_left = 28.0
+margin_top = 6.0
+margin_right = 140.0
+margin_bottom = 84.0
+text = "Shuffle"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DeckLabel" type="Label" parent="."]
+margin_left = 36.0
+margin_top = 110.0
+margin_right = 182.0
+margin_bottom = 317.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

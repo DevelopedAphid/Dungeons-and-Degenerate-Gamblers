@@ -54,10 +54,8 @@ func _on_Character_finished_moving(position):
 
 func _on_GUIButton2_pressed():
 	var deck_contents = []
-	var suits = ["Spades", "Clubs", "Diamonds", "Hearts"]
 	for n in 52:
 		deck_contents.append(n+1)
-	print(deck_contents)
 	
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
@@ -67,7 +65,8 @@ func _on_GUIButton2_pressed():
 		deck_contents[random] = deck_contents[i]
 		deck_contents[i] = temp
 	
-	print(deck_contents)
-	
-	var card = "001"
-	print (CardList.card_dictionary.get(card).name)
+	for card in deck_contents:
+		if card < 10:
+			print(CardList.card_dictionary.get("00" + str(card)).name)
+		else:
+			print(CardList.card_dictionary.get("0" + str(card)).name)

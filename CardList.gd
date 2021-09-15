@@ -1,125 +1,140 @@
 extends Node
 
 var card_dictionary = {
-	"000": {
+	"001": {
 		"name": "Ace of Spades",
 		"suit": "spades",
 		"value": 1
 	},
-	"001": {
+	"002": {
 		"name": "Two of Spades",
 		"suit": "spades",
 		"value": 2
 	},
-	"002": {
+	"003": {
 		"name": "Three of Spades",
 		"suit": "spades",
 		"value": 3
 	},
-	"003": {
+	"004": {
 		"name": "Four of Spades",
 		"suit": "spades",
 		"value": 4
 	},
-	"004": {
+	"005": {
 		"name": "Five of Spades",
 		"suit": "spades",
 		"value": 5
 	},
-		"005": {
+	"006": {
 		"name": "Six of Spades",
 		"suit": "spades",
 		"value": 6
 	},
-		"006": {
+		"007": {
 		"name": "Seven of Spades",
 		"suit": "spades",
 		"value": 7
 	},
-		"007": {
+		"008": {
 		"name": "Eight of Spades",
 		"suit": "spades",
 		"value": 8
 	},
-		"008": {
+		"009": {
 		"name": "Nine of Spades",
 		"suit": "spades",
 		"value": 9
 	},
-		"009": {
+		"010": {
 		"name": "Ten of Spades",
 		"suit": "spades",
 		"value": 10
 	},
-		"010": {
+		"011": {
 		"name": "Jack of Spades",
 		"suit": "spades",
 		"value": "J"
 	},
-		"011": {
+		"012": {
 		"name": "Queen of Spades",
 		"suit": "spades",
 		"value": "Q"
 	},
-		"012": {
+		"013": {
 		"name": "King of Spades",
 		"suit": "spades",
 		"value": "K"
 	},
-		"013": {
+		"014": {
 		"name": "Ace of Clubs",
 		"suit": "clubs",
-		"value": "1"
-	},
-		"014": {
-		"name": "Two of Clubs",
-		"suit": "clubs",
-		"value": "2"
+		"value": 1
 	},
 		"015": {
-		"name": "Three of Clubs",
+		"name": "Two of Clubs",
 		"suit": "clubs",
-		"value": "3"
+		"value": 2
 	},
 		"016": {
-		"name": "Four of Clubs",
+		"name": "Three of Clubs",
 		"suit": "clubs",
-		"value": "4"
+		"value": 3
 	},
 		"017": {
-		"name": "Five of Clubs",
+		"name": "Four of Clubs",
 		"suit": "clubs",
-		"value": "5"
+		"value": 4
 	},
 		"018": {
-		"name": "Six of Clubs",
+		"name": "Five of Clubs",
 		"suit": "clubs",
-		"value": "6"
+		"value": 5
 	},
 		"019": {
-		"name": "Seven of Clubs",
+		"name": "Six of Clubs",
 		"suit": "clubs",
-		"value": "7"
+		"value": 6
 	},
 		"020": {
-		"name": "Eight of Clubs",
+		"name": "Seven of Clubs",
 		"suit": "clubs",
-		"value": "8"
+		"value": 7
 	},
 		"021": {
-		"name": "Nine of Clubs",
+		"name": "Eight of Clubs",
 		"suit": "clubs",
-		"value": "9"
+		"value": 8
 	},
 		"022": {
-		"name": "Ten of Clubs",
+		"name": "Nine of Clubs",
 		"suit": "clubs",
-		"value": "10"
+		"value": 9
 	},
 		"023": {
+		"name": "Ten of Clubs",
+		"suit": "clubs",
+		"value": 10
+	},
+		"024": {
 		"name": "Jack of Clubs",
 		"suit": "clubs",
 		"value": "J"
+	},
+		"025": {
+		"name": "Queen of Clubs",
+		"suit": "clubs",
+		"value": "Q"
+	},
+		"026": {
+		"name": "King of Clubs",
+		"suit": "clubs",
+		"value": "K"
+	},
+		"027": {
+		"name": "Ace of Diamonds",
+		"suit": "diamonds",
+		"value": 1
 	},
 		"028": {
 		"name": "Two of Diamonds",
