@@ -53,20 +53,4 @@ func _on_Character_finished_moving(position):
 
 
 func _on_GUIButton2_pressed():
-	var deck_contents = []
-	for n in 52:
-		deck_contents.append(n+1)
-	
-	var rng = RandomNumberGenerator.new()
-	rng.randomize()
-	for i in deck_contents.size():
-		var random = i + rng.randi_range(0,51 - i)
-		var temp = deck_contents[random]
-		deck_contents[random] = deck_contents[i]
-		deck_contents[i] = temp
-	
-	for card in deck_contents:
-		if card < 10:
-			print(CardList.card_dictionary.get("00" + str(card)).name)
-		else:
-			print(CardList.card_dictionary.get("0" + str(card)).name)
+	pass
