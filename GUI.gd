@@ -50,3 +50,7 @@ func _on_Character_character_level_up(level):
 
 func _on_Character_finished_moving(position):
 	emit_signal("character_moved")
+
+
+func _on_GUIButton2_pressed():
+	pass
