@@ -43,5 +43,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="DiscardLabel" type="Label" parent="."]
+margin_left = 725.0
+margin_top = 93.0
+margin_right = 963.0
+margin_bottom = 323.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="pressed" from="ShuffleButton" to="." method="_on_ShuffleButton_pressed"]
 [connection signal="pressed" from="HitButton" to="." method="_on_HitButton_pressed"]

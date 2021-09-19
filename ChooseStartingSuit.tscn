@@ -1,0 +1,82 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://art/card-art/standard-card-faces-art/queen_of_spades2.svg" type="Texture" id=1]
+[ext_resource path="res://art/card-art/standard-card-faces-art/king_of_clubs2.svg" type="Texture" id=2]
+[ext_resource path="res://art/card-art/standard-card-faces-art/king_of_diamonds2.svg" type="Texture" id=3]
+[ext_resource path="res://art/card-art/standard-card-faces-art/jack_of_hearts2.svg" type="Texture" id=4]
+[ext_resource path="res://ChooseStartingSuit.gd" type="Script" id=5]
+
+[node name="Main" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpadesButton" type="Button" parent="HBoxContainer"]
+margin_left = 38.0
+margin_right = 272.0
+margin_bottom = 600.0
+icon = ExtResource( 1 )
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DiamondsButton" type="Button" parent="HBoxContainer"]
+margin_left = 276.0
+margin_right = 510.0
+margin_bottom = 600.0
+icon = ExtResource( 3 )
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ClubsButton" type="Button" parent="HBoxContainer"]
+margin_left = 514.0
+margin_right = 748.0
+margin_bottom = 600.0
+icon = ExtResource( 2 )
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartsButton" type="Button" parent="HBoxContainer"]
+margin_left = 752.0
+margin_right = 986.0
+margin_bottom = 600.0
+icon = ExtResource( 4 )
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ChooseSuitLabel" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -371.5
+margin_top = 20.0
+margin_right = 371.5
+margin_bottom = 92.0
+text = "CHOOSE YOUR STARTING SUIT"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="HBoxContainer/SpadesButton" to="." method="_on_SpadesButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/DiamondsButton" to="." method="_on_DiamondsButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/ClubsButton" to="." method="_on_ClubsButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/HeartsButton" to="." method="_on_HeartsButton_pressed"]
