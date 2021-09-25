@@ -15,11 +15,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DeckLabel" type="Label" parent="."]
+[node name="PlayerDeckLabel" type="Label" parent="."]
 margin_left = 36.0
-margin_top = 110.0
+margin_top = 108.558
 margin_right = 182.0
-margin_bottom = 317.0
+margin_bottom = 315.558
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -34,7 +34,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="InPlayLabel" type="Label" parent="."]
+[node name="PlayerInPlayLabel" type="Label" parent="."]
 margin_left = 373.0
 margin_top = 94.0
 margin_right = 532.0
@@ -43,11 +43,47 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DiscardLabel" type="Label" parent="."]
+[node name="PlayerDiscardLabel" type="Label" parent="."]
 margin_left = 725.0
 margin_top = 93.0
 margin_right = 963.0
 margin_bottom = 323.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OpponentDeckLabel" type="Label" parent="."]
+margin_left = 40.2694
+margin_top = 345.48
+margin_right = 186.269
+margin_bottom = 552.48
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OpponentScoreLabel" type="Label" parent="."]
+margin_left = 868.673
+margin_top = 241.096
+margin_right = 1014.67
+margin_bottom = 295.096
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OpponentInPlayLabel" type="Label" parent="."]
+margin_left = 368.999
+margin_top = 310.193
+margin_right = 514.999
+margin_bottom = 517.193
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OpponentDiscardLabel" type="Label" parent="."]
+margin_left = 750.978
+margin_top = 316.061
+margin_right = 896.978
+margin_bottom = 523.061
 __meta__ = {
 "_edit_use_anchors_": false
 }

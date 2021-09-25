@@ -31,232 +31,232 @@ var card_dictionary = {
 		"suit": "spades",
 		"value": 6
 	},
-		"007": {
+	"007": {
 		"name": "Seven of Spades",
 		"suit": "spades",
 		"value": 7
 	},
-		"008": {
+	"008": {
 		"name": "Eight of Spades",
 		"suit": "spades",
 		"value": 8
 	},
-		"009": {
+	"009": {
 		"name": "Nine of Spades",
 		"suit": "spades",
 		"value": 9
 	},
-		"010": {
+	"010": {
 		"name": "Ten of Spades",
 		"suit": "spades",
 		"value": 10
 	},
-		"011": {
+	"011": {
 		"name": "Jack of Spades",
 		"suit": "spades",
 		"value": "J"
 	},
-		"012": {
+	"012": {
 		"name": "Queen of Spades",
 		"suit": "spades",
 		"value": "Q"
 	},
-		"013": {
+	"013": {
 		"name": "King of Spades",
 		"suit": "spades",
 		"value": "K"
 	},
-		"014": {
+	"014": {
 		"name": "Ace of Clubs",
 		"suit": "clubs",
 		"value": 1
 	},
-		"015": {
+	"015": {
 		"name": "Two of Clubs",
 		"suit": "clubs",
 		"value": 2
 	},
-		"016": {
+	"016": {
 		"name": "Three of Clubs",
 		"suit": "clubs",
 		"value": 3
 	},
-		"017": {
+	"017": {
 		"name": "Four of Clubs",
 		"suit": "clubs",
 		"value": 4
 	},
-		"018": {
+	"018": {
 		"name": "Five of Clubs",
 		"suit": "clubs",
 		"value": 5
 	},
-		"019": {
+	"019": {
 		"name": "Six of Clubs",
 		"suit": "clubs",
 		"value": 6
 	},
-		"020": {
+	"020": {
 		"name": "Seven of Clubs",
 		"suit": "clubs",
 		"value": 7
 	},
-		"021": {
+	"021": {
 		"name": "Eight of Clubs",
 		"suit": "clubs",
 		"value": 8
 	},
-		"022": {
+	"022": {
 		"name": "Nine of Clubs",
 		"suit": "clubs",
 		"value": 9
 	},
-		"023": {
+	"023": {
 		"name": "Ten of Clubs",
 		"suit": "clubs",
 		"value": 10
 	},
-		"024": {
+	"024": {
 		"name": "Jack of Clubs",
 		"suit": "clubs",
 		"value": "J"
 	},
-		"025": {
+	"025": {
 		"name": "Queen of Clubs",
 		"suit": "clubs",
 		"value": "Q"
 	},
-		"026": {
+	"026": {
 		"name": "King of Clubs",
 		"suit": "clubs",
 		"value": "K"
 	},
-		"027": {
+	"027": {
 		"name": "Ace of Diamonds",
 		"suit": "diamonds",
 		"value": 1
 	},
-		"028": {
+	"028": {
 		"name": "Two of Diamonds",
 		"suit": "diamonds",
 		"value": 2
 	},
-		"029": {
+	"029": {
 		"name": "Three of Diamonds",
 		"suit": "diamonds",
 		"value": 3
 	},
-		"030": {
+	"030": {
 		"name": "Four of Diamonds",
 		"suit": "diamonds",
 		"value": 4
 	},
-		"031": {
+	"031": {
 		"name": "Five of Diamonds",
 		"suit": "diamonds",
 		"value": 5
 	},
-		"032": {
+	"032": {
 		"name": "Six of Diamonds",
 		"suit": "diamonds",
 		"value": 6
 	},
-		"033": {
+	"033": {
 		"name": "Seven of Diamonds",
 		"suit": "diamonds",
 		"value": 7
 	},
-		"034": {
+	"034": {
 		"name": "Eight of Diamonds",
 		"suit": "diamonds",
 		"value": 8
 	},
-		"035": {
+	"035": {
 		"name": "Nine of Diamonds",
 		"suit": "diamonds",
 		"value": 9
 	},
-		"036": {
+	"036": {
 		"name": "Ten of Diamonds",
 		"suit": "diamonds",
 		"value": 10
 	},
-		"037": {
+	"037": {
 		"name": "Jack of Diamonds",
 		"suit": "diamonds",
 		"value": "J"
 	},
-		"038": {
+	"038": {
 		"name": "Queen of Diamonds",
 		"suit": "diamonds",
 		"value": "Q"
 	},
-		"039": {
+	"039": {
 		"name": "King of Diamonds",
 		"suit": "diamonds",
 		"value": "K"
 	},
-		"040": {
+	"040": {
 		"name": "Ace of Hearts",
 		"suit": "hearts",
 		"value": 1
 	},
-		"041": {
+	"041": {
 		"name": "Two of Hearts",
 		"suit": "hearts",
 		"value": 2
 	},
-		"042": {
+	"042": {
 		"name": "Three of Hearts",
 		"suit": "hearts",
 		"value": 3
 	},
-		"043": {
+	"043": {
 		"name": "Four of Hearts",
 		"suit": "hearts",
 		"value": 4
 	},
-		"044": {
+	"044": {
 		"name": "Five of Hearts",
 		"suit": "hearts",
 		"value": 5
 	},
-		"045": {
+	"045": {
 		"name": "Six of Hearts",
 		"suit": "hearts",
 		"value": 6
 	},
-		"046": {
+	"046": {
 		"name": "Seven of Hearts",
 		"suit": "hearts",
 		"value": 7
 	},
-		"047": {
+	"047": {
 		"name": "Eight of Hearts",
 		"suit": "hearts",
 		"value": 8
 	},
-		"048": {
+	"048": {
 		"name": "Nine of Hearts",
 		"suit": "hearts",
 		"value": 9
 	},
-		"049": {
+	"049": {
 		"name": "Ten of Hearts",
 		"suit": "hearts",
 		"value": 10
 	},
-		"050": {
+	"050": {
 		"name": "Jack of Hearts",
 		"suit": "hearts",
 		"value": "J"
 	},
-		"051": {
+	"051": {
 		"name": "Queen of Hearts",
 		"suit": "hearts",
 		"value": "Q"
 	},
-		"052": {
+	"052": {
 		"name": "King of Hearts",
 		"suit": "hearts",
 		"value": "K"
