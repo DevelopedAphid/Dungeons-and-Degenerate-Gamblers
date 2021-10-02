@@ -66,6 +66,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="HitpointsLabel" type="Label" parent="Player"]
+margin_left = 155.768
+margin_top = 40.3843
+margin_right = 195.768
+margin_bottom = 54.3843
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Opponent" type="Node2D" parent="."]
 script = ExtResource( 2 )
 
@@ -104,6 +113,15 @@ margin_left = 824.994
 margin_top = 40.3843
 margin_right = 864.994
 margin_bottom = 54.3843
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HitpointsLabel" type="Label" parent="Opponent"]
+margin_left = 901.436
+margin_top = 36.0575
+margin_right = 941.436
+margin_bottom = 50.0575
 __meta__ = {
 "_edit_use_anchors_": false
 }

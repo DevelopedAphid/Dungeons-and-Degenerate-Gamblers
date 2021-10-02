@@ -1,12 +1,13 @@
 extends Node
 
-signal turn_ended
+signal turn_ended(action_taken)
 
 var deck = []
 var draw_pile = []
 var play_pile = []
 var discard_pile = []
 var score = 0
+var hitpoints = 100
 
 func ready():
 	pass
@@ -42,7 +43,7 @@ func draw_top_card():
 		shuffle_discard_pile_into_draw_pile()
 	
 	if score > 20:
-		discard_played_cards()
+		end_turn("stay")
 	else:
 		#move top draw pile card to top of play pile
 		var top_card = draw_pile[0]
@@ -50,12 +51,12 @@ func draw_top_card():
 		draw_pile.pop_front()
 	
 		score = score + get_card_number_value(top_card)
+		end_turn("hit")
 	
 	update_UI()
-	end_turn()
 
-func end_turn():
-	emit_signal("turn_ended")
+func end_turn(action):
+	emit_signal("turn_ended", action)
 
 func get_card_number_value(card) -> int:
 	var card_value
@@ -81,13 +82,15 @@ func discard_played_cards():
 	for cards in play_pile.size():
 		play_pile.pop_front()
 	score = 0
+	update_UI()
 
-func add_card_to_draw_pile(card, position):
-	#add a defined card to the draw pile at a defined position
-	pass
+#func add_card_to_draw_pile(card, position):
+#	#add a defined card to the draw pile at a defined position
+#	pass
 
 func update_UI():
 	get_node("DrawPileLabel").text = str(draw_pile)
 	get_node("PlayPileLabel").text = str(play_pile)
 	get_node("DiscardPileLabel").text = str(discard_pile)
 	get_node("ScoreLabel").text = str(score)
+	get_node("HitpointsLabel").text = str(hitpoints)
