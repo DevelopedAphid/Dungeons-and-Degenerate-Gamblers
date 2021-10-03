@@ -9,6 +9,8 @@ var discard_pile = []
 var score = 0
 var hitpoints = 100
 
+var Card = preload("res://Card.tscn")
+
 func ready():
 	pass
 

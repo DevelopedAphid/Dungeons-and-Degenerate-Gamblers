@@ -78,5 +78,4 @@ func compare_score_and_deal_damage():
 	if damage > 0: #player won
 		opponent.hitpoints = opponent.hitpoints - damage
 	if damage < 0: #opponent won
-		damage = damage * -1
-		player.hitpoints = player.hitpoints - damage
+		player.hitpoints = player.hitpoints + damage
