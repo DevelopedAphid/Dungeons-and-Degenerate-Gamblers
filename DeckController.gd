@@ -16,7 +16,9 @@ func ready():
 
 func add_card_to_deck(card_id):
 	#add a defined card to the deck
-	deck.append(card_id)
+	var new_card = Card.instance()
+	new_card.set_card_id(card_id)
+	deck.append(new_card)
 
 func build_draw_pile():
 	#put deck list into draw pile
@@ -49,27 +51,18 @@ func draw_top_card():
 	else:
 		#move top draw pile card to top of play pile
 		var top_card = draw_pile[0]
+		top_card.play_card_effect()
+		
 		play_pile.append(top_card)
 		draw_pile.pop_front()
 	
-		score = score + get_card_number_value(top_card)
+		score = score + top_card.get_card_value()
 		end_turn("hit")
 	
 	update_UI()
 
 func end_turn(action):
 	emit_signal("turn_ended", action)
-
-func get_card_number_value(card) -> int:
-	var card_value
-	if card < 10:
-		card_value = CardList.card_dictionary.get("00" + str(card)).value
-	else:
-		card_value = CardList.card_dictionary.get("0" + str(card)).value
-	if typeof(card_value) == 4: #if value is a string
-		if card_value == "J" || card_value == "Q" || card_value == "K":
-			card_value = 10
-	return card_value
 
 func shuffle_discard_pile_into_draw_pile():
 	#put everything in discard pile into draw pile
@@ -91,8 +84,13 @@ func discard_played_cards():
 #	pass
 
 func update_UI():
-	get_node("DrawPileLabel").text = str(draw_pile)
-	get_node("PlayPileLabel").text = str(play_pile)
-	get_node("DiscardPileLabel").text = str(discard_pile)
+	get_node("DrawPileLabel").text = "Cards Remaining:" + str(draw_pile.size())
+	update_UI_pile_label(get_node("PlayPileLabel"), play_pile)
+	update_UI_pile_label(get_node("DiscardPileLabel"), discard_pile)
 	get_node("ScoreLabel").text = str(score)
 	get_node("HitpointsLabel").text = str(hitpoints)
+
+func update_UI_pile_label(label, pile):
+	label.text = ""
+	for cards in pile:
+		label.text = label.text + cards.get_card_name() + "\n"

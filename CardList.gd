@@ -260,5 +260,95 @@ var card_dictionary = {
 		"name": "King of Hearts",
 		"suit": "hearts",
 		"value": "K"
+	},
+	"053": {
+		"name": "Eleven of Spades",
+		"suit": "spades",
+		"value": 11
+	},
+	"054": {
+		"name": "Twelve of Spades",
+		"suit": "spades",
+		"value": 12
+	},
+	"055": {
+		"name": "Thirteen of Spades",
+		"suit": "spades",
+		"value": 13
+	},
+	"056": {
+		"name": "Eleven of Clubs",
+		"suit": "clubs",
+		"value": 11
+	},
+	"057": {
+		"name": "Twelve of Clubs",
+		"suit": "clubs",
+		"value": 12
+	},
+	"058": {
+		"name": "Thirteen of Clubs",
+		"suit": "clubs",
+		"value": 13
+	},
+	"059": {
+		"name": "Eleven of Diamonds",
+		"suit": "diamonds",
+		"value": 11
+	},
+	"060": {
+		"name": "Twelve of Diamonds",
+		"suit": "diamonds",
+		"value": 12
+	},
+	"061": {
+		"name": "Thirteen of Diamonds",
+		"suit": "diamonds",
+		"value": 13
+	},
+	"062": {
+		"name": "Eleven of Hearts",
+		"suit": "hearts",
+		"value": 11
+	},
+	"063": {
+		"name": "Twelve of Hearts",
+		"suit": "hearts",
+		"value": 12
+	},
+	"064": {
+		"name": "Thirteen of Hearts",
+		"suit": "hearts",
+		"value": 13
+	},
+	"065": {
+		"name": "Twenty One of Spades",
+		"suit": "spades",
+		"value": 21
+	},
+	"066": {
+		"name": "Twenty One of Clubs",
+		"suit": "clubs",
+		"value": 21
+	},
+	"067": {
+		"name": "Twenty One of Diamonds",
+		"suit": "diamonds",
+		"value": 21
+	},
+	"068": {
+		"name": "Twenty One of Hearts",
+		"suit": "hearts",
+		"value": 21
+	},
+	"069": {
+		"name": "Joker",
+		"suit": "special",
+		"value": "Joker"
+	},
+	"070": {
+		"name": "Birthday Card",
+		"suit": "special",
+		"value": 0
 	}
 }

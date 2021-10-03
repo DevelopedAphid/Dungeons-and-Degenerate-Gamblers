@@ -49,10 +49,10 @@ __meta__ = {
 }
 
 [node name="DiscardPileLabel" type="Label" parent="Player"]
-margin_left = 379.324
-margin_top = 144.23
-margin_right = 419.324
-margin_bottom = 158.23
+margin_left = 89.4221
+margin_top = 272.595
+margin_right = 129.422
+margin_bottom = 286.595
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -100,10 +100,10 @@ __meta__ = {
 }
 
 [node name="DiscardPileLabel" type="Label" parent="Opponent"]
-margin_left = 773.072
-margin_top = 193.268
-margin_right = 813.072
-margin_bottom = 207.268
+margin_left = 543.747
+margin_top = 311.536
+margin_right = 583.747
+margin_bottom = 325.536
 __meta__ = {
 "_edit_use_anchors_": false
 }
