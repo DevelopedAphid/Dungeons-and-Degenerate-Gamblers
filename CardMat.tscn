@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://GameController.gd" type="Script" id=1]
 [ext_resource path="res://DeckController.gd" type="Script" id=2]
 [ext_resource path="res://OpponentAI.gd" type="Script" id=3]
+[ext_resource path="res://ChoiceController.tscn" type="PackedScene" id=4]
 
 [node name="GameController" type="Node2D"]
 script = ExtResource( 1 )
@@ -125,6 +126,8 @@ margin_bottom = 50.0575
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ChoiceController" parent="." instance=ExtResource( 4 )]
 
 [connection signal="turn_ended" from="Player" to="." method="_on_Player_turn_ended"]
 [connection signal="pressed" from="Player/HitButton" to="." method="_on_HitButton_pressed"]

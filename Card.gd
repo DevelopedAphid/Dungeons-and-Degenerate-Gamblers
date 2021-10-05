@@ -6,6 +6,8 @@ var card_suit
 var card_value
 var card_sprite
 
+signal test_card_signal
+
 func set_card_id(id):
 	if id < 10:
 		card_id = "00" + str(id)
@@ -39,7 +41,11 @@ func get_card_name() -> String:
 	return card_name
 
 func play_card_effect():
-	if card_id == "070": #Birthday Card
+	if card_id == "014": #ace of clubs
+		emit_signal("test_card_signal")
+	elif card_id == "069": #Joker
+		pass
+	elif card_id == "070": #Birthday Card
 		card_value = card_value + 1
 		set_card_name(CardList.card_dictionary["070"].name + " (" + str(card_value) + ")")
 	else: 

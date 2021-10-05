@@ -18,6 +18,7 @@ func add_card_to_deck(card_id):
 	#add a defined card to the deck
 	var new_card = Card.instance()
 	new_card.set_card_id(card_id)
+	new_card.connect("test_card_signal", self, "_on_Card_test_card_signal")
 	deck.append(new_card)
 
 func build_draw_pile():
@@ -94,3 +95,6 @@ func update_UI_pile_label(label, pile):
 	label.text = ""
 	for cards in pile:
 		label.text = label.text + cards.get_card_name() + "\n"
+
+func _on_Card_test_card_signal():
+	print("test ok")
