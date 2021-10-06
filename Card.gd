@@ -6,10 +6,12 @@ var card_suit
 var card_value
 var card_sprite
 
-signal test_card_signal
+signal choice_to_make(choice_array, card)
 
 func set_card_id(id):
-	if id < 10:
+	if typeof(id) == 4: #if already a string
+		card_id = id
+	elif id < 10:
 		card_id = "00" + str(id)
 	elif id < 100:
 		card_id = "0" + str(id)
@@ -42,7 +44,7 @@ func get_card_name() -> String:
 
 func play_card_effect():
 	if card_id == "014": #ace of clubs
-		emit_signal("test_card_signal")
+		emit_signal("choice_to_make", ["014","056"], self)
 	elif card_id == "069": #Joker
 		pass
 	elif card_id == "070": #Birthday Card

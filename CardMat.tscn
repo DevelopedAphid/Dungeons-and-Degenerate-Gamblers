@@ -129,7 +129,9 @@ __meta__ = {
 
 [node name="ChoiceController" parent="." instance=ExtResource( 4 )]
 
+[connection signal="card_choice_to_make" from="Player" to="ChoiceController" method="_on_Player_card_choice_to_make"]
 [connection signal="turn_ended" from="Player" to="." method="_on_Player_turn_ended"]
 [connection signal="pressed" from="Player/HitButton" to="." method="_on_HitButton_pressed"]
 [connection signal="pressed" from="Player/StayButton" to="." method="_on_StayButton_pressed"]
+[connection signal="card_choice_to_make" from="Opponent" to="Opponent/AI" method="_on_Opponent_card_choice_to_make"]
 [connection signal="turn_ended" from="Opponent" to="." method="_on_Opponent_turn_ended"]

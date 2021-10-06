@@ -1,6 +1,7 @@
 extends Node
 
 signal turn_ended(action_taken)
+signal card_choice_to_make(choice_array)
 
 var deck = []
 var draw_pile = []
@@ -18,7 +19,7 @@ func add_card_to_deck(card_id):
 	#add a defined card to the deck
 	var new_card = Card.instance()
 	new_card.set_card_id(card_id)
-	new_card.connect("test_card_signal", self, "_on_Card_test_card_signal")
+	new_card.connect("choice_to_make", self, "_on_Card_choice_to_make")
 	deck.append(new_card)
 
 func build_draw_pile():
@@ -53,6 +54,7 @@ func draw_top_card():
 		#move top draw pile card to top of play pile
 		var top_card = draw_pile[0]
 		top_card.play_card_effect()
+		#should maybe yield until card effect completed
 		
 		play_pile.append(top_card)
 		draw_pile.pop_front()
@@ -96,5 +98,5 @@ func update_UI_pile_label(label, pile):
 	for cards in pile:
 		label.text = label.text + cards.get_card_name() + "\n"
 
-func _on_Card_test_card_signal():
-	print("test ok")
+func _on_Card_choice_to_make(choice_array, card):
+	emit_signal("card_choice_to_make", choice_array, card)
