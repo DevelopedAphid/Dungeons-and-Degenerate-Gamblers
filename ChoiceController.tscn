@@ -12,12 +12,3 @@ columns = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Button" type="Button" parent="ChoiceGridContainer"]
-margin_right = 12.0
-margin_bottom = 20.0
-
-[node name="Button2" type="Button" parent="ChoiceGridContainer"]
-margin_left = 16.0
-margin_right = 28.0
-margin_bottom = 20.0

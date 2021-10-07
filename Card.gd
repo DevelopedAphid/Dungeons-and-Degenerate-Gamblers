@@ -43,8 +43,14 @@ func get_card_name() -> String:
 	return card_name
 
 func play_card_effect():
-	if card_id == "014": #ace of clubs
+	if card_id == "001": #ace of spade
+		emit_signal("choice_to_make", ["001","053"], self)
+	elif card_id == "014": #ace of clubs
 		emit_signal("choice_to_make", ["014","056"], self)
+	elif card_id == "027": #ace of diamonds
+		emit_signal("choice_to_make", ["027","059"], self)
+	elif card_id == "040": #ace of hearts
+		emit_signal("choice_to_make", ["040","062"], self)
 	elif card_id == "069": #Joker
 		pass
 	elif card_id == "070": #Birthday Card
