@@ -6,8 +6,6 @@ var card_suit
 var card_value
 var card_sprite
 
-signal choice_to_make(choice_array, card)
-
 func set_card_id(id):
 	if typeof(id) == 4: #if already a string
 		card_id = id
@@ -29,8 +27,8 @@ func set_card_value(value):
 
 func get_card_value() -> int:
 	var value = card_value
-	if typeof(value) == 4: #if value is a string
-		if value == "J" || value == "Q" || value == "K":
+	if typeof(value) == 4: #if value is a string - and therefore a face or special card
+		if value == "J" || value == "Q" || value == "K": #face cards
 			value = 10
 		else:
 			value = 0
@@ -43,18 +41,13 @@ func get_card_name() -> String:
 	return card_name
 
 func play_card_effect():
-	if card_id == "001": #ace of spade
-		emit_signal("choice_to_make", ["001","053"], self)
-	elif card_id == "014": #ace of clubs
-		emit_signal("choice_to_make", ["014","056"], self)
-	elif card_id == "027": #ace of diamonds
-		emit_signal("choice_to_make", ["027","059"], self)
-	elif card_id == "040": #ace of hearts
-		emit_signal("choice_to_make", ["040","062"], self)
-	elif card_id == "069": #Joker
+	if card_id == "069": #Joker
 		pass
 	elif card_id == "070": #Birthday Card
 		card_value = card_value + 1
 		set_card_name(CardList.card_dictionary["070"].name + " (" + str(card_value) + ")")
 	else: 
 		pass
+
+func has_special_effect() -> bool:
+	return CardList.card_dictionary[card_id].effect

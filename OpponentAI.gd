@@ -10,5 +10,5 @@ func will_hit() -> bool:
 		return false
 
 
-func _on_Opponent_card_choice_to_make(choice_array):
+func _on_Opponent_card_choice_to_make(_choice_array, _card):
 	pass #later code goes here to tell opponent AI to make a card choice

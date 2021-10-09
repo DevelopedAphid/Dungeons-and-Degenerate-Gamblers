@@ -1,7 +1,6 @@
 extends Node
 
 signal turn_ended(action_taken)
-signal card_choice_to_make(choice_array)
 
 var deck = []
 var draw_pile = []
@@ -53,8 +52,9 @@ func draw_top_card():
 	else:
 		#move top draw pile card to top of play pile
 		var top_card = draw_pile[0]
-		top_card.play_card_effect()
-		#should maybe yield until card effect completed
+		top_card.play_card_effect() #TODO: remove in favour of has_special_effect
+		if top_card.has_special_effect():
+			play_card_effect(top_card)
 		
 		play_pile.append(top_card)
 		draw_pile.pop_front()
@@ -100,3 +100,18 @@ func update_UI_pile_label(label, pile):
 
 func _on_Card_choice_to_make(choice_array, card):
 	emit_signal("card_choice_to_make", choice_array, card)
+
+func play_card_effect(card):
+	if self.name == "Opponent": #TODO: not good, need to sort later
+		return
+	var id = card.get_card_id()
+	if id == "001" || id == "014" || id == "027" || id == "040" : #aces
+		get_node("ChoiceController")._on_Player_card_choice_to_make([id, "056"], card)
+		var choice_made = yield(get_node("ChoiceController"), "choice_made")
+		card.set_card_value(CardList.card_dictionary[choice_made].value)
+		card.set_card_name(CardList.card_dictionary[id].name + " (" + str(card.get_card_value()) + ")")
+	if id == "071": #magic trick card
+		get_node("ChoiceController")._on_Player_card_choice_to_make(["051", "020"], card)
+		var choice_made = yield(get_node("ChoiceController"), "choice_made")
+		card.set_card_value(CardList.card_dictionary[choice_made].value)
+		card.set_card_name(CardList.card_dictionary[id].name + " (" + CardList.card_dictionary[choice_made].name + ")")
