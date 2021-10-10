@@ -60,43 +60,6 @@ func transition_to(target_state: String, _data: Dictionary):
 	current_state = target_state
 	get_node(target_state).enter_state()
 
-func _on_Player_turn_ended(action):
-	player_last_turn_result = action
-	current_turn = "opponent"
-	if opponent.get_node("AI").will_hit() == true:
-		opponent.draw_top_card()
-	else:
-		opponent.end_turn("stay")
-
-func _on_Opponent_turn_ended(action):
-	opponent_last_turn_result = action
-	current_turn = "player"
-	check_if_round_ended()
-
-func check_if_round_ended():
-	if player_last_turn_result == "stay" && opponent_last_turn_result == "stay":
-		end_round()
-
-func end_round():
-	compare_score_and_deal_damage()
-	player.discard_played_cards()
-	opponent.discard_played_cards()
-
-func compare_score_and_deal_damage():
-	var player_score = player.score
-	var opponent_score = opponent.score
-	if player_score > 21: #busted
-		player_score = 0
-	if opponent_score > 21: #busted
-		opponent_score = 0
-	
-	#should be replaced by a "deal damage" method later in case we add damage multiplier effects or anything
-	var damage = player_score - opponent_score
-	if damage > 0: #player won, deal difference of scores as damage
-		opponent.hitpoints = opponent.hitpoints - damage
-	if damage < 0: #opponent won, deal difference of scores as damage
-		player.hitpoints = player.hitpoints + damage
-
 func _on_PlayerPreGameChoice_state_exited():
 	transition_to("OpponentPreGameChoice", {})
 
@@ -113,7 +76,31 @@ func _on_PlayerWaitForFirstPlayAreaInput_state_exited(action_taken):
 		transition_to("PlayerScoreUpdate", {})
 
 func _on_PlayerWaitForCardChoice_state_exited():
-	transition_to("PlayerWaitForFirstPlayAreaInput", {})
+	transition_to("PlayerScoreUpdate", {})
 
 func _on_PlayerScoreUpdate_state_exited():
-	pass # Replace with function body.
+	transition_to("OpponentStartOfTurnActions", {})
+
+func _on_OpponentStartOfTurnActions_state_exited():
+	transition_to("OpponentWaitForFirstPlayAreaInput", {})
+
+func _on_OpponentWaitForFirstPlayAreaInput_state_exited(action_taken):
+	if action_taken == "hit":
+		transition_to("OpponentWaitForCardChoice", {})
+	elif action_taken == "stay":
+		transition_to("OpponentScoreUpdate", {})
+
+func _on_OpponentWaitForCardChoice_state_exited():
+	transition_to("OpponentScoreUpdate", {})
+
+func _on_OpponentScoreUpdate_state_exited():
+	transition_to("AfterRoundPhase", {})
+
+func _on_AfterRoundPhase_state_exited(play_should_continue):
+	if play_should_continue:
+		transition_to("PlayerWaitForFirstPlayAreaInput", {})
+	else:
+		transition_to("DiscardPhase", {})
+
+func _on_DiscardPhase_state_exited():
+	transition_to("PlayerWaitForFirstPlayAreaInput", {})

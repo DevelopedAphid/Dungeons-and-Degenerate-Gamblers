@@ -3,12 +3,12 @@ extends Node2D
 var grid_controller
 var choices
 
-signal choice_made(choice)
+signal choice_made(choice_made)
 
 func _ready():
 	grid_controller = get_node("ChoiceGridContainer")
 
-func _on_Player_card_choice_to_make(choice_array, card):
+func _on_Player_card_choice_to_make(choice_array):
 	choices = choice_array
 	for choice in choices:
 		var button = Button.new()
@@ -25,5 +25,3 @@ func _on_Player_card_choice_selected(choice):
 	
 	for child in grid_controller.get_children():
 		child.queue_free()
-	
-	#remove the buttons and clear choices at the end of this function!

@@ -1,6 +1,6 @@
 extends Node
 
-signal turn_ended(action_taken)
+signal card_effect_ended
 
 var deck = []
 var draw_pile = []
@@ -18,7 +18,6 @@ func add_card_to_deck(card_id):
 	#add a defined card to the deck
 	var new_card = Card.instance()
 	new_card.set_card_id(card_id)
-	new_card.connect("choice_to_make", self, "_on_Card_choice_to_make")
 	deck.append(new_card)
 
 func build_draw_pile():
@@ -48,24 +47,17 @@ func draw_top_card():
 		shuffle_discard_pile_into_draw_pile()
 	
 	if score > 20:
-		end_turn("stay")
+		pass
 	else:
 		#move top draw pile card to top of play pile
 		var top_card = draw_pile[0]
-		top_card.play_card_effect() #TODO: remove in favour of has_special_effect
 		if top_card.has_special_effect():
 			play_card_effect(top_card)
 		
-		play_pile.append(top_card)
 		draw_pile.pop_front()
-	
-		score = score + top_card.get_card_value()
-		end_turn("hit")
+		play_pile.append(top_card)
 	
 	update_UI()
-
-func end_turn(action):
-	emit_signal("turn_ended", action)
 
 func shuffle_discard_pile_into_draw_pile():
 	#put everything in discard pile into draw pile
@@ -106,12 +98,19 @@ func play_card_effect(card):
 		return
 	var id = card.get_card_id()
 	if id == "001" || id == "014" || id == "027" || id == "040" : #aces
-		get_node("ChoiceController")._on_Player_card_choice_to_make([id, "056"], card)
+		get_node("ChoiceController")._on_Player_card_choice_to_make([id, "056"])
 		var choice_made = yield(get_node("ChoiceController"), "choice_made")
 		card.set_card_value(CardList.card_dictionary[choice_made].value)
 		card.set_card_name(CardList.card_dictionary[id].name + " (" + str(card.get_card_value()) + ")")
-	if id == "071": #magic trick card
-		get_node("ChoiceController")._on_Player_card_choice_to_make(["051", "020"], card)
+	elif id == "069": #Joker
+		pass
+	elif id == "070": #birthday card
+		card.set_card_value(card.get_card_value() + 1)
+		card.set_card_name(CardList.card_dictionary["070"].name + " (" + str(card.get_card_value()) + ")")
+	elif id == "071": #magic trick card
+		get_node("ChoiceController")._on_Player_card_choice_to_make(["051", "020"])
 		var choice_made = yield(get_node("ChoiceController"), "choice_made")
 		card.set_card_value(CardList.card_dictionary[choice_made].value)
 		card.set_card_name(CardList.card_dictionary[id].name + " (" + CardList.card_dictionary[choice_made].name + ")")
+	
+	emit_signal("card_effect_ended")

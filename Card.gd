@@ -40,14 +40,5 @@ func set_card_name(name):
 func get_card_name() -> String:
 	return card_name
 
-func play_card_effect():
-	if card_id == "069": #Joker
-		pass
-	elif card_id == "070": #Birthday Card
-		card_value = card_value + 1
-		set_card_name(CardList.card_dictionary["070"].name + " (" + str(card_value) + ")")
-	else: 
-		pass
-
 func has_special_effect() -> bool:
 	return CardList.card_dictionary[card_id].effect

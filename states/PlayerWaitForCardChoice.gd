@@ -14,7 +14,6 @@ func _ready():
 
 func enter_state():
 	game_controller.current_state = self.name
-	print("entered state: " + str(self.name))
 	
 	if choice_controller.choices != null && choice_controller.choices.size() > 0: #there is a choice to be made
 		choice_controller.visible = true #swap for choice_controller.show choices or something later
@@ -22,8 +21,7 @@ func enter_state():
 		exit_state()
 
 func exit_state():
-	print("exited state: " + str(self.name))
 	emit_signal("state_exited")
 
-func _on_ChoiceController_choice_made(choice):
+func _on_Player_card_effect_ended():
 	exit_state()

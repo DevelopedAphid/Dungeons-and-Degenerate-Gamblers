@@ -10,20 +10,19 @@ func _ready():
 
 func enter_state():
 	game_controller.current_state = self.name
-	print("entered state: " + str(self.name))
 
 func exit_state(action_taken):
-	print("exited state: " + str(self.name))
 	emit_signal("state_exited", action_taken)
 
 func _on_HitButton_pressed():
 	if is_current_state():
 		player.draw_top_card()
+		game_controller.player_last_turn_result = "hit"
 		exit_state("hit")
 
 func _on_StayButton_pressed():
 	if is_current_state():
-		player.end_turn("stay")
+		game_controller.player_last_turn_result = "stay"
 		exit_state("stay")
 
 func is_current_state() -> bool: 

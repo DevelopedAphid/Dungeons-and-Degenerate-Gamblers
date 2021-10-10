@@ -1,22 +1,17 @@
 extends Node
 
 var game_controller
-var player
 signal state_exited
 
 func _ready():
 	game_controller = get_parent()
-	player = game_controller.get_node("Player")
 
 func enter_state():
 	game_controller.current_state = self.name
 	
-	var score = 0
-	for card in player.play_pile:
-		score = score + card.get_card_value()
-	player.score = score
+	game_controller.get_node("Player").discard_played_cards()
+	game_controller.get_node("Opponent").discard_played_cards()
 	
-	player.update_UI()
 	exit_state()
 
 func exit_state():

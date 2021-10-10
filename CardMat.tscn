@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://GameController.gd" type="Script" id=1]
 [ext_resource path="res://DeckController.gd" type="Script" id=2]
@@ -10,6 +10,12 @@
 [ext_resource path="res://states/PlayerWaitForFirstPlayAreaInput.gd" type="Script" id=8]
 [ext_resource path="res://states/PlayerScoreUpdate.gd" type="Script" id=9]
 [ext_resource path="res://states/PlayerWaitForCardChoice.gd" type="Script" id=10]
+[ext_resource path="res://states/OpponentStartOfTurnActions.gd" type="Script" id=11]
+[ext_resource path="res://states/OpponentWaitForFirstPlayAreaInput.gd" type="Script" id=12]
+[ext_resource path="res://states/OpponentScoreUpdate.gd" type="Script" id=13]
+[ext_resource path="res://states/OpponentWaitForCardChoice.gd" type="Script" id=14]
+[ext_resource path="res://states/AfterRoundPhase.gd" type="Script" id=15]
+[ext_resource path="res://states/DiscardPhase.gd" type="Script" id=16]
 
 [node name="GameController" type="Node"]
 script = ExtResource( 1 )
@@ -154,14 +160,36 @@ script = ExtResource( 10 )
 [node name="PlayerScoreUpdate" type="Node" parent="."]
 script = ExtResource( 9 )
 
-[connection signal="turn_ended" from="Player" to="." method="_on_Player_turn_ended"]
-[connection signal="choice_made" from="Player/ChoiceController" to="PlayerWaitForCardChoice" method="_on_ChoiceController_choice_made"]
+[node name="OpponentStartOfTurnActions" type="Node" parent="."]
+script = ExtResource( 11 )
+
+[node name="OpponentWaitForFirstPlayAreaInput" type="Node" parent="."]
+script = ExtResource( 12 )
+
+[node name="OpponentWaitForCardChoice" type="Node" parent="."]
+script = ExtResource( 14 )
+
+[node name="OpponentScoreUpdate" type="Node" parent="."]
+script = ExtResource( 13 )
+
+[node name="AfterRoundPhase" type="Node" parent="."]
+script = ExtResource( 15 )
+
+[node name="DiscardPhase" type="Node" parent="."]
+script = ExtResource( 16 )
+
+[connection signal="card_effect_ended" from="Player" to="PlayerWaitForCardChoice" method="_on_Player_card_effect_ended"]
 [connection signal="pressed" from="Player/HitButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_HitButton_pressed"]
 [connection signal="pressed" from="Player/StayButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_StayButton_pressed"]
-[connection signal="turn_ended" from="Opponent" to="." method="_on_Opponent_turn_ended"]
 [connection signal="state_exited" from="PlayerPreGameChoice" to="." method="_on_PlayerPreGameChoice_state_exited"]
 [connection signal="state_exited" from="OpponentPreGameChoice" to="." method="_on_OpponentPreGameChoice_state_exited"]
 [connection signal="state_exited" from="PlayerStartOfTurnActions" to="." method="_on_PlayerStartOfTurnActions_state_exited"]
 [connection signal="state_exited" from="PlayerWaitForFirstPlayAreaInput" to="." method="_on_PlayerWaitForFirstPlayAreaInput_state_exited"]
 [connection signal="state_exited" from="PlayerWaitForCardChoice" to="." method="_on_PlayerWaitForCardChoice_state_exited"]
 [connection signal="state_exited" from="PlayerScoreUpdate" to="." method="_on_PlayerScoreUpdate_state_exited"]
+[connection signal="state_exited" from="OpponentStartOfTurnActions" to="." method="_on_OpponentStartOfTurnActions_state_exited"]
+[connection signal="state_exited" from="OpponentWaitForFirstPlayAreaInput" to="." method="_on_OpponentWaitForFirstPlayAreaInput_state_exited"]
+[connection signal="state_exited" from="OpponentWaitForCardChoice" to="." method="_on_OpponentWaitForCardChoice_state_exited"]
+[connection signal="state_exited" from="OpponentScoreUpdate" to="." method="_on_OpponentScoreUpdate_state_exited"]
+[connection signal="state_exited" from="AfterRoundPhase" to="." method="_on_AfterRoundPhase_state_exited"]
+[connection signal="state_exited" from="DiscardPhase" to="." method="_on_DiscardPhase_state_exited"]
