@@ -97,6 +97,7 @@ func play_card_effect(card):
 	if self.name == "Opponent": #TODO: not good, need to sort later
 		return
 	var id = card.get_card_id()
+	
 	if id == "001" || id == "014" || id == "027" || id == "040" : #aces
 		get_node("ChoiceController")._on_Player_card_choice_to_make([id, "056"])
 		var choice_made = yield(get_node("ChoiceController"), "choice_made")

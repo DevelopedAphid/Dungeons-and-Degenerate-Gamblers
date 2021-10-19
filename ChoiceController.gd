@@ -7,19 +7,19 @@ signal choice_made(choice_made)
 
 func _ready():
 	grid_controller = get_node("ChoiceGridContainer")
-#	_on_Player_card_choice_to_make(["014","051"])
 
 func _on_Player_card_choice_to_make(choice_array):
 	choices = choice_array
+	if choice_array.size() > 4:
+		grid_controller.columns = 4
+	else:
+		grid_controller.columns = choice_array.size()
 	for choice in choices:
 		var button = Button.new()
 		grid_controller.add_child(button)
-		var file_path = "res://art/card-art/" + choice + ".png"
-		button.icon = load(file_path)
-		button.flat = true
-		button.expand_icon = true
-		button.rect_min_size.x = 360
-		button.rect_min_size.y = 600
+		button.size_flags_horizontal = SIZE_EXPAND_FILL
+		button.size_flags_vertical = SIZE_EXPAND_FILL
+		button.text = CardList.card_dictionary[choice].name
 		button.connect("pressed", self, "_on_Player_card_choice_selected", [choice])
 
 func _on_Player_card_choice_selected(choice):
@@ -29,3 +29,5 @@ func _on_Player_card_choice_selected(choice):
 	
 	for child in grid_controller.get_children():
 		child.queue_free()
+	
+	self.visible = false
