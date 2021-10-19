@@ -1,4 +1,4 @@
-extends Node2D
+extends Control
 
 var grid_controller
 var choices
@@ -7,6 +7,7 @@ signal choice_made(choice_made)
 
 func _ready():
 	grid_controller = get_node("ChoiceGridContainer")
+#	_on_Player_card_choice_to_make(["014","051"])
 
 func _on_Player_card_choice_to_make(choice_array):
 	choices = choice_array
@@ -16,6 +17,9 @@ func _on_Player_card_choice_to_make(choice_array):
 		var file_path = "res://art/card-art/" + choice + ".png"
 		button.icon = load(file_path)
 		button.flat = true
+		button.expand_icon = true
+		button.rect_min_size.x = 360
+		button.rect_min_size.y = 600
 		button.connect("pressed", self, "_on_Player_card_choice_selected", [choice])
 
 func _on_Player_card_choice_selected(choice):

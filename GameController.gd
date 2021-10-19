@@ -8,14 +8,6 @@ var player_last_turn_result
 var opponent_last_turn_result
 
 var current_state
-enum States {PREPARE_DRAW_PILES, PLAYER_PRE_GAME_CHOICE, OPPONENT_PRE_GAME_CHOICE, 
-			PLAYER_START_OF_TURN_ACTIONS, PLAYER_WAIT_FOR_FIRST_PLAY_AREA_INPUT, PLAYER_PLAY_CARD, 
-			PLAYER_WAIT_FOR_CARD_CHOICE, PLAYER_SCORE_UPDATE, PLAYER_WAIT_FOR_LAST_PLAY_AREA_INPUT,
-			OPPONENT_START_OF_TURN_ACTIONS, OPPONENT_WAIT_FOR_FIRST_PLAY_AREA_INPUT, OPPONENT_PLAY_CARD, 
-			OPPONENT_WAIT_FOR_CARD_CHOICE, OPPONENT_SCORE_UPDATE, OPPONENT_WAIT_FOR_LAST_PLAY_AREA_INPUT,
-			AFTER_ROUND_PHASE, 
-			PLAYER_DISCARD, PLAYER_WAIT_FOR_DISCARD_CHOICE, 
-			OPPONENT_DISCARD, OPPONENT_WAIT_FOR_DISCARD_CHOICE}
 
 func _ready():
 	player = get_node("Player")
@@ -69,10 +61,10 @@ func _on_OpponentPreGameChoice_state_exited():
 func _on_PlayerStartOfTurnActions_state_exited():
 	transition_to("PlayerWaitForFirstPlayAreaInput", {})
 
-func _on_PlayerWaitForFirstPlayAreaInput_state_exited(action_taken):
-	if action_taken == "hit":
+func _on_PlayerWaitForFirstPlayAreaInput_state_exited(player_action_taken):
+	if player_action_taken == "hit":
 		transition_to("PlayerWaitForCardChoice", {})
-	elif action_taken == "stay":
+	elif player_action_taken == "stay":
 		transition_to("PlayerScoreUpdate", {})
 
 func _on_PlayerWaitForCardChoice_state_exited():
