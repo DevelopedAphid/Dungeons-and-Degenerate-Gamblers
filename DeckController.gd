@@ -104,7 +104,10 @@ func play_card_effect(card):
 		card.set_card_value(CardList.card_dictionary[choice_made].value)
 		card.set_card_name(CardList.card_dictionary[id].name + " (" + str(card.get_card_value()) + ")")
 	elif id == "069": #Joker
-		pass
+		get_node("ChoiceController")._on_Player_card_choice_to_make(discard_pile)
+		var choice_made = yield(get_node("ChoiceController"), "choice_made")
+		card.set_card_value(discard_pile[choice_made].get_card_value())
+		card.set_card_name("Joker (" + discard_pile[choice_made].get_card_name() + ")")
 	elif id == "070": #birthday card
 		card.set_card_value(card.get_card_value() + 1)
 		card.set_card_name(CardList.card_dictionary["070"].name + " (" + str(card.get_card_value()) + ")")

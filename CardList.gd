@@ -413,7 +413,7 @@ var card_dictionary = {
 		"name": "Joker",
 		"suit": "special",
 		"value": "Joker",
-		"effect": false
+		"effect": true
 	},
 	"070": {
 		"name": "Birthday Card",
