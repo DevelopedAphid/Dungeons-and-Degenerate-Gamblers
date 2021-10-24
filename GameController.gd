@@ -38,6 +38,12 @@ func _ready():
 	player.add_card_to_deck(70)
 	player.add_card_to_deck(71)
 	player.add_card_to_deck(72)
+	player.add_card_to_deck(72)
+	player.add_card_to_deck(72)
+	player.add_card_to_deck(72)
+	player.add_card_to_deck(72)
+	player.add_card_to_deck(72)
+	player.add_card_to_deck(72)
 	
 	player.build_draw_pile()
 	opponent.build_draw_pile()

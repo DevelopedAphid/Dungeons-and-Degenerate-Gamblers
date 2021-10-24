@@ -132,7 +132,6 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
 		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + CardList.card_dictionary[choice_made].name + ")")
 	elif id == "072": #Red Joker
-		origin_card.set_card_value(choice_made.get_card_value())
-		origin_card.set_card_name("Red Joker (" + choice_made.get_card_name() + ")")
+		call_deferred("play_card_effect", origin_card, choice_made.get_card_id())
 	current_card_effect_id = null
 	update_UI()

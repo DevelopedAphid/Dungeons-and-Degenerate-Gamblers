@@ -11,8 +11,10 @@ func _ready():
 	grid_controller = get_node("ChoiceGridContainer")
 
 func _on_Player_card_choice_to_make(origin_card, choice_array):
+	self.visible = true
 	origin = origin_card
 	choices = choice_array
+	
 	if choice_array.size() > 4:
 		grid_controller.columns = 4
 	else:
