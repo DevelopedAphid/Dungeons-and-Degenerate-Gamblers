@@ -412,7 +412,7 @@ var card_dictionary = {
 	"069": {
 		"name": "Joker",
 		"suit": "special",
-		"value": "Joker",
+		"value": 0,
 		"effect": true
 	},
 	"070": {
@@ -423,6 +423,12 @@ var card_dictionary = {
 	},
 	"071": {
 		"name": "Magic Trick Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true
+	},
+	"072": {
+		"name": "Red Joker",
 		"suit": "special",
 		"value": 0,
 		"effect": true

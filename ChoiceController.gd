@@ -23,7 +23,7 @@ func _on_Player_card_choice_to_make(choice_array):
 		var current_choice = choice_array[choice]
 		if typeof(current_choice) == 4: #if input is a string
 			button.text = CardList.card_dictionary[choice_array[choice]].name
-			button.connect("pressed", self, "_on_Player_card_choice_selected", [choice_array[choice]])
+			button.connect("pressed", self, "_on_Player_card_choice_selected", [choice])
 		else: #must be a card instead
 			button.text = current_choice.get_card_name()
 			button.connect("pressed", self, "_on_Player_card_choice_selected", [choice])

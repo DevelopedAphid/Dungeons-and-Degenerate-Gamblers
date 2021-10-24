@@ -30,11 +30,12 @@ func _ready():
 	for n in 13: #all cards of one suit
 		player.add_card_to_deck(n + first_card_index)
 		opponent.add_card_to_deck(n + 1) #for now always spades
-	
-	#add the birthday card and the joker and the magic trick card
-	player.add_card_to_deck(70)
+
+	#add the birthday card and the joker and the magic trick card and the red joker
 	player.add_card_to_deck(69)
+	player.add_card_to_deck(70)
 	player.add_card_to_deck(71)
+	player.add_card_to_deck(72)
 	
 	player.build_draw_pile()
 	opponent.build_draw_pile()
