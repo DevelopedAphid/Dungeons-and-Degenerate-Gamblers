@@ -50,11 +50,12 @@ func draw_top_card():
 	else:
 		#move top draw pile card to top of play pile
 		var top_card = draw_pile[0]
-		if top_card.has_special_effect():
-			play_card_effect(top_card, top_card.get_card_id())
 		
 		draw_pile.pop_front()
 		play_pile.append(top_card)
+		
+		if top_card.has_special_effect():
+			play_card_effect(top_card, top_card.get_card_id())
 	
 	update_UI()
 
@@ -104,35 +105,34 @@ func play_card_effect(card, id):
 	elif id == "069": #Joker
 		if discard_pile.size() > 0:
 			get_node("ChoiceController")._on_Player_card_choice_to_make(card, discard_pile)
-			var choice_made = yield(get_node("ChoiceController"), "choice_made")
-			card.set_card_value(discard_pile[choice_made].get_card_value())
-			card.set_card_name("Joker (" + discard_pile[choice_made].get_card_name() + ")")
 	elif id == "070": #birthday card
 		card.set_card_value(card.get_card_value() + 1)
 		card.set_card_name(CardList.card_dictionary["070"].name + " (" + str(card.get_card_value()) + ")")
 	elif id == "071": #magic trick card
 		var choice_array = ["051", "020"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
-		var choice_made = yield(get_node("ChoiceController"), "choice_made")
-		card.set_card_value(CardList.card_dictionary[choice_array[choice_made]].value)
-		card.set_card_name(CardList.card_dictionary[id].name + " (" + CardList.card_dictionary[choice_array[choice_made]].name + ")")
 	elif id == "072": #Red Joker
 		if draw_pile.size() > 0:
 			get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
-			var choice_made = yield(get_node("ChoiceController"), "choice_made")
-			card.set_card_value(draw_pile[choice_made].get_card_value())
-			card.set_card_name("Red Joker (" + draw_pile[choice_made].get_card_name() + ")")
 	
 	update_UI()
 
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
-	print(str(origin_card.get_card_name()))
 	var id = current_card_effect_id
+	var choice_made = choice_array[choice_index]
 	
 	if id == "001" || id == "014" || id == "027" || id == "040" : #aces
-		var choice_made = choice_array[choice_index]
 		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
 		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + str(origin_card.get_card_value()) + ")")
-	
+	elif id == "069": #Joker
+		origin_card.set_card_value(choice_made.get_card_value())
+		origin_card.set_card_name("Joker (" + choice_made.get_card_name() + ")")
+	elif id == "071": #magic trick card
+		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
+		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + CardList.card_dictionary[choice_made].name + ")")
+	elif id == "072": #Red Joker
+		origin_card.set_card_value(choice_made.get_card_value())
+		origin_card.set_card_name("Red Joker (" + choice_made.get_card_name() + ")")
 	current_card_effect_id = null
+	update_UI()
