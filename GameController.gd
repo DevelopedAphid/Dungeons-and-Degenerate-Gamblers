@@ -6,12 +6,14 @@ var opponent
 var current_turn
 var player_last_turn_result
 var opponent_last_turn_result
+var state_label
 
 var current_state
 
 func _ready():
 	player = get_node("Player")
 	opponent = get_node("Opponent")
+	state_label = get_node("StateLabel")
 	
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
@@ -51,6 +53,7 @@ func transition_to(target_state: String, _data: Dictionary):
 		print("target_state: '" + target_state + "' does not exist")
 	
 	current_state = target_state
+	state_label.text = current_state
 	get_node(target_state).enter_state()
 
 func _on_PlayerPreGameChoice_state_exited():

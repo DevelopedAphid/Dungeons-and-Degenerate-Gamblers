@@ -2,13 +2,16 @@ extends Control
 
 var grid_controller
 var choices
+var origin
 
 signal choice_made(choice_made)
+signal choice_made_(origin_card, choice_array, choice_index)
 
 func _ready():
 	grid_controller = get_node("ChoiceGridContainer")
 
-func _on_Player_card_choice_to_make(choice_array):
+func _on_Player_card_choice_to_make(origin_card, choice_array):
+	origin = origin_card
 	choices = choice_array
 	if choice_array.size() > 4:
 		grid_controller.columns = 4
@@ -29,6 +32,8 @@ func _on_Player_card_choice_to_make(choice_array):
 			button.connect("pressed", self, "_on_Player_card_choice_selected", [choice])
 
 func _on_Player_card_choice_selected(choice):
+	emit_signal("choice_made_", origin, choices, choice)
+	
 	emit_signal("choice_made", choice)
 	get_parent().update_UI()
 	choices = null

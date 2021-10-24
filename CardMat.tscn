@@ -97,6 +97,15 @@ __meta__ = {
 visible = false
 anchor_top = 0.5
 
+[node name="StateLabel" type="Label" parent="."]
+margin_left = 4.90402
+margin_top = 581.732
+margin_right = 44.904
+margin_bottom = 595.732
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Opponent" type="Node2D" parent="."]
 script = ExtResource( 2 )
 
@@ -184,9 +193,9 @@ script = ExtResource( 15 )
 [node name="DiscardPhase" type="Node" parent="."]
 script = ExtResource( 16 )
 
-[connection signal="card_effect_ended" from="Player" to="PlayerWaitForCardChoice" method="_on_Player_card_effect_ended"]
 [connection signal="pressed" from="Player/HitButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_HitButton_pressed"]
 [connection signal="pressed" from="Player/StayButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_StayButton_pressed"]
+[connection signal="choice_made_" from="Player/ChoiceController" to="Player" method="_on_ChoiceController_choice_made_"]
 [connection signal="state_exited" from="PlayerPreGameChoice" to="." method="_on_PlayerPreGameChoice_state_exited"]
 [connection signal="state_exited" from="OpponentPreGameChoice" to="." method="_on_OpponentPreGameChoice_state_exited"]
 [connection signal="state_exited" from="PlayerStartOfTurnActions" to="." method="_on_PlayerStartOfTurnActions_state_exited"]

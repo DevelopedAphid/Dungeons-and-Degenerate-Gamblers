@@ -23,5 +23,5 @@ func enter_state():
 func exit_state():
 	emit_signal("state_exited")
 
-func _on_Player_card_effect_ended():
+func _on_Choice_controller_choice_made(_choice_made):
 	exit_state()

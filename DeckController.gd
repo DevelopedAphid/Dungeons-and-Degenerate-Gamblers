@@ -1,13 +1,12 @@
 extends Node
 
-signal card_effect_ended
-
 var deck = []
 var draw_pile = []
 var play_pile = []
 var discard_pile = []
 var score = 0
 var hitpoints = 100
+var current_card_effect_id
 
 var Card = preload("res://Card.tscn")
 
@@ -97,15 +96,14 @@ func play_card_effect(card, id):
 	if self.name == "Opponent": #TODO: not good, need to sort later
 		return
 	
+	current_card_effect_id = id
+	
 	if id == "001" || id == "014" || id == "027" || id == "040" : #aces
 		var choice_array = [id, "056"]
-		get_node("ChoiceController")._on_Player_card_choice_to_make(choice_array)
-		var choice_made = yield(get_node("ChoiceController"), "choice_made")
-		card.set_card_value(CardList.card_dictionary[choice_array[choice_made]].value)
-		card.set_card_name(CardList.card_dictionary[id].name + " (" + str(card.get_card_value()) + ")")
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 	elif id == "069": #Joker
 		if discard_pile.size() > 0:
-			get_node("ChoiceController")._on_Player_card_choice_to_make(discard_pile)
+			get_node("ChoiceController")._on_Player_card_choice_to_make(card, discard_pile)
 			var choice_made = yield(get_node("ChoiceController"), "choice_made")
 			card.set_card_value(discard_pile[choice_made].get_card_value())
 			card.set_card_name("Joker (" + discard_pile[choice_made].get_card_name() + ")")
@@ -114,16 +112,27 @@ func play_card_effect(card, id):
 		card.set_card_name(CardList.card_dictionary["070"].name + " (" + str(card.get_card_value()) + ")")
 	elif id == "071": #magic trick card
 		var choice_array = ["051", "020"]
-		get_node("ChoiceController")._on_Player_card_choice_to_make(choice_array)
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 		var choice_made = yield(get_node("ChoiceController"), "choice_made")
 		card.set_card_value(CardList.card_dictionary[choice_array[choice_made]].value)
 		card.set_card_name(CardList.card_dictionary[id].name + " (" + CardList.card_dictionary[choice_array[choice_made]].name + ")")
 	elif id == "072": #Red Joker
 		if draw_pile.size() > 0:
-			get_node("ChoiceController")._on_Player_card_choice_to_make(draw_pile)
+			get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
 			var choice_made = yield(get_node("ChoiceController"), "choice_made")
 			card.set_card_value(draw_pile[choice_made].get_card_value())
 			card.set_card_name("Red Joker (" + draw_pile[choice_made].get_card_name() + ")")
 	
-	emit_signal("card_effect_ended")
+	update_UI()
 
+
+func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
+	print(str(origin_card.get_card_name()))
+	var id = current_card_effect_id
+	
+	if id == "001" || id == "014" || id == "027" || id == "040" : #aces
+		var choice_made = choice_array[choice_index]
+		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
+		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + str(origin_card.get_card_value()) + ")")
+	
+	current_card_effect_id = null
