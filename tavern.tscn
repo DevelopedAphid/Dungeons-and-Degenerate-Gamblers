@@ -4,15 +4,15 @@
 
 [sub_resource type="PlaneMesh" id=1]
 
-[sub_resource type="BoxShape" id=5]
+[sub_resource type="BoxShape" id=2]
 
 [sub_resource type="CubeMesh" id=3]
 
 [sub_resource type="BoxShape" id=4]
 
-[sub_resource type="CapsuleMesh" id=6]
+[sub_resource type="CapsuleMesh" id=5]
 
-[sub_resource type="CapsuleShape" id=7]
+[sub_resource type="CapsuleShape" id=6]
 
 [node name="Spatial" type="Spatial"]
 
@@ -26,7 +26,7 @@ material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="RigidBody"]
 transform = Transform( 20, 0, 0, 0, 0.1, 0, 0, 0, 20, 0, 0, 0 )
-shape = SubResource( 5 )
+shape = SubResource( 2 )
 
 [node name="RigidBody2" type="RigidBody" parent="."]
 transform = Transform( 0.819827, -0.520198, -0.23933, 0.421846, 0.831317, -0.361881, 0.387209, 0.195719, 0.900979, 0, 3.28378, 0 )
@@ -43,12 +43,12 @@ script = ExtResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="KinematicBody"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2, 4 )
-mesh = SubResource( 6 )
+mesh = SubResource( 5 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="KinematicBody"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2, 4 )
-shape = SubResource( 7 )
+shape = SubResource( 6 )
 
 [node name="Position3D" type="Position3D" parent="KinematicBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 4 )
