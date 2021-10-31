@@ -1,30 +1,82 @@
 extends KinematicBody
 
-var dir
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var dir = Vector3()
+var vel = Vector3()
 
+const MAX_SPEED = 20
+const ACCEL = 4.5
+const DEACCEL = 16
+const MOUSE_SENSITIVITY = 0.05
+
+var camera
+var rotation_helper
+var interaction_raycast
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	camera = $RotationHelper/Camera
+	rotation_helper = $RotationHelper	
+	
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _physics_process(delta):
-	if Input.is_action_pressed("movement_forward"):
-		move_and_slide(Vector3(1,1,1),Vector3(1,1,1),false,4,0,false)
+	process_input(delta)
+	process_movement(delta)
 
-func process_input(delta):
+func process_input(_delta):
 	dir = Vector3()
-	var dir_2d = Vector2()
+	var input_movement_vector = Vector2()
+	var camera_transform = camera.get_global_transform()
 	
 	if Input.is_action_pressed("movement_forward"):
-		dir_2d.x += 1
+		input_movement_vector.x -= 1
 	if Input.is_action_pressed("movement_backward"):
-		dir_2d.x -= 1
+		input_movement_vector.x += 1
 	if Input.is_action_pressed("movement_right"):
-		dir_2d.y += 1
+		input_movement_vector.y += 1
 	if Input.is_action_pressed("movement_left"):
-		dir_2d.y -= 1
+		input_movement_vector.y -= 1
 	
+	input_movement_vector = input_movement_vector.normalized()
 	
+	#move in relation to camera direction
+	dir += camera_transform.basis.z * input_movement_vector.x
+	dir += camera_transform.basis.x * input_movement_vector.y
+	
+	#capture/free cursor
+	if Input.is_action_just_pressed("ui_cancel"):
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		else:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
+func process_movement(delta):
+	dir.y = 0
+	dir = dir.normalized()
+	
+	var hvel = vel
+	hvel.y = 0
+	
+	var target = dir
+	target *= MAX_SPEED
+	
+	var accel
+	if dir.dot(hvel) > 0:
+		accel = ACCEL
+	else: 
+		accel = DEACCEL
+	
+	hvel = hvel.linear_interpolate(target, accel * delta)
+	vel.x = hvel.x
+	vel.z = hvel.z
+	
+	vel = move_and_slide(vel, Vector3(0,1,0), 0.05, 4,deg2rad(40))
+
+func _input(event):
+	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		rotation_helper.rotate_x(deg2rad(event.relative.y * MOUSE_SENSITIVITY * -1))
+		self.rotate_y(deg2rad(event.relative.x * MOUSE_SENSITIVITY  * -1))
+		
+		var camera_rot = rotation_helper.rotation_degrees
+		camera_rot.x = clamp(camera_rot.x, -70, 70)
+		rotation_helper.rotation_degrees = camera_rot
