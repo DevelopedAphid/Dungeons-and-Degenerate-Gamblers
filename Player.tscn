@@ -23,3 +23,13 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, -10 )
 script = ExtResource( 2 )
+
+[node name="DebugLabel" type="Label" parent="RotationHelper/Camera/InteractionRayCast"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -14.0
+margin_right = 40.0
+text = "debug"
+__meta__ = {
+"_edit_use_anchors_": false
+}

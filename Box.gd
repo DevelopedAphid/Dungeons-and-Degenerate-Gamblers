@@ -14,9 +14,4 @@ func interact():
 	mesh_instance.set_surface_material(0,material)
 	
 	var table = get_parent().get_node("Table")
-	for n in table.get_children():
-		if n.is_in_group("Cards"):
-			table.remove_child(n)
-			n.queue_free()
-	
-	table.card_spawn_position = table.DEFAULT_CARD_SPAWN_POSITION
+	table.clear_table()
