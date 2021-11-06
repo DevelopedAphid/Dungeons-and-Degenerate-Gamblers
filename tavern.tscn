@@ -2,25 +2,22 @@
 
 [ext_resource path="res://Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Box.gd" type="Script" id=2]
-[ext_resource path="res://art/3d-models/table.glb" type="PackedScene" id=3]
+[ext_resource path="res://Table3D.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Light3D.tscn" type="PackedScene" id=5]
 
 [sub_resource type="PlaneMesh" id=1]
+
+[sub_resource type="SpatialMaterial" id=8]
+albedo_color = Color( 0.380392, 0.188235, 0, 1 )
 
 [sub_resource type="BoxShape" id=2]
 
 [sub_resource type="CubeMesh" id=3]
 
-[sub_resource type="SpatialMaterial" id=7]
+[sub_resource type="SpatialMaterial" id=4]
 albedo_color = Color( 0.831373, 0.211765, 0.211765, 1 )
 
-[sub_resource type="BoxShape" id=4]
-
-[sub_resource type="SpatialMaterial" id=9]
-albedo_color = Color( 0.447059, 0.00784314, 0.00784314, 1 )
-
-[sub_resource type="CylinderShape" id=8]
-radius = 0.304494
-height = 0.991679
+[sub_resource type="BoxShape" id=5]
 
 [node name="Spatial" type="Spatial"]
 
@@ -32,24 +29,37 @@ mode = 1
 [node name="MeshInstance" type="MeshInstance" parent="Floor"]
 transform = Transform( 20, 0, 0, 0, 1, 0, 0, 0, 20, 0, 0, 0 )
 mesh = SubResource( 1 )
-material/0 = null
+material/0 = SubResource( 8 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Floor"]
-transform = Transform( 20, 0, 0, 0, 0.1, 0, 0, 0, 20, 0, 0, 0 )
+transform = Transform( 20, 0, 0, 0, 0.1, 0, 0, 0, 20, 0, -0.1, 0 )
 shape = SubResource( 2 )
 
-[node name="Box" type="RigidBody" parent="." groups=[
-"Interactable",
-]]
+[node name="Box" type="RigidBody" parent="." groups=["Interactable"]]
 transform = Transform( 0.819827, -0.520198, -0.23933, 0.421846, 0.831317, -0.361881, 0.387209, 0.195719, 0.900979, 0, 3.28378, 0 )
 script = ExtResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Box"]
 mesh = SubResource( 3 )
-material/0 = SubResource( 7 )
+material/0 = SubResource( 4 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Box"]
-shape = SubResource( 4 )
+shape = SubResource( 5 )
+
+[node name="Table" parent="." groups=["Cards", "Interactable"] instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.80028, 1.20062, 4.58748 )
+mode = 1
+
+[node name="Candles" type="Node" parent="."]
+
+[node name="Light" parent="Candles" instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.03316, 2.18866, 4.78145 )
+
+[node name="Light2" parent="Candles" instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.30947, 2.18866, 5.00745 )
+
+[node name="Light3" parent="Candles" instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.06602, 2.18866, 5.1883 )
 
 [node name="HUD" type="Control" parent="."]
 anchor_right = 1.0
@@ -71,18 +81,3 @@ margin_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="RigidBody" type="RigidBody" parent="."]
-mode = 1
-
-[node name="table" parent="RigidBody" instance=ExtResource( 3 )]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
-
-[node name="Bar Table" parent="RigidBody/table" index="2"]
-material/0 = SubResource( 9 )
-
-[node name="CollisionShape" type="CollisionShape" parent="RigidBody"]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -2.14562, 1.00949, 4.36219 )
-shape = SubResource( 8 )
-
-[editable path="RigidBody/table"]
