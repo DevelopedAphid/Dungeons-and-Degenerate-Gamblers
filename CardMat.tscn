@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://GameController.gd" type="Script" id=1]
 [ext_resource path="res://DeckController.gd" type="Script" id=2]
@@ -16,34 +16,19 @@
 [ext_resource path="res://states/OpponentWaitForCardChoice.gd" type="Script" id=14]
 [ext_resource path="res://states/AfterRoundPhase.gd" type="Script" id=15]
 [ext_resource path="res://states/DiscardPhase.gd" type="Script" id=16]
+[ext_resource path="res://Card.tscn" type="PackedScene" id=17]
+[ext_resource path="res://ScoreBar.tscn" type="PackedScene" id=18]
 
 [node name="GameController" type="Node"]
 script = ExtResource( 1 )
+
+[node name="DeckCard" parent="." instance=ExtResource( 17 )]
+position = Vector2( 0, 90 )
 
 [node name="Player" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HitButton" type="Button" parent="Player"]
-margin_left = 445.67
-margin_top = 15.8653
-margin_right = 551.67
-margin_bottom = 81.8653
-text = "HIT"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="StayButton" type="Button" parent="Player"]
-margin_left = 568.265
-margin_top = 18.7498
-margin_right = 674.265
-margin_bottom = 84.7498
-text = "STAY"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -57,29 +42,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PlayPileLabel" type="Label" parent="Player"]
-margin_left = 223.556
-margin_top = 111.057
-margin_right = 263.556
-margin_bottom = 125.057
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="DiscardPileLabel" type="Label" parent="Player"]
-margin_left = 89.4221
-margin_top = 272.595
-margin_right = 129.422
-margin_bottom = 286.595
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="ScoreLabel" type="Label" parent="Player"]
-margin_left = 268.267
-margin_top = 46.1535
-margin_right = 308.267
-margin_bottom = 60.1535
+margin_left = 84.0
+margin_top = 24.0
+margin_right = 124.0
+margin_bottom = 38.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -97,6 +64,18 @@ __meta__ = {
 visible = false
 anchor_top = 0.5
 
+[node name="StayButton" type="Button" parent="Player"]
+margin_left = 3.0
+margin_top = 27.0
+margin_right = 72.0
+margin_bottom = 78.0
+text = "STAY"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScoreBar" parent="Player" instance=ExtResource( 18 )]
+
 [node name="StateLabel" type="Label" parent="."]
 margin_left = 4.90402
 margin_top = 581.732
@@ -113,49 +92,34 @@ script = ExtResource( 2 )
 script = ExtResource( 3 )
 
 [node name="DrawPileLabel" type="Label" parent="Opponent"]
-margin_left = 529.0
-margin_top = 95.0
-margin_right = 939.0
-margin_bottom = 563.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="PlayPileLabel" type="Label" parent="Opponent"]
-margin_left = 682.207
-margin_top = 113.942
-margin_right = 722.207
-margin_bottom = 127.942
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="DiscardPileLabel" type="Label" parent="Opponent"]
-margin_left = 543.747
-margin_top = 311.536
-margin_right = 583.747
-margin_bottom = 325.536
+margin_left = 256.0
+margin_top = 148.0
+margin_right = 666.0
+margin_bottom = 616.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ScoreLabel" type="Label" parent="Opponent"]
-margin_left = 824.994
-margin_top = 40.3843
-margin_right = 864.994
-margin_bottom = 54.3843
+margin_left = 405.0
+margin_top = 8.0
+margin_right = 445.0
+margin_bottom = 22.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HitpointsLabel" type="Label" parent="Opponent"]
-margin_left = 901.436
-margin_top = 36.0575
-margin_right = 941.436
-margin_bottom = 50.0575
+margin_left = 438.0
+margin_top = 9.0
+margin_right = 478.0
+margin_bottom = 23.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ScoreBar" parent="Opponent" instance=ExtResource( 18 )]
+position = Vector2( 221, 33 )
 
 [node name="PlayerPreGameChoice" type="Node" parent="."]
 script = ExtResource( 5 )
@@ -193,9 +157,9 @@ script = ExtResource( 15 )
 [node name="DiscardPhase" type="Node" parent="."]
 script = ExtResource( 16 )
 
-[connection signal="pressed" from="Player/HitButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_HitButton_pressed"]
-[connection signal="pressed" from="Player/StayButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_StayButton_pressed"]
+[connection signal="card_clicked" from="DeckCard" to="PlayerWaitForFirstPlayAreaInput" method="_on_DeckCard_card_clicked"]
 [connection signal="choice_made_" from="Player/ChoiceController" to="Player" method="_on_ChoiceController_choice_made_"]
+[connection signal="pressed" from="Player/StayButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_StayButton_pressed"]
 [connection signal="state_exited" from="PlayerPreGameChoice" to="." method="_on_PlayerPreGameChoice_state_exited"]
 [connection signal="state_exited" from="OpponentPreGameChoice" to="." method="_on_OpponentPreGameChoice_state_exited"]
 [connection signal="state_exited" from="PlayerStartOfTurnActions" to="." method="_on_PlayerStartOfTurnActions_state_exited"]

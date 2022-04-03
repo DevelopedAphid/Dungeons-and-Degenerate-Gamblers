@@ -14,12 +14,6 @@ func enter_state():
 func exit_state(action_taken):
 	emit_signal("state_exited", action_taken)
 
-func _on_HitButton_pressed():
-	if is_current_state():
-		player.draw_top_card()
-		game_controller.player_last_turn_result = "hit"
-		exit_state("hit")
-
 func _on_StayButton_pressed():
 	if is_current_state():
 		game_controller.player_last_turn_result = "stay"
@@ -30,3 +24,9 @@ func is_current_state() -> bool:
 		return true
 	else:
 		return false
+
+func _on_DeckCard_card_clicked(_card):
+	if is_current_state():
+		player.draw_top_card()
+		game_controller.player_last_turn_result = "hit"
+		exit_state("hit")

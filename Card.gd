@@ -1,10 +1,15 @@
 extends Node2D
 
-var card_id
+signal card_clicked(card)
+
+export var card_id = "073" #default to card back
 var card_name
 var card_suit
 var card_value
 var card_sprite
+
+func _ready():
+	set_card_id(card_id)
 
 func set_card_id(id):
 	if typeof(id) == 4: #if already a string
@@ -18,6 +23,14 @@ func set_card_id(id):
 	card_name = CardList.card_dictionary[card_id].name
 	card_suit = CardList.card_dictionary[card_id].suit
 	card_value = CardList.card_dictionary[card_id].value
+	
+	#set card art according to position on spite sheet
+	var card_sprite_index = float(card_id) - 1
+	var row = floor(card_sprite_index/13)
+	var col = fmod(card_sprite_index, 13)
+	
+	$CardArtSprite.frame_coords.x = col
+	$CardArtSprite.frame_coords.y = row
 
 func get_card_id() -> String:
 	return card_id
@@ -42,3 +55,6 @@ func get_card_name() -> String:
 
 func has_special_effect() -> bool:
 	return CardList.card_dictionary[card_id].effect
+
+func sprite_clicked():
+	emit_signal("card_clicked", self)

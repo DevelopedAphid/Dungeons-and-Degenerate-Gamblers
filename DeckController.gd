@@ -16,7 +16,7 @@ func ready():
 func add_card_to_deck(card_id):
 	#add a defined card to the deck
 	var new_card = Card.instance()
-	new_card.set_card_id(card_id)
+	new_card.call_deferred("set_card_id", card_id)
 	deck.append(new_card)
 
 func build_draw_pile():
@@ -54,6 +54,12 @@ func draw_top_card():
 		draw_pile.pop_front()
 		play_pile.append(top_card)
 		
+		#if first time drawn then add it as a child so we can display it
+		if top_card.get_parent() == null:
+			add_child(top_card)
+		
+		update_UI()
+		
 		if top_card.has_special_effect():
 			play_card_effect(top_card, top_card.get_card_id())
 	
@@ -63,8 +69,11 @@ func shuffle_discard_pile_into_draw_pile():
 	#put everything in discard pile into draw pile
 	for cards in discard_pile.size():
 		draw_pile.append(discard_pile[cards])
+	for card in discard_pile:
+		remove_child(card)
 	for cards in discard_pile.size():
 		discard_pile.pop_front()
+	update_UI()
 
 func discard_played_cards():
 	for cards in play_pile.size():
@@ -80,21 +89,35 @@ func discard_played_cards():
 
 func update_UI():
 	get_node("DrawPileLabel").text = "Cards Remaining:" + str(draw_pile.size())
-	update_UI_pile_label(get_node("PlayPileLabel"), play_pile)
-	update_UI_pile_label(get_node("DiscardPileLabel"), discard_pile)
 	get_node("ScoreLabel").text = str(score)
 	get_node("HitpointsLabel").text = str(hitpoints)
-
-func update_UI_pile_label(label, pile):
-	label.text = ""
-	for cards in pile:
-		label.text = label.text + cards.get_card_name() + "\n"
+	
+	get_node("ScoreBar").update_score(score)
+	
+	var play_pile_pos = Vector2(57, 90)
+	var discard_pile_pos = Vector2(0, 180)
+	
+	if name == "Opponent":
+		play_pile_pos = Vector2(240, 90)
+		discard_pile_pos = Vector2(240, 180)
+	
+	var play_pile_count = 0
+	var discard_pile_count = 0
+	for card in play_pile:
+		play_pile_count += 1
+		card.position = play_pile_pos + Vector2(14 * play_pile_count, 0)
+	
+	for card in discard_pile:
+		discard_pile_count += 1
+		card.position = discard_pile_pos + Vector2((discard_pile_count - 1) * 5, 0)
+	
+	#todo: show that draw pile is a pile (except when only one card left)
 
 func _on_Card_choice_to_make(choice_array, card):
 	emit_signal("card_choice_to_make", choice_array, card)
 
 func play_card_effect(card, id):
-	if self.name == "Opponent": #TODO: not good, need to sort later
+	if self.name == "Opponent": #TODO: means opponents unable to use special cards
 		return
 	
 	current_card_effect_id = id
