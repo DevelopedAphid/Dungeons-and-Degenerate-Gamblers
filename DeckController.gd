@@ -70,6 +70,7 @@ func shuffle_discard_pile_into_draw_pile():
 	for cards in discard_pile.size():
 		draw_pile.append(discard_pile[cards])
 	for card in discard_pile:
+		card.set_card_art(card.get_card_id()) #reset card art to default
 		remove_child(card)
 	for cards in discard_pile.size():
 		discard_pile.pop_front()
@@ -89,7 +90,6 @@ func discard_played_cards():
 
 func update_UI():
 	get_node("DrawPileLabel").text = "Cards Remaining:" + str(draw_pile.size())
-	get_node("ScoreLabel").text = str(score)
 	get_node("HitpointsLabel").text = str(hitpoints)
 	
 	get_node("ScoreBar").update_score(score)
@@ -123,7 +123,7 @@ func play_card_effect(card, id):
 	current_card_effect_id = id
 	
 	if id == "001" || id == "014" || id == "027" || id == "040" : #aces
-		var choice_array = [id, "056"]
+		var choice_array = [id, "053"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 	elif id == "069": #Joker
 		if discard_pile.size() > 0:
@@ -147,14 +147,19 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	
 	if id == "001" || id == "014" || id == "027" || id == "040" : #aces
 		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
+		origin_card.set_card_art(choice_made)
 		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + str(origin_card.get_card_value()) + ")")
 	elif id == "069": #Joker
 		origin_card.set_card_value(choice_made.get_card_value())
+		origin_card.set_card_art(choice_made.get_card_id())
 		origin_card.set_card_name("Joker (" + choice_made.get_card_name() + ")")
 	elif id == "071": #magic trick card
 		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
+		origin_card.set_card_art(choice_made)
 		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + CardList.card_dictionary[choice_made].name + ")")
 	elif id == "072": #Red Joker
+		origin_card.set_card_value(choice_made.get_card_value())
+		origin_card.set_card_art(choice_made.get_card_id())
 		call_deferred("play_card_effect", origin_card, choice_made.get_card_id())
 	current_card_effect_id = null
 	update_UI()

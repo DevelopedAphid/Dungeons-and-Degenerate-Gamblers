@@ -1,3 +1,3 @@
 extends Node
 
-var chosen_suit
+var chosen_suit = "spades"

@@ -24,13 +24,7 @@ func set_card_id(id):
 	card_suit = CardList.card_dictionary[card_id].suit
 	card_value = CardList.card_dictionary[card_id].value
 	
-	#set card art according to position on spite sheet
-	var card_sprite_index = float(card_id) - 1
-	var row = floor(card_sprite_index/13)
-	var col = fmod(card_sprite_index, 13)
-	
-	$CardArtSprite.frame_coords.x = col
-	$CardArtSprite.frame_coords.y = row
+	set_card_art(card_id)
 
 func get_card_id() -> String:
 	return card_id
@@ -52,6 +46,15 @@ func set_card_name(name):
 
 func get_card_name() -> String:
 	return card_name
+
+func set_card_art(id):
+	#set card art according to position on sprite sheet
+	var card_sprite_index = float(id) - 1
+	var row = floor(card_sprite_index/13)
+	var col = fmod(card_sprite_index, 13)
+	
+	$CardArtSprite.frame_coords.x = col
+	$CardArtSprite.frame_coords.y = row
 
 func has_special_effect() -> bool:
 	return CardList.card_dictionary[card_id].effect
