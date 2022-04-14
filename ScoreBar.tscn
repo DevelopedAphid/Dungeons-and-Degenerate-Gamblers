@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/art/score_bar.png" type="Texture" id=1]
+[ext_resource path="res://ScoreBar.gd" type="Script" id=3]
+
+[node name="ScoreBar" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="BarSprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+offset = Vector2( 129.5, 9.5 )

@@ -432,5 +432,11 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true
+	},
+	"073": {
+		"name": "Double Back Card",
+		"suit": "special",
+		"value": 0,
+		"effect": false
 	}
 }
