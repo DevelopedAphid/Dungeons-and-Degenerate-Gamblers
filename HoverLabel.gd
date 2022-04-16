@@ -12,12 +12,14 @@ func find_and_focus_top_card():
 	
 	for current_card in hovered_cards:
 		current_card.set_z_index(0)
+		current_card.highlight_card(false)
 		var index = current_card.get_index()
 		if index > top_index:
 			top_card = current_card
 			top_index = index
 	
 	top_card.set_z_index(1)
+	top_card.highlight_card(true)
 	
 	visible = true
 	text = top_card.card_name
@@ -32,6 +34,7 @@ func _on_Card_hover_started(card):
 func _on_Card_hover_ended(card):
 	hovered_cards.erase(card)
 	card.set_z_index(0)
+	card.highlight_card(false)
 	
 	if hovered_cards.size() == 0:
 		visible = false

@@ -12,6 +12,7 @@ var card_sprite
 
 func _ready():
 	set_card_id(card_id)
+	highlight_card(false)
 
 func set_card_id(id):
 	if typeof(id) == 4: #if already a string
@@ -63,6 +64,9 @@ func has_special_effect() -> bool:
 
 func sprite_clicked():
 	emit_signal("card_clicked", self)
+
+func highlight_card(to_highlight: bool):
+	$HighlightSprite.visible = to_highlight
 
 func _on_HoverArea_mouse_entered():
 	emit_signal("card_hover_started", self)
