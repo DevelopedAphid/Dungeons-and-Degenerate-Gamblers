@@ -18,6 +18,9 @@ func add_card_to_deck(card_id):
 	var new_card = Card.instance()
 	new_card.call_deferred("set_card_id", card_id)
 	deck.append(new_card)
+	
+	new_card.connect("card_hover_started", get_parent().get_node("HoverZ/HoverLabel"), "_on_Card_hover_started")
+	new_card.connect("card_hover_ended", get_parent().get_node("HoverZ/HoverLabel"), "_on_Card_hover_ended")
 
 func build_draw_pile():
 	#put deck list into draw pile

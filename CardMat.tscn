@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://GameController.gd" type="Script" id=1]
 [ext_resource path="res://DeckController.gd" type="Script" id=2]
@@ -20,6 +20,7 @@
 [ext_resource path="res://ScoreBar.tscn" type="PackedScene" id=18]
 [ext_resource path="res://assets/art/card_mat.png" type="Texture" id=19]
 [ext_resource path="res://assets/art/stand_button.png" type="Texture" id=20]
+[ext_resource path="res://HoverLabel.gd" type="Script" id=21]
 
 [node name="GameController" type="Node"]
 script = ExtResource( 1 )
@@ -61,6 +62,7 @@ position = Vector2( 213, 28 )
 [node name="Player" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -106,6 +108,16 @@ margin_left = 4.90402
 margin_top = 581.732
 margin_right = 44.904
 margin_bottom = 595.732
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HoverZ" type="Node2D" parent="."]
+
+[node name="HoverLabel" type="Label" parent="HoverZ"]
+margin_right = 90.0
+margin_bottom = 30.0
+script = ExtResource( 21 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
