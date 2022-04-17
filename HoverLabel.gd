@@ -1,6 +1,7 @@
 extends Label
 
 var hovered_cards = []
+var hover_position = Vector2(62, 5)
 
 func _ready():
 	add_font_override("font", Fonts.font_pixel_5_9)
@@ -23,8 +24,8 @@ func find_and_focus_top_card():
 	
 	visible = true
 	text = top_card.card_name
-	rect_position.x = top_card.position.x + 5
-	rect_position.y = top_card.position.y + 5
+	rect_position.x = top_card.position.x + hover_position.x
+	rect_position.y = top_card.position.y + hover_position.y
 
 func _on_Card_hover_started(card):
 	hovered_cards.append(card)

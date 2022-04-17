@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/art/floors/tavern/tavern.png" type="Texture" id=1]
 [ext_resource path="res://Player_Overworld.tscn" type="PackedScene" id=2]
 [ext_resource path="res://NPC.tscn" type="PackedScene" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 5.5, 5.5 )
 
 [node name="Tavern" type="Node2D"]
 
@@ -15,6 +18,10 @@ centered = false
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
 polygon = PoolVector2Array( 4, 201, 51, 201, 51, 198, 124, 198, 124, 261, 74, 261, 74, 270, 128, 270, 128, 142, 0, 142, 0, 270, 55, 270, 55, 261, 4, 261 )
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 87.5, 204.5 )
+shape = SubResource( 1 )
+
 [node name="YSort" type="YSort" parent="."]
 position = Vector2( 84, 202 )
 
@@ -22,3 +29,4 @@ position = Vector2( 84, 202 )
 position = Vector2( -20, 59 )
 
 [node name="NPC" parent="YSort" instance=ExtResource( 3 )]
+position = Vector2( 15, 0 )

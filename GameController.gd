@@ -18,26 +18,11 @@ func _ready():
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
 	
-	var first_card_index
-	var starting_suit = PlayerSettings.chosen_suit
-	if starting_suit == "spades":
-		first_card_index = 1
-	elif starting_suit == "clubs":
-		first_card_index = 14
-	elif starting_suit == "diamonds":
-		first_card_index = 27
-	elif starting_suit == "hearts":
-		first_card_index = 40
+	for n in PlayerSettings.player_deck:
+		player.add_card_to_deck(n)
 	
-	for n in 13: #all cards of one suit
-		player.add_card_to_deck(n + first_card_index)
-		opponent.add_card_to_deck(n + 1) #for now always spades
-
-	#add the birthday card, joker, magic trick card, red joker
-	player.add_card_to_deck(69)
-	player.add_card_to_deck(70)
-	player.add_card_to_deck(71)
-	player.add_card_to_deck(72)
+	for n in PlayerSettings.opponent_deck:
+		opponent.add_card_to_deck(n)
 	
 	player.build_draw_pile()
 	opponent.build_draw_pile()

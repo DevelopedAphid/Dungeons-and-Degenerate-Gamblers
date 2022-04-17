@@ -1,7 +1,11 @@
 extends StaticBody2D
 
+var deck_list = ["006", "006", "006", "006", "006", "006"]
+
 func interact():
 	#start game
+	PlayerSettings.opponent_deck = deck_list
+# warning-ignore:return_value_discarded
 	get_tree().change_scene("res://CardMat.tscn")
 
 func _on_InteractionArea_area_entered(area):
