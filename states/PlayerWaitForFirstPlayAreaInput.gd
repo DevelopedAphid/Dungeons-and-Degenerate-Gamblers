@@ -25,7 +25,7 @@ func is_current_state() -> bool:
 	else:
 		return false
 
-func _on_DeckCard_card_clicked(_card):
+func _on_HitButton_pressed():
 	if is_current_state():
 		player.draw_top_card()
 		game_controller.player_last_turn_result = "hit"
