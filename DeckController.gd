@@ -18,6 +18,9 @@ func add_card_to_deck(card_id):
 	var new_card = Card.instance()
 	new_card.call_deferred("set_card_id", card_id)
 	deck.append(new_card)
+	
+	new_card.connect("card_hover_started", get_parent().get_node("HoverZ/HoverLabel"), "_on_Card_hover_started")
+	new_card.connect("card_hover_ended", get_parent().get_node("HoverZ/HoverLabel"), "_on_Card_hover_ended")
 
 func build_draw_pile():
 	#put deck list into draw pile
@@ -89,27 +92,30 @@ func discard_played_cards():
 #	pass
 
 func update_UI():
-	get_node("DrawPileLabel").text = "Cards Remaining:" + str(draw_pile.size())
-	get_node("HitpointsLabel").text = str(hitpoints)
-	
-	get_node("ScoreBar").update_score(score)
-	
-	var play_pile_pos = Vector2(57, 90)
-	var discard_pile_pos = Vector2(0, 180)
-	
+	#todo: make this way less ugly - use signals and call from game controller instead of deck controller
+	#or... make the battle sprites and health labels children of the player/opponent nodes so we can just call them as children like everything else
+	if name == "Player":
+		get_parent().get_node("BattleScene/PlayerHealthLabel").text = str(hitpoints)
 	if name == "Opponent":
-		play_pile_pos = Vector2(240, 90)
-		discard_pile_pos = Vector2(240, 180)
+		get_parent().get_node("BattleScene/OpponentHealthLabel").text = str(hitpoints)
+	
+	$ScoreBar.update_score(score)
+	
+	var play_pile_pos = $PlayPilePosition.position
+	var discard_pile_pos = $DiscardPilePosition.position
+	
+	var play_pile_card_spacing = 14
+	var discard_pile_card_spacing = 4
 	
 	var play_pile_count = 0
 	var discard_pile_count = 0
 	for card in play_pile:
 		play_pile_count += 1
-		card.position = play_pile_pos + Vector2(14 * play_pile_count, 0)
+		card.position = play_pile_pos + Vector2(play_pile_card_spacing * play_pile_count, 0)
 	
 	for card in discard_pile:
 		discard_pile_count += 1
-		card.position = discard_pile_pos + Vector2((discard_pile_count - 1) * 5, 0)
+		card.position = discard_pile_pos + Vector2((discard_pile_count - 1) * discard_pile_card_spacing, 0)
 	
 	#todo: show that draw pile is a pile (except when only one card left)
 

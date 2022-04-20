@@ -8,4 +8,4 @@ script = ExtResource( 3 )
 
 [node name="BarSprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-offset = Vector2( 129.5, 9.5 )
+centered = false

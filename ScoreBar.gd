@@ -21,4 +21,4 @@ func update_score(score):
 			new_sprite.hframes = 4
 			new_sprite.add_to_group("suit_icons")
 			add_child(new_sprite)
-			new_sprite.position = Vector2(10 + i * 12, 9.5)
+			new_sprite.position = Vector2(10, 230 - i * 11) #score bar image is 239 high so this will mean icons go bottom up
