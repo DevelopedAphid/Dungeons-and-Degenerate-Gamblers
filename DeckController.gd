@@ -92,7 +92,12 @@ func discard_played_cards():
 #	pass
 
 func update_UI():
-	get_node("HitpointsLabel").text = str(hitpoints)
+	#todo: make this way less ugly - use signals and call from game controller instead of deck controller
+	#or... make the battle sprites and health labels children of the player/opponent nodes so we can just call them as children like everything else
+	if name == "Player":
+		get_parent().get_node("BattleScene/PlayerHealthLabel").text = str(hitpoints)
+	if name == "Opponent":
+		get_parent().get_node("BattleScene/OpponentHealthLabel").text = str(hitpoints)
 	
 	$ScoreBar.update_score(score)
 	

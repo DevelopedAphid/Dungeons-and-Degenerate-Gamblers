@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://GameController.gd" type="Script" id=1]
 [ext_resource path="res://DeckController.gd" type="Script" id=2]
@@ -23,6 +23,8 @@
 [ext_resource path="res://HoverLabel.gd" type="Script" id=21]
 [ext_resource path="res://assets/art/hit_button.png" type="Texture" id=22]
 [ext_resource path="res://assets/art/battle_vignette.png" type="Texture" id=23]
+[ext_resource path="res://assets/art/characters/imp.png" type="Texture" id=24]
+[ext_resource path="res://BattleScene.gd" type="Script" id=25]
 
 [node name="GameController" type="Node"]
 script = ExtResource( 1 )
@@ -32,17 +34,47 @@ texture = ExtResource( 19 )
 centered = false
 
 [node name="BattleScene" type="Node2D" parent="."]
-position = Vector2( 90, 100 )
+position = Vector2( 90, 110 )
+script = ExtResource( 25 )
 
 [node name="BackgroundSprite" type="Sprite" parent="BattleScene"]
 texture = ExtResource( 23 )
 centered = false
 
+[node name="PlayerSprite" type="Sprite" parent="BattleScene"]
+texture = ExtResource( 24 )
+centered = false
+offset = Vector2( 32, 32 )
+flip_h = true
+
+[node name="OpponentSprite" type="Sprite" parent="BattleScene"]
+texture = ExtResource( 24 )
+centered = false
+offset = Vector2( 257, 32 )
+
+[node name="PlayerHealthLabel" type="Label" parent="BattleScene"]
+margin_left = 17.0
+margin_top = 16.0
+margin_right = 57.0
+margin_bottom = 30.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OpponentHealthLabel" type="Label" parent="BattleScene"]
+margin_left = 242.0
+margin_top = 16.0
+margin_right = 282.0
+margin_bottom = 30.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="DeckCard" parent="." instance=ExtResource( 17 )]
-position = Vector2( 32, 90 )
+position = Vector2( 32, 100 )
 
 [node name="DeckCard2" parent="." instance=ExtResource( 17 )]
-position = Vector2( 391, 90 )
+position = Vector2( 391, 100 )
 
 [node name="Opponent" type="Node2D" parent="."]
 script = ExtResource( 2 )
@@ -50,38 +82,20 @@ script = ExtResource( 2 )
 [node name="AI" type="Node2D" parent="Opponent"]
 script = ExtResource( 3 )
 
-[node name="HitpointsLabel" type="Label" parent="Opponent"]
-margin_left = 438.0
-margin_top = 9.0
-margin_right = 478.0
-margin_bottom = 23.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="ScoreBar" parent="Opponent" instance=ExtResource( 18 )]
 position = Vector2( 452, 15 )
 
 [node name="PlayPilePosition" type="Position2D" parent="Opponent"]
-position = Vector2( 240, 0 )
+position = Vector2( 240, 10 )
 
 [node name="DiscardPilePosition" type="Position2D" parent="Opponent"]
-position = Vector2( 340, 180 )
+position = Vector2( 340, 200 )
 
 [node name="Player" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HitpointsLabel" type="Label" parent="Player"]
-margin_left = 155.768
-margin_top = 40.3843
-margin_right = 195.768
-margin_bottom = 54.3843
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -114,10 +128,10 @@ visible = false
 anchor_top = 0.5
 
 [node name="PlayPilePosition" type="Position2D" parent="Player"]
-position = Vector2( 57, 0 )
+position = Vector2( 57, 10 )
 
 [node name="DiscardPilePosition" type="Position2D" parent="Player"]
-position = Vector2( 32, 180 )
+position = Vector2( 32, 200 )
 
 [node name="StateLabel" type="Label" parent="."]
 margin_left = 4.90402
