@@ -15,9 +15,7 @@ func _physics_process(delta):
 	if Input.get_action_strength("ui_right"):
 		direction_vector.x = 1
 	
-	var collision = move_and_collide(direction_vector * walk_speed * delta)
-	if collision:
-		print("collided")
+	var _collision = move_and_collide(direction_vector * walk_speed * delta)
 	
 	if Input.get_action_strength("ui_left") > Input.get_action_strength("ui_right"):
 		facing_left = true

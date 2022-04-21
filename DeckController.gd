@@ -107,15 +107,19 @@ func update_UI():
 	var play_pile_card_spacing = 14
 	var discard_pile_card_spacing = 4
 	
+	if name == "Opponent":
+		play_pile_card_spacing = -14
+		discard_pile_card_spacing = -4
+	
 	var play_pile_count = 0
 	var discard_pile_count = 0
 	for card in play_pile:
-		play_pile_count += 1
 		card.position = play_pile_pos + Vector2(play_pile_card_spacing * play_pile_count, 0)
+		play_pile_count += 1
 	
 	for card in discard_pile:
-		discard_pile_count += 1
 		card.position = discard_pile_pos + Vector2((discard_pile_count - 1) * discard_pile_card_spacing, 0)
+		discard_pile_count += 1
 	
 	#todo: show that draw pile is a pile (except when only one card left)
 
