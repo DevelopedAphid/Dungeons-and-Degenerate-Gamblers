@@ -22,10 +22,10 @@ func find_and_focus_top_card():
 	top_card.set_z_index(1)
 	top_card.highlight_card(true)
 	
-	visible = true
 	text = top_card.card_name
 	rect_position.x = top_card.position.x + hover_position.x
 	rect_position.y = top_card.position.y + hover_position.y
+	visible = true
 
 func _on_Card_hover_started(card):
 	hovered_cards.append(card)

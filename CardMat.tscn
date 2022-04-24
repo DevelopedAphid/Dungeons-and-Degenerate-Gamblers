@@ -16,7 +16,6 @@
 [ext_resource path="res://states/OpponentWaitForCardChoice.gd" type="Script" id=14]
 [ext_resource path="res://states/AfterRoundPhase.gd" type="Script" id=15]
 [ext_resource path="res://states/DiscardPhase.gd" type="Script" id=16]
-[ext_resource path="res://Card.tscn" type="PackedScene" id=17]
 [ext_resource path="res://ScoreBar.tscn" type="PackedScene" id=18]
 [ext_resource path="res://assets/art/card_mat.png" type="Texture" id=19]
 [ext_resource path="res://assets/art/stand_button.png" type="Texture" id=20]
@@ -25,6 +24,7 @@
 [ext_resource path="res://assets/art/battle_vignette.png" type="Texture" id=23]
 [ext_resource path="res://assets/art/characters/imp.png" type="Texture" id=24]
 [ext_resource path="res://BattleScene.gd" type="Script" id=25]
+[ext_resource path="res://DeckDisplay.tscn" type="PackedScene" id=26]
 
 [node name="GameController" type="Node"]
 script = ExtResource( 1 )
@@ -70,12 +70,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DeckCard" parent="." instance=ExtResource( 17 )]
-position = Vector2( 32, 100 )
-
-[node name="DeckCard2" parent="." instance=ExtResource( 17 )]
-position = Vector2( 391, 100 )
-
 [node name="Opponent" type="Node2D" parent="."]
 script = ExtResource( 2 )
 
@@ -90,6 +84,9 @@ position = Vector2( 391, 10 )
 
 [node name="DiscardPilePosition" type="Position2D" parent="Opponent"]
 position = Vector2( 391, 200 )
+
+[node name="DeckDisplay" parent="Opponent" instance=ExtResource( 26 )]
+position = Vector2( 391, 100 )
 
 [node name="Player" type="Control" parent="."]
 anchor_right = 1.0
@@ -132,6 +129,9 @@ position = Vector2( 32, 10 )
 
 [node name="DiscardPilePosition" type="Position2D" parent="Player"]
 position = Vector2( 32, 200 )
+
+[node name="DeckDisplay" parent="Player" instance=ExtResource( 26 )]
+position = Vector2( 32, 100 )
 
 [node name="StateLabel" type="Label" parent="."]
 margin_left = 4.90402

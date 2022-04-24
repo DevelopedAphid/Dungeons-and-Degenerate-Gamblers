@@ -101,6 +101,8 @@ func update_UI():
 	
 	$ScoreBar.update_score(score)
 	
+	$DeckDisplay.change_deck_size(draw_pile.size())
+	
 	var play_pile_pos = $PlayPilePosition.position
 	var discard_pile_pos = $DiscardPilePosition.position
 	
