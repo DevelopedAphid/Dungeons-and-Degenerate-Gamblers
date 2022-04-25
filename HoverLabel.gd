@@ -14,6 +14,7 @@ func find_and_focus_top_card():
 	for current_card in hovered_cards:
 		current_card.set_z_index(0)
 		current_card.highlight_card(false)
+		current_card.get_parent().get_node("ScoreBar").remove_highlights()
 		var index = current_card.get_index()
 		if index > top_index:
 			top_card = current_card
@@ -26,6 +27,8 @@ func find_and_focus_top_card():
 	rect_position.x = top_card.position.x + hover_position.x
 	rect_position.y = top_card.position.y + hover_position.y
 	visible = true
+	
+	top_card.get_parent().get_node("ScoreBar").highlight_scores(top_card.score_before_played + 1, top_card.score_before_played + top_card.get_card_value())
 
 func _on_Card_hover_started(card):
 	hovered_cards.append(card)
@@ -36,6 +39,7 @@ func _on_Card_hover_ended(card):
 	hovered_cards.erase(card)
 	card.set_z_index(0)
 	card.highlight_card(false)
+	card.get_parent().get_node("ScoreBar").remove_highlights()
 	
 	if hovered_cards.size() == 0:
 		visible = false

@@ -54,6 +54,8 @@ func draw_top_card():
 		#move top draw pile card to top of play pile
 		var top_card = draw_pile[0]
 		
+		top_card.score_before_played = score
+		
 		draw_pile.pop_front()
 		play_pile.append(top_card)
 		

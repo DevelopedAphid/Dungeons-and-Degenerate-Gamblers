@@ -10,6 +10,8 @@ var card_suit
 var card_value
 var card_sprite
 
+var score_before_played
+
 func _ready():
 	set_card_id(card_id)
 	highlight_card(false)
