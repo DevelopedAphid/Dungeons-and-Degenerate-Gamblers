@@ -17,6 +17,8 @@ func enter_state():
 	if game_controller.player_last_turn_result == "stay" && game_controller.opponent_last_turn_result == "stay":
 		play_should_continue = false
 		compare_score_and_deal_damage()
+		game_controller.player_last_turn_result = "hit"
+		game_controller.opponent_last_turn_result = "hit"
 	else: 
 		play_should_continue = true
 	
@@ -33,7 +35,7 @@ func compare_score_and_deal_damage():
 	if opponent_score > 21: #busted
 		opponent_score = 0
 	
-	#should be replaced by a "deal damage" method later in case we add damage multiplier effects or anything
+	#todo: should be replaced by a "deal damage" method later in case we add damage multiplier effects or anything
 	var damage = player_score - opponent_score
 	if damage > 0: #player won, deal difference of scores as damage
 		opponent.hitpoints = opponent.hitpoints - damage

@@ -79,6 +79,7 @@ func shuffle_discard_pile_into_draw_pile():
 		remove_child(card)
 	for cards in discard_pile.size():
 		discard_pile.pop_front()
+	shuffle_draw_pile()
 	update_UI()
 
 func discard_played_cards():
