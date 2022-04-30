@@ -6,6 +6,11 @@ var icon_highlight_path = preload("res://assets/art/suit_icon_highlights_9_9.png
 
 var current_score = 0
 
+onready var font = Fonts.font_pixel_5_9
+
+func _ready():
+	$ScoreLabel.add_font_override("font", font)
+
 func update_score(score):
 	#remove current icons
 	var sprite_array = []
@@ -14,6 +19,8 @@ func update_score(score):
 			sprite_array.append(child)
 	for child in sprite_array:
 		child.queue_free()
+	
+	$ScoreLabel.text = str(score)
 	
 	#choose which icon to add
 	var icon_sprite

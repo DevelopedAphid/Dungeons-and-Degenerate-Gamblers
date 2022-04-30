@@ -41,7 +41,7 @@ texture = ExtResource( 19 )
 centered = false
 
 [node name="BattleScene" type="Node2D" parent="."]
-position = Vector2( 90, 110 )
+position = Vector2( 110, 110 )
 script = ExtResource( 25 )
 
 [node name="BackgroundSprite" type="Sprite" parent="BattleScene"]
@@ -57,7 +57,7 @@ flip_h = true
 [node name="OpponentSprite" type="Sprite" parent="BattleScene"]
 texture = ExtResource( 24 )
 centered = false
-offset = Vector2( 257, 32 )
+offset = Vector2( 222, 32 )
 
 [node name="PlayerHealthLabel" type="Label" parent="BattleScene"]
 margin_left = 17.0
@@ -69,9 +69,9 @@ __meta__ = {
 }
 
 [node name="OpponentHealthLabel" type="Label" parent="BattleScene"]
-margin_left = 242.0
+margin_left = 208.0
 margin_top = 16.0
-margin_right = 282.0
+margin_right = 248.0
 margin_bottom = 30.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -84,16 +84,16 @@ script = ExtResource( 2 )
 script = ExtResource( 3 )
 
 [node name="ScoreBar" parent="Opponent" instance=ExtResource( 18 )]
-position = Vector2( 452, 15 )
+position = Vector2( 442, 50 )
 
 [node name="PlayPilePosition" type="Position2D" parent="Opponent"]
-position = Vector2( 391, 10 )
-
-[node name="DiscardPilePosition" type="Position2D" parent="Opponent"]
-position = Vector2( 391, 200 )
+position = Vector2( 371, 10 )
 
 [node name="DeckDisplay" parent="Opponent" instance=ExtResource( 26 )]
-position = Vector2( 391, 100 )
+position = Vector2( 381, 100 )
+
+[node name="DiscardPilePosition" type="Position2D" parent="Opponent"]
+position = Vector2( 376, 200 )
 
 [node name="Player" type="Control" parent="."]
 anchor_right = 1.0
@@ -105,42 +105,51 @@ __meta__ = {
 }
 
 [node name="StayButton" type="TextureButton" parent="Player"]
-margin_left = 151.0
-margin_top = 196.0
-margin_right = 240.0
-margin_bottom = 253.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -44.5
+margin_top = 81.5
+margin_right = 44.5
+margin_bottom = 138.5
 texture_normal = ExtResource( 20 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HitButton" type="TextureButton" parent="Player"]
-margin_left = 240.0
-margin_top = 196.0
-margin_right = 329.0
-margin_bottom = 253.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -44.5
+margin_top = 24.5
+margin_right = 44.5
+margin_bottom = 81.5
 texture_normal = ExtResource( 22 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ScoreBar" parent="Player" instance=ExtResource( 18 )]
-position = Vector2( 10, 15 )
+position = Vector2( 19, 50 )
 
 [node name="ChoiceController" parent="Player" instance=ExtResource( 4 )]
 visible = false
 anchor_top = 0.5
 
 [node name="PlayPilePosition" type="Position2D" parent="Player"]
-position = Vector2( 32, 10 )
-
-[node name="DiscardPilePosition" type="Position2D" parent="Player"]
-position = Vector2( 32, 200 )
+position = Vector2( 52, 10 )
 
 [node name="DeckDisplay" parent="Player" instance=ExtResource( 26 )]
-position = Vector2( 32, 100 )
+position = Vector2( 42, 100 )
+
+[node name="DiscardPilePosition" type="Position2D" parent="Player"]
+position = Vector2( 46, 200 )
 
 [node name="StateLabel" type="Label" parent="."]
+visible = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
