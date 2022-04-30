@@ -22,7 +22,7 @@ func enter_state():
 	else: 
 		play_should_continue = true
 	
-	exit_state() 
+	exit_state()
 
 func exit_state():
 	emit_signal("state_exited", play_should_continue)
@@ -30,9 +30,9 @@ func exit_state():
 func compare_score_and_deal_damage():
 	var player_score = player.score
 	var opponent_score = opponent.score
-	if player_score > 21: #busted
+	if player.score > 21: #busted
 		player_score = 0
-	if opponent_score > 21: #busted
+	if opponent.score > 21: #busted
 		opponent_score = 0
 	
 	#todo: should be replaced by a "deal damage" method later in case we add damage multiplier effects or anything
@@ -41,3 +41,5 @@ func compare_score_and_deal_damage():
 		opponent.hitpoints = opponent.hitpoints - damage
 	if damage < 0: #opponent won, deal difference of scores as damage
 		player.hitpoints = player.hitpoints + damage
+	
+	player.update_UI()

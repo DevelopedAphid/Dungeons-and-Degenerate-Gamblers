@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://GameController.gd" type="Script" id=1]
 [ext_resource path="res://DeckController.gd" type="Script" id=2]
@@ -25,6 +25,13 @@
 [ext_resource path="res://assets/art/characters/imp.png" type="Texture" id=24]
 [ext_resource path="res://BattleScene.gd" type="Script" id=25]
 [ext_resource path="res://DeckDisplay.tscn" type="PackedScene" id=26]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [node name="GameController" type="Node"]
 script = ExtResource( 1 )
@@ -134,15 +141,17 @@ position = Vector2( 32, 200 )
 position = Vector2( 32, 100 )
 
 [node name="StateLabel" type="Label" parent="."]
-margin_left = 4.90402
-margin_top = 581.732
-margin_right = 44.904
-margin_bottom = 595.732
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HoverZ" type="Node2D" parent="."]
+
+[node name="BackgroundPanel" type="Panel" parent="HoverZ"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+custom_styles/panel = SubResource( 1 )
 
 [node name="HoverLabel" type="Label" parent="HoverZ"]
 margin_right = 90.0

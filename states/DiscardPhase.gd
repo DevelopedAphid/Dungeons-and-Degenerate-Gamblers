@@ -8,7 +8,6 @@ func _ready():
 
 func enter_state():
 	game_controller.current_state = self.name
-	
 	game_controller.get_node("Player").discard_played_cards()
 	game_controller.get_node("Opponent").discard_played_cards()
 	
