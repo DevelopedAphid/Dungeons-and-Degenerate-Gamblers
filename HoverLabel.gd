@@ -16,15 +16,21 @@ func find_and_focus_top_card():
 	var top_index = 0
 	
 	for current_card in hovered_cards:
-		current_card.set_z_index(0)
 		current_card.highlight_card(false)
-		current_card.get_parent().get_node("ScoreBar").remove_highlights()
+		if current_card.is_in_group("choices"):
+			current_card.set_z_index(2)
+		else: #choices don't have a score contribution to highlight
+			current_card.get_parent().get_node("ScoreBar").remove_highlights()
+			current_card.set_z_index(0)
 		var index = current_card.get_index()
 		if index > top_index:
 			top_card = current_card
 			top_index = index
 	
-	top_card.set_z_index(1)
+	if top_card.is_in_group("choices"):
+		top_card.set_z_index(3)
+	else:
+		top_card.set_z_index(1)
 	top_card.highlight_card(true)
 	
 	text = top_card.card_name
@@ -45,7 +51,9 @@ func find_and_focus_top_card():
 	
 	bg_panel.visible = true
 	
-	top_card.get_parent().get_node("ScoreBar").highlight_scores(top_card.score_before_played + 1, top_card.score_before_played + top_card.get_card_value())
+	
+	if not top_card.is_in_group("choices"): #choices don't have a score contribution to highlight
+		top_card.get_parent().get_node("ScoreBar").highlight_scores(top_card.score_before_played + 1, top_card.score_before_played + top_card.get_card_value())
 
 func _on_Card_hover_started(card):
 	hovered_cards.append(card)
@@ -54,9 +62,13 @@ func _on_Card_hover_started(card):
 
 func _on_Card_hover_ended(card):
 	hovered_cards.erase(card)
-	card.set_z_index(0)
+	if card.is_in_group("choices"):
+		card.set_z_index(2)
+	else:
+		card.set_z_index(0)
 	card.highlight_card(false)
-	card.get_parent().get_node("ScoreBar").remove_highlights()
+	if not card.is_in_group("choices"): #choices don't have a score contribution to highlight
+		card.get_parent().get_node("ScoreBar").remove_highlights()
 	
 	if hovered_cards.size() == 0:
 		visible = false
