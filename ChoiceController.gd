@@ -32,8 +32,8 @@ func _on_Player_card_choice_to_make(origin_card, choice_array):
 		add_child(card)
 		
 		#allow hovering
-		card.connect("card_hover_started", get_parent().get_parent().get_node("HoverZ/HoverLabel"), "_on_Card_hover_started")
-		card.connect("card_hover_ended", get_parent().get_parent().get_node("HoverZ/HoverLabel"), "_on_Card_hover_ended")
+		card.connect("card_hover_started", get_parent().get_parent().get_node("HoverPanel"), "_on_Card_hover_started")
+		card.connect("card_hover_ended", get_parent().get_parent().get_node("HoverPanel"), "_on_Card_hover_ended")
 		
 		card.connect("card_clicked", self, "_on_Player_card_choice_selected", [i])
 		

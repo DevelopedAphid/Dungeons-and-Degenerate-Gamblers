@@ -5,7 +5,8 @@ var card_dictionary = {
 		"name": "Ace of Spades",
 		"suit": "spades",
 		"value": 1,
-		"effect": true
+		"effect": true,
+		"description": "Choose value: 1 or 11"
 	},
 	"002": {
 		"name": "Two of Spades",

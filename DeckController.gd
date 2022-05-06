@@ -19,8 +19,8 @@ func add_card_to_deck(card_id):
 	new_card.call_deferred("set_card_id", card_id)
 	deck.append(new_card)
 	
-	new_card.connect("card_hover_started", get_parent().get_node("HoverZ/HoverLabel"), "_on_Card_hover_started")
-	new_card.connect("card_hover_ended", get_parent().get_node("HoverZ/HoverLabel"), "_on_Card_hover_ended")
+	new_card.connect("card_hover_started", get_parent().get_node("HoverPanel"), "_on_Card_hover_started")
+	new_card.connect("card_hover_ended", get_parent().get_node("HoverPanel"), "_on_Card_hover_ended")
 
 func build_draw_pile():
 	#put deck list into draw pile
@@ -146,6 +146,18 @@ func play_card_effect(card, id):
 	elif id == "070": #birthday card
 		card.set_card_value(card.get_card_value() + 1)
 		card.set_card_name(CardList.card_dictionary["070"].name + " (" + str(card.get_card_value()) + ")")
+		#add a candle each time card drawn
+		var card_value = card.get_card_value()
+		var candle = Sprite.new()
+		card.add_child(candle)
+		candle.texture = load("res://assets/art/candles.png")
+		candle.hframes = 5
+		candle.frame = round(rand_range(1,5)) #choose a random candle colour
+		var spacing = 2
+		if not card_value % 2 == 0: #odd
+			candle.position = Vector2(27 + spacing * card_value, 51)
+		else: 
+			candle.position = Vector2(27 - spacing * (card_value - 1), 51)
 	elif id == "071": #magic trick card
 		var choice_array = ["051", "020"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)

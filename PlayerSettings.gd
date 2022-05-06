@@ -8,5 +8,7 @@ var player_deck = [
 "069", "070", "071", "072"
 ]
 
+#var player_deck = ["070"]
+
 var opponent_deck = []
 
