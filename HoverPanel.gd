@@ -2,7 +2,6 @@ extends Node2D
 
 var hovered_cards = []
 var hover_position = Vector2(62, 5)
-
 var hover_bubble_texture = preload("res://assets/art/hover_bubble.png")
 
 onready var font = Fonts.font_pixel_5_9
@@ -40,42 +39,49 @@ func find_and_focus_top_card():
 	
 	hover_label.text = top_card.card_name
 	hover_label.rect_size = font.get_string_size(top_card.card_name)
-	hover_label.rect_position.x = top_card.position.x + hover_position.x
-	hover_label.rect_position.y = top_card.position.y + hover_position.y
+	hover_label.rect_position = top_card.position + hover_position
 	hover_label.visible = true
-	
-	description_label.text = top_card.card_description
-	description_label.rect_position = hover_label.rect_position + Vector2(0, 11)
-	description_label.rect_size = font.get_string_size(top_card.card_description)
-	description_label.visible = true
 	
 	#check if it fits on the screen and re-position if it doesn't
 	if hover_label.rect_position.x + hover_label.rect_size.x > get_viewport_rect().size.x - 10:
 		hover_label.rect_position.x = get_viewport_rect().size.x - hover_label.rect_size.x - 10
 	if hover_label.rect_position.y + hover_label.rect_size.y > get_viewport_rect().size.y - 10:
 		hover_label.rect_position.y = get_viewport_rect().size.y - hover_label.rect_size.y - 10
-	#todo: include a check if here for the description label going over edge of screen, and then reposition description label as well
+	
+	description_label.text = top_card.card_description
+	description_label.rect_size = description_font.get_string_size(top_card.card_description)
+	description_label.rect_position = hover_label.rect_position + Vector2(0, 11)
+	description_label.visible = true
+	
+	#check if it fits on the screen and re-position if it doesn't
+	if description_label.rect_position.x + description_label.rect_size.x > get_viewport_rect().size.x - 10:
+		description_label.rect_position.x = get_viewport_rect().size.x - description_label.rect_size.x - 10
+		hover_label.rect_position.x = description_label.rect_position.x
+	if description_label.rect_position.y + description_label.rect_size.y > get_viewport_rect().size.y - 10:
+		description_label.rect_position.y = get_viewport_rect().size.y - description_label.rect_size.y - 10
+		hover_label.rect_position.y = description_label.rect_position.y - 11
 	
 	#position all the bubble sprites
 	var tile_size = 5
 	var hover_size = Vector2(0, 0)
-	hover_size.x = max(hover_label.rect_size.x, description_label.rect_size.x)
-	hover_size.y = hover_label.rect_size.y + description_label.rect_size.y
-	$BubbleParts/TopLeftBubble.position = hover_label.rect_position
-	$BubbleParts/TopMiddleBubble.position = hover_label.rect_position + Vector2(tile_size, 0)
-	$BubbleParts/TopMiddleBubble.scale.x = (hover_size.x - tile_size*2) / tile_size
-	$BubbleParts/TopRightBubble.position = hover_label.rect_position + Vector2(hover_size.x - tile_size, 0)
-	$BubbleParts/MiddleLeftBubble.position = hover_label.rect_position + Vector2(0, tile_size)
-	$BubbleParts/MiddleLeftBubble.scale.y = (hover_size.y - tile_size*2) / tile_size
-	$BubbleParts/MiddleRightBubble.position = hover_label.rect_position + Vector2(hover_size.x - tile_size, tile_size)
-	$BubbleParts/MiddleRightBubble.scale.y = (hover_size.y - tile_size*2) / tile_size
-	$BubbleParts/BottomLeftBubble.position = hover_label.rect_position + Vector2(0, hover_size.y - tile_size)
-	$BubbleParts/BottomMiddleBubble.position = hover_label.rect_position + Vector2(5, hover_size.y - tile_size)
-	$BubbleParts/BottomMiddleBubble.scale.x = (hover_size.x - tile_size*2) / tile_size
-	$BubbleParts/BottomRightBubble.position = hover_label.rect_position + Vector2(hover_size.x - tile_size, hover_size.y -  tile_size)
-	$BubbleParts/MiddleMiddleBubble.position = hover_label.rect_position + Vector2(tile_size, tile_size)
-	$BubbleParts/MiddleMiddleBubble.scale.x = (hover_size.x - tile_size*2) / tile_size
-	$BubbleParts/MiddleMiddleBubble.scale.y = (hover_size.y - tile_size*2) / tile_size
+	var padding = 3
+	hover_size.x = max(hover_label.rect_size.x, description_label.rect_size.x) + padding
+	hover_size.y = hover_label.rect_size.y + description_label.rect_size.y + padding
+	$BubbleParts/TopLeftBubble.position = hover_label.rect_position + Vector2(-padding, -padding)
+	$BubbleParts/TopMiddleBubble.position = hover_label.rect_position + Vector2(tile_size, 0) + Vector2(-padding, -padding)
+	$BubbleParts/TopMiddleBubble.scale.x = (hover_size.x - tile_size*2 + 2*padding) / tile_size
+	$BubbleParts/TopRightBubble.position = hover_label.rect_position + Vector2(hover_size.x - tile_size, 0) + Vector2(padding, -padding)
+	$BubbleParts/MiddleLeftBubble.position = hover_label.rect_position + Vector2(0, tile_size) + Vector2(-padding, -padding)
+	$BubbleParts/MiddleLeftBubble.scale.y = (hover_size.y - tile_size*2 + 2*padding) / tile_size
+	$BubbleParts/MiddleRightBubble.position = hover_label.rect_position + Vector2(hover_size.x - tile_size, tile_size) + Vector2(padding, -padding)
+	$BubbleParts/MiddleRightBubble.scale.y = (hover_size.y - tile_size*2 + 2*padding) / tile_size
+	$BubbleParts/BottomLeftBubble.position = hover_label.rect_position + Vector2(0, hover_size.y - tile_size) + Vector2(-padding, padding)
+	$BubbleParts/BottomMiddleBubble.position = hover_label.rect_position + Vector2(5, hover_size.y - tile_size) + Vector2(-padding, padding)
+	$BubbleParts/BottomMiddleBubble.scale.x = (hover_size.x - tile_size*2 + 2*padding) / tile_size
+	$BubbleParts/BottomRightBubble.position = hover_label.rect_position + Vector2(hover_size.x - tile_size, hover_size.y -  tile_size) + Vector2(padding, padding)
+	$BubbleParts/MiddleMiddleBubble.position = hover_label.rect_position + Vector2(tile_size, tile_size) + Vector2(-padding, -padding)
+	$BubbleParts/MiddleMiddleBubble.scale.x = (hover_size.x - tile_size*2 + 2*padding) / tile_size
+	$BubbleParts/MiddleMiddleBubble.scale.y = (hover_size.y - tile_size*2 + 2*padding) / tile_size
 	$BubbleParts.visible = true
 	
 	if not top_card.is_in_group("choices"): #choices don't have a score contribution to highlight

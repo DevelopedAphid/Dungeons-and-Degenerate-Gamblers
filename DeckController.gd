@@ -125,14 +125,12 @@ func update_UI():
 	for card in discard_pile:
 		card.position = discard_pile_pos + Vector2((discard_pile_count - 1) * discard_pile_card_spacing, 0)
 		discard_pile_count += 1
-	
-	#todo: show that draw pile is a pile (except when only one card left)
 
 func _on_Card_choice_to_make(choice_array, card):
 	emit_signal("card_choice_to_make", choice_array, card)
 
 func play_card_effect(card, id):
-	if self.name == "Opponent": #TODO: means opponents unable to use special cards
+	if self.name == "Opponent": #currently this means opponents are unable to use special cards
 		return
 	
 	current_card_effect_id = id

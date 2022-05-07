@@ -21,6 +21,10 @@ func update_score(score):
 		child.queue_free()
 	
 	$ScoreLabel.text = str(score)
+	if $ScoreLabel.text.length() == 1:
+		$ScoreLabel.rect_position = Vector2(6, -25)
+	else: #doesn't handle 3 digit score but not sure if that matters
+		$ScoreLabel.rect_position = Vector2(3, -25)
 	
 	#choose which icon to add
 	var icon_sprite

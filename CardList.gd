@@ -6,7 +6,7 @@ var card_dictionary = {
 		"suit": "spades",
 		"value": 1,
 		"effect": true,
-		"description": "Choose value: 1 or 11"
+		"description": "When played, choose value of either 1 or 11"
 	},
 	"002": {
 		"name": "Two of Spades",
@@ -84,7 +84,8 @@ var card_dictionary = {
 		"name": "Ace of Clubs",
 		"suit": "clubs",
 		"value": 1,
-		"effect": true
+		"effect": true,
+		"description": "When played, choose value of either 1 or 11"
 	},
 	"015": {
 		"name": "Two of Clubs",
@@ -162,7 +163,8 @@ var card_dictionary = {
 		"name": "Ace of Diamonds",
 		"suit": "diamonds",
 		"value": 1,
-		"effect": true
+		"effect": true,
+		"description": "When played, choose value of either 1 or 11"
 	},
 	"028": {
 		"name": "Two of Diamonds",
@@ -240,7 +242,8 @@ var card_dictionary = {
 		"name": "Ace of Hearts",
 		"suit": "hearts",
 		"value": 1,
-		"effect": true
+		"effect": true,
+		"description": "When played, choose value of either 1 or 11"
 	},
 	"041": {
 		"name": "Two of Hearts",
@@ -414,25 +417,29 @@ var card_dictionary = {
 		"name": "Joker",
 		"suit": "special",
 		"value": 0,
-		"effect": true
+		"effect": true,
+		"description": "When played, choose a card from your discard pile to copy the value from"
 	},
 	"070": {
 		"name": "Birthday Card",
 		"suit": "special",
 		"value": 0,
-		"effect": true
+		"effect": true,
+		"description": "When played, increase this card's value by 1"
 	},
 	"071": {
 		"name": "Magic Trick Card",
 		"suit": "special",
 		"value": 0,
-		"effect": true
+		"effect": true,
+		"description": "When played, choose to change this card to either Queen of Hearts or 7 of Clubs"
 	},
 	"072": {
 		"name": "Red Joker",
 		"suit": "special",
 		"value": 0,
-		"effect": true
+		"effect": true,
+		"description": "When played, choose a card from your play pile to copy the effect and value from"
 	},
 	"073": {
 		"name": "Double Back Card",
