@@ -13,6 +13,9 @@ func _ready():
 func enter_state():
 	game_controller.current_state = self.name
 	if is_current_state():
+		if game_controller.opponent_last_turn_result == "stay":
+			exit_state("stay")
+		
 		if opponent_AI.will_hit():
 			opponent.draw_top_card()
 			game_controller.opponent_last_turn_result = "hit"

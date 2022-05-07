@@ -10,6 +10,9 @@ func _ready():
 
 func enter_state():
 	game_controller.current_state = self.name
+	
+	if game_controller.player_last_turn_result == "stay":
+		exit_state("stay")
 
 func exit_state(action_taken):
 	emit_signal("state_exited", action_taken)

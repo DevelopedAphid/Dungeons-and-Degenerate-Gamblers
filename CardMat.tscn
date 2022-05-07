@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://GameController.gd" type="Script" id=1]
 [ext_resource path="res://DeckController.gd" type="Script" id=2]
@@ -16,15 +16,16 @@
 [ext_resource path="res://states/OpponentWaitForCardChoice.gd" type="Script" id=14]
 [ext_resource path="res://states/AfterRoundPhase.gd" type="Script" id=15]
 [ext_resource path="res://states/DiscardPhase.gd" type="Script" id=16]
-[ext_resource path="res://Card.tscn" type="PackedScene" id=17]
+[ext_resource path="res://HoverPanel.gd" type="Script" id=17]
 [ext_resource path="res://ScoreBar.tscn" type="PackedScene" id=18]
 [ext_resource path="res://assets/art/card_mat.png" type="Texture" id=19]
 [ext_resource path="res://assets/art/stand_button.png" type="Texture" id=20]
-[ext_resource path="res://HoverLabel.gd" type="Script" id=21]
+[ext_resource path="res://assets/art/hover_bubble.png" type="Texture" id=21]
 [ext_resource path="res://assets/art/hit_button.png" type="Texture" id=22]
 [ext_resource path="res://assets/art/battle_vignette.png" type="Texture" id=23]
 [ext_resource path="res://assets/art/characters/imp.png" type="Texture" id=24]
 [ext_resource path="res://BattleScene.gd" type="Script" id=25]
+[ext_resource path="res://DeckDisplay.tscn" type="PackedScene" id=26]
 
 [node name="GameController" type="Node"]
 script = ExtResource( 1 )
@@ -34,7 +35,7 @@ texture = ExtResource( 19 )
 centered = false
 
 [node name="BattleScene" type="Node2D" parent="."]
-position = Vector2( 90, 110 )
+position = Vector2( 110, 110 )
 script = ExtResource( 25 )
 
 [node name="BackgroundSprite" type="Sprite" parent="BattleScene"]
@@ -50,7 +51,7 @@ flip_h = true
 [node name="OpponentSprite" type="Sprite" parent="BattleScene"]
 texture = ExtResource( 24 )
 centered = false
-offset = Vector2( 257, 32 )
+offset = Vector2( 222, 32 )
 
 [node name="PlayerHealthLabel" type="Label" parent="BattleScene"]
 margin_left = 17.0
@@ -62,19 +63,13 @@ __meta__ = {
 }
 
 [node name="OpponentHealthLabel" type="Label" parent="BattleScene"]
-margin_left = 242.0
+margin_left = 208.0
 margin_top = 16.0
-margin_right = 282.0
+margin_right = 248.0
 margin_bottom = 30.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="DeckCard" parent="." instance=ExtResource( 17 )]
-position = Vector2( 32, 100 )
-
-[node name="DeckCard2" parent="." instance=ExtResource( 17 )]
-position = Vector2( 391, 100 )
 
 [node name="Opponent" type="Node2D" parent="."]
 script = ExtResource( 2 )
@@ -83,13 +78,16 @@ script = ExtResource( 2 )
 script = ExtResource( 3 )
 
 [node name="ScoreBar" parent="Opponent" instance=ExtResource( 18 )]
-position = Vector2( 452, 15 )
+position = Vector2( 442, 50 )
 
 [node name="PlayPilePosition" type="Position2D" parent="Opponent"]
-position = Vector2( 240, 10 )
+position = Vector2( 371, 10 )
+
+[node name="DeckDisplay" parent="Opponent" instance=ExtResource( 26 )]
+position = Vector2( 381, 100 )
 
 [node name="DiscardPilePosition" type="Position2D" parent="Opponent"]
-position = Vector2( 340, 200 )
+position = Vector2( 376, 200 )
 
 [node name="Player" type="Control" parent="."]
 anchor_right = 1.0
@@ -101,53 +99,132 @@ __meta__ = {
 }
 
 [node name="StayButton" type="TextureButton" parent="Player"]
-margin_left = 151.0
-margin_top = 196.0
-margin_right = 240.0
-margin_bottom = 253.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -44.5
+margin_top = 81.5
+margin_right = 44.5
+margin_bottom = 138.5
+mouse_filter = 1
 texture_normal = ExtResource( 20 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HitButton" type="TextureButton" parent="Player"]
-margin_left = 240.0
-margin_top = 196.0
-margin_right = 329.0
-margin_bottom = 253.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -44.5
+margin_top = 24.5
+margin_right = 44.5
+margin_bottom = 81.5
+mouse_filter = 1
 texture_normal = ExtResource( 22 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ScoreBar" parent="Player" instance=ExtResource( 18 )]
-position = Vector2( 10, 15 )
+position = Vector2( 19, 50 )
 
 [node name="ChoiceController" parent="Player" instance=ExtResource( 4 )]
 visible = false
-anchor_top = 0.5
+choice_y_position = 100
 
 [node name="PlayPilePosition" type="Position2D" parent="Player"]
-position = Vector2( 57, 10 )
+position = Vector2( 52, 10 )
+
+[node name="DeckDisplay" parent="Player" instance=ExtResource( 26 )]
+position = Vector2( 42, 100 )
 
 [node name="DiscardPilePosition" type="Position2D" parent="Player"]
-position = Vector2( 32, 200 )
+position = Vector2( 46, 200 )
 
 [node name="StateLabel" type="Label" parent="."]
-margin_left = 4.90402
-margin_top = 581.732
-margin_right = 44.904
-margin_bottom = 595.732
+visible = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HoverZ" type="Node2D" parent="."]
+[node name="HoverPanel" type="Node2D" parent="."]
+script = ExtResource( 17 )
 
-[node name="HoverLabel" type="Label" parent="HoverZ"]
-margin_right = 90.0
+[node name="BubbleParts" type="Node2D" parent="HoverPanel"]
+visible = false
+
+[node name="TopLeftBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
+texture = ExtResource( 21 )
+centered = false
+hframes = 9
+
+[node name="TopMiddleBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
+position = Vector2( 5, 0 )
+texture = ExtResource( 21 )
+centered = false
+hframes = 9
+frame = 1
+
+[node name="TopRightBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
+position = Vector2( 10, 0 )
+texture = ExtResource( 21 )
+centered = false
+hframes = 9
+frame = 2
+
+[node name="MiddleLeftBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
+position = Vector2( 0, 5 )
+texture = ExtResource( 21 )
+centered = false
+hframes = 9
+frame = 3
+
+[node name="MiddleRightBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
+position = Vector2( 10, 5 )
+texture = ExtResource( 21 )
+centered = false
+hframes = 9
+frame = 4
+
+[node name="BottomLeftBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
+position = Vector2( 0, 10 )
+texture = ExtResource( 21 )
+centered = false
+hframes = 9
+frame = 5
+
+[node name="BottomMiddleBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
+position = Vector2( 5, 10 )
+texture = ExtResource( 21 )
+centered = false
+hframes = 9
+frame = 6
+
+[node name="BottomRightBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
+position = Vector2( 10, 10 )
+texture = ExtResource( 21 )
+centered = false
+hframes = 9
+frame = 7
+
+[node name="MiddleMiddleBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
+position = Vector2( 5, 5 )
+texture = ExtResource( 21 )
+centered = false
+hframes = 9
+frame = 8
+
+[node name="HoverLabel" type="Label" parent="HoverPanel"]
+margin_right = 13.0
 margin_bottom = 30.0
-script = ExtResource( 21 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DescriptionLabel" type="Label" parent="HoverPanel"]
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -5,10 +5,14 @@ signal card_hover_started(card)
 signal card_hover_ended(card)
 
 export var card_id = "073" #default to card back
-var card_name
-var card_suit
-var card_value
-var card_sprite
+var card_name = ""
+var card_suit = ""
+var card_value = 0
+var card_sprite = ""
+var card_description = ""
+
+var score_before_played
+var is_focused
 
 func _ready():
 	set_card_id(card_id)
@@ -26,6 +30,8 @@ func set_card_id(id):
 	card_name = CardList.card_dictionary[card_id].name
 	card_suit = CardList.card_dictionary[card_id].suit
 	card_value = CardList.card_dictionary[card_id].value
+	if CardList.card_dictionary[card_id].has("description"):
+		card_description = CardList.card_dictionary[card_id].description
 	
 	set_card_art(card_id)
 
@@ -63,10 +69,12 @@ func has_special_effect() -> bool:
 	return CardList.card_dictionary[card_id].effect
 
 func sprite_clicked():
-	emit_signal("card_clicked", self)
+	if is_focused:
+		emit_signal("card_clicked")
 
 func highlight_card(to_highlight: bool):
 	$HighlightSprite.visible = to_highlight
+	is_focused = to_highlight
 
 func _on_HoverArea_mouse_entered():
 	emit_signal("card_hover_started", self)

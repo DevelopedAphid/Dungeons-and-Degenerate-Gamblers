@@ -19,8 +19,8 @@ func add_card_to_deck(card_id):
 	new_card.call_deferred("set_card_id", card_id)
 	deck.append(new_card)
 	
-	new_card.connect("card_hover_started", get_parent().get_node("HoverZ/HoverLabel"), "_on_Card_hover_started")
-	new_card.connect("card_hover_ended", get_parent().get_node("HoverZ/HoverLabel"), "_on_Card_hover_ended")
+	new_card.connect("card_hover_started", get_parent().get_node("HoverPanel"), "_on_Card_hover_started")
+	new_card.connect("card_hover_ended", get_parent().get_node("HoverPanel"), "_on_Card_hover_ended")
 
 func build_draw_pile():
 	#put deck list into draw pile
@@ -54,6 +54,8 @@ func draw_top_card():
 		#move top draw pile card to top of play pile
 		var top_card = draw_pile[0]
 		
+		top_card.score_before_played = score
+		
 		draw_pile.pop_front()
 		play_pile.append(top_card)
 		
@@ -77,6 +79,7 @@ func shuffle_discard_pile_into_draw_pile():
 		remove_child(card)
 	for cards in discard_pile.size():
 		discard_pile.pop_front()
+	shuffle_draw_pile()
 	update_UI()
 
 func discard_played_cards():
@@ -101,29 +104,33 @@ func update_UI():
 	
 	$ScoreBar.update_score(score)
 	
+	$DeckDisplay.change_deck_size(draw_pile.size())
+	
 	var play_pile_pos = $PlayPilePosition.position
 	var discard_pile_pos = $DiscardPilePosition.position
 	
 	var play_pile_card_spacing = 14
 	var discard_pile_card_spacing = 4
 	
+	if name == "Opponent":
+		play_pile_card_spacing = -14
+		discard_pile_card_spacing = -4
+	
 	var play_pile_count = 0
 	var discard_pile_count = 0
 	for card in play_pile:
-		play_pile_count += 1
 		card.position = play_pile_pos + Vector2(play_pile_card_spacing * play_pile_count, 0)
+		play_pile_count += 1
 	
 	for card in discard_pile:
-		discard_pile_count += 1
 		card.position = discard_pile_pos + Vector2((discard_pile_count - 1) * discard_pile_card_spacing, 0)
-	
-	#todo: show that draw pile is a pile (except when only one card left)
+		discard_pile_count += 1
 
 func _on_Card_choice_to_make(choice_array, card):
 	emit_signal("card_choice_to_make", choice_array, card)
 
 func play_card_effect(card, id):
-	if self.name == "Opponent": #TODO: means opponents unable to use special cards
+	if self.name == "Opponent": #currently this means opponents are unable to use special cards
 		return
 	
 	current_card_effect_id = id
@@ -137,6 +144,18 @@ func play_card_effect(card, id):
 	elif id == "070": #birthday card
 		card.set_card_value(card.get_card_value() + 1)
 		card.set_card_name(CardList.card_dictionary["070"].name + " (" + str(card.get_card_value()) + ")")
+		#add a candle each time card drawn
+		var card_value = card.get_card_value()
+		var candle = Sprite.new()
+		card.add_child(candle)
+		candle.texture = load("res://assets/art/candles.png")
+		candle.hframes = 5
+		candle.frame = round(rand_range(1,5)) #choose a random candle colour
+		var spacing = 2
+		if not card_value % 2 == 0: #odd
+			candle.position = Vector2(27 + spacing * card_value, 51)
+		else: 
+			candle.position = Vector2(27 - spacing * (card_value - 1), 51)
 	elif id == "071": #magic trick card
 		var choice_array = ["051", "020"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
