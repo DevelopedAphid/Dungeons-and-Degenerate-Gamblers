@@ -1,0 +1,83 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://HoverPanel.gd" type="Script" id=1]
+[ext_resource path="res://assets/art/hover_bubble.png" type="Texture" id=2]
+
+[node name="HoverPanel" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="BubbleParts" type="Node2D" parent="."]
+visible = false
+
+[node name="TopLeftBubble" type="Sprite" parent="BubbleParts"]
+texture = ExtResource( 2 )
+centered = false
+hframes = 9
+
+[node name="TopMiddleBubble" type="Sprite" parent="BubbleParts"]
+position = Vector2( 5, 0 )
+texture = ExtResource( 2 )
+centered = false
+hframes = 9
+frame = 1
+
+[node name="TopRightBubble" type="Sprite" parent="BubbleParts"]
+position = Vector2( 10, 0 )
+texture = ExtResource( 2 )
+centered = false
+hframes = 9
+frame = 2
+
+[node name="MiddleLeftBubble" type="Sprite" parent="BubbleParts"]
+position = Vector2( 0, 5 )
+texture = ExtResource( 2 )
+centered = false
+hframes = 9
+frame = 3
+
+[node name="MiddleRightBubble" type="Sprite" parent="BubbleParts"]
+position = Vector2( 10, 5 )
+texture = ExtResource( 2 )
+centered = false
+hframes = 9
+frame = 4
+
+[node name="BottomLeftBubble" type="Sprite" parent="BubbleParts"]
+position = Vector2( 0, 10 )
+texture = ExtResource( 2 )
+centered = false
+hframes = 9
+frame = 5
+
+[node name="BottomMiddleBubble" type="Sprite" parent="BubbleParts"]
+position = Vector2( 5, 10 )
+texture = ExtResource( 2 )
+centered = false
+hframes = 9
+frame = 6
+
+[node name="BottomRightBubble" type="Sprite" parent="BubbleParts"]
+position = Vector2( 10, 10 )
+texture = ExtResource( 2 )
+centered = false
+hframes = 9
+frame = 7
+
+[node name="MiddleMiddleBubble" type="Sprite" parent="BubbleParts"]
+position = Vector2( 5, 5 )
+texture = ExtResource( 2 )
+centered = false
+hframes = 9
+frame = 8
+
+[node name="HoverLabel" type="Label" parent="."]
+margin_right = 13.0
+margin_bottom = 30.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DescriptionLabel" type="Label" parent="."]
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -135,8 +135,17 @@ func play_card_effect(card, id):
 	
 	current_card_effect_id = id
 	
-	if id == "001" || id == "014" || id == "027" || id == "040" : #aces
+	if id == "001": #ace of spades
 		var choice_array = [id, "053"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "014": #ace of clubs
+		var choice_array = [id, "056"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "027": #ace of diamonds
+		var choice_array = [id, "059"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "040": #ace of hearts
+		var choice_array = [id, "062"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 	elif id == "069": #Joker
 		if discard_pile.size() > 0:

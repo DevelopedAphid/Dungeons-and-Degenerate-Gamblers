@@ -19,17 +19,20 @@ func find_and_focus_top_card():
 	var top_card
 	var top_index = 0
 	
-	for current_card in hovered_cards:
-		current_card.highlight_card(false)
-		if current_card.is_in_group("choices"):
-			current_card.set_z_index(2)
-		else: #choices don't have a score contribution to highlight
-			current_card.get_parent().get_node("ScoreBar").remove_highlights()
-			current_card.set_z_index(0)
-		var index = current_card.get_index()
-		if index > top_index:
-			top_card = current_card
-			top_index = index
+	if hovered_cards.size() > 1:
+		for current_card in hovered_cards:
+			current_card.highlight_card(false)
+			if current_card.is_in_group("choices"):
+				current_card.set_z_index(2)
+			else: #choices don't have a score contribution to highlight
+				current_card.get_parent().get_node("ScoreBar").remove_highlights()
+				current_card.set_z_index(0)
+			var index = current_card.get_index()
+			if index > top_index:
+				top_card = current_card
+				top_index = index
+	else:
+		top_card = hovered_cards[0]
 	
 	if top_card.is_in_group("choices"):
 		top_card.set_z_index(3)
