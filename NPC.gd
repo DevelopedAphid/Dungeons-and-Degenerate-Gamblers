@@ -1,6 +1,7 @@
 extends StaticBody2D
 
-export var deck_list = ["006", "006", "006", "006", "006", "006"]
+#export var deck_list = ["006", "006", "006", "006", "006", "006"]
+var deck_list = ["055", "055", "055", "055", "055"]
 
 func interact():
 	if PlayerSettings.chosen_suit != "":

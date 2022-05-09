@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://assets/art/floors/tavern/tavern.png" type="Texture" id=1]
 [ext_resource path="res://Player_Overworld.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://OverworldUI.gd" type="Script" id=6]
 [ext_resource path="res://assets/art/floors/furniture/table_small.png" type="Texture" id=7]
 [ext_resource path="res://StarterDeckTable.gd" type="Script" id=8]
+[ext_resource path="res://Tavern.gd" type="Script" id=9]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 5.5, 5.5 )
@@ -19,6 +20,7 @@ extents = Vector2( 5.5, 5.5 )
 extents = Vector2( 5.5, 3.5 )
 
 [node name="Tavern" type="Node2D"]
+script = ExtResource( 9 )
 
 [node name="FloorSprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
@@ -46,23 +48,37 @@ position = Vector2( 15, 0 )
 script = ExtResource( 6 )
 
 [node name="StartingSuitChoice" type="Node2D" parent="OverworldUI"]
-visible = false
 
-[node name="Card1" parent="OverworldUI/StartingSuitChoice" instance=ExtResource( 4 )]
+[node name="Card1" parent="OverworldUI/StartingSuitChoice" groups=["choices"] instance=ExtResource( 4 )]
 position = Vector2( 110, 90 )
 card_id = "001"
 
-[node name="Card2" parent="OverworldUI/StartingSuitChoice" instance=ExtResource( 4 )]
+[node name="Card2" parent="OverworldUI/StartingSuitChoice" groups=["choices"] instance=ExtResource( 4 )]
 position = Vector2( 175, 90 )
 card_id = "014"
 
-[node name="Card3" parent="OverworldUI/StartingSuitChoice" instance=ExtResource( 4 )]
+[node name="Card3" parent="OverworldUI/StartingSuitChoice" groups=["choices"] instance=ExtResource( 4 )]
 position = Vector2( 240, 90 )
 card_id = "027"
 
-[node name="Card4" parent="OverworldUI/StartingSuitChoice" instance=ExtResource( 4 )]
+[node name="Card4" parent="OverworldUI/StartingSuitChoice" groups=["choices"] instance=ExtResource( 4 )]
 position = Vector2( 305, 90 )
 card_id = "040"
+
+[node name="RewardCardChoice" type="Node2D" parent="OverworldUI"]
+visible = false
+
+[node name="Reward1" parent="OverworldUI/RewardCardChoice" groups=["choices"] instance=ExtResource( 4 )]
+position = Vector2( 142, 90 )
+card_id = "001"
+
+[node name="Reward2" parent="OverworldUI/RewardCardChoice" groups=["choices"] instance=ExtResource( 4 )]
+position = Vector2( 207, 90 )
+card_id = "001"
+
+[node name="Reward3" parent="OverworldUI/RewardCardChoice" groups=["choices"] instance=ExtResource( 4 )]
+position = Vector2( 272, 90 )
+card_id = "001"
 
 [node name="HoverPanel" parent="OverworldUI" instance=ExtResource( 5 )]
 
