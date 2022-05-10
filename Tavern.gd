@@ -6,3 +6,5 @@ func _ready():
 		for i in 3:
 			rewards.append(int(rand_range(1, CardList.card_dictionary.size())))
 		$OverworldUI.show_rewards(rewards)
+	
+	PlayerSettings.last_game_result = ""

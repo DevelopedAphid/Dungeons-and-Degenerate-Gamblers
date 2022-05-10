@@ -44,10 +44,18 @@ position = Vector2( -20, 59 )
 [node name="NPC" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( 15, 0 )
 
+[node name="NPC2" parent="YSort" instance=ExtResource( 3 )]
+position = Vector2( -48, 9 )
+npc_type = "wizard"
+deck_list = [ "057", "057", "013", "024", "028" ]
+health_points = 50
+flip_h = true
+
 [node name="OverworldUI" type="Node2D" parent="."]
 script = ExtResource( 6 )
 
 [node name="StartingSuitChoice" type="Node2D" parent="OverworldUI"]
+visible = false
 
 [node name="Card1" parent="OverworldUI/StartingSuitChoice" groups=["choices"] instance=ExtResource( 4 )]
 position = Vector2( 110, 90 )
