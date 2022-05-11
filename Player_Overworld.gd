@@ -4,8 +4,12 @@ var walk_speed = 50
 var direction_vector = Vector2(0, 0)
 var facing_left = true
 
+var player_sprite_left = preload("res://assets/art/characters/player1.png")
+var player_sprite_right = preload("res://assets/art/characters/player2.png")
+
 func _ready():
 	position = PlayerSettings.player_position
+	PlayerSettings.player_sprite = player_sprite_left
 
 func _physics_process(delta):
 	direction_vector = Vector2(0, 0)
@@ -23,11 +27,11 @@ func _physics_process(delta):
 	
 	if Input.get_action_strength("ui_left") > Input.get_action_strength("ui_right"):
 		facing_left = true
-		$Sprite.flip_h = false
+		$Sprite.texture = player_sprite_left
 		$InteractionArea.scale.x = 1
 	elif Input.get_action_strength("ui_right") > Input.get_action_strength("ui_left"):
 		facing_left = false
-		$Sprite.flip_h = true
+		$Sprite.texture = player_sprite_right
 		$InteractionArea.scale.x = -1
 	
 	if Input.is_action_just_pressed("ui_accept"):
