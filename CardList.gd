@@ -446,5 +446,17 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": false
+	},
+	"074": {
+		"name": "Rules Card",
+		"suit": "special",
+		"value": 0,
+		"effect": false #Todo
+	},
+	"075": {
+		"name": "Jack of All Trades",
+		"suit": "special",
+		"value": 10,
+		"effect": false #Todo
 	}
 }

@@ -11,7 +11,9 @@ var current_card_effect_id
 var Card = preload("res://Card.tscn")
 
 func _ready():
-	if name == "Opponent":
+	if name == "Player":
+		hitpoints = PlayerSettings.player_hitpoints
+	elif name == "Opponent":
 		hitpoints = PlayerSettings.opponent_health_points
 
 func add_card_to_deck(card_id):

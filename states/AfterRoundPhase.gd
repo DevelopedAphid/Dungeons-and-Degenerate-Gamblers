@@ -46,5 +46,6 @@ func compare_score_and_deal_damage():
 	
 	if opponent.hitpoints <= 0:
 		PlayerSettings.last_game_result = "won"
+		PlayerSettings.player_hitpoints = player.hitpoints
 # warning-ignore:return_value_discarded
 		get_tree().change_scene("res://Tavern.tscn")

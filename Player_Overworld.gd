@@ -4,6 +4,9 @@ var walk_speed = 50
 var direction_vector = Vector2(0, 0)
 var facing_left = true
 
+func _ready():
+	position = PlayerSettings.player_position
+
 func _physics_process(delta):
 	direction_vector = Vector2(0, 0)
 	if Input.get_action_strength("ui_up"):
@@ -16,6 +19,7 @@ func _physics_process(delta):
 		direction_vector.x = 1
 	
 	var _collision = move_and_collide(direction_vector * walk_speed * delta)
+	PlayerSettings.player_position = position
 	
 	if Input.get_action_strength("ui_left") > Input.get_action_strength("ui_right"):
 		facing_left = true
