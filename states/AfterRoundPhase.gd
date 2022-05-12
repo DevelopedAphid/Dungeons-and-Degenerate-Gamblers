@@ -38,14 +38,38 @@ func compare_score_and_deal_damage():
 	#todo: should be replaced by a "deal damage" method later in case we add damage multiplier effects or anything
 	var damage = player_score - opponent_score
 	if damage > 0: #player won, deal difference of scores as damage
-		opponent.hitpoints = opponent.hitpoints - damage
+		var spades = 0
+		var clubs = 0
+		var diamonds = 0
+		var hearts = 0
+		if player_score == 21:
+			for card in player.play_pile:
+				if card.card_suit == "spades":
+					spades += card.card_value
+				elif card.card_suit == "clubs":
+					clubs += card.card_value
+				elif card.card_suit == "diamonds":
+					diamonds += card.card_value
+				elif card.card_suit == "hearts":
+					hearts += card.card_value
+		opponent.bleedpoints += spades
+		opponent.hitpoints -= (damage + clubs) #clubs deal double damage on 21
+		print("add " + str(diamonds) + "cash to the players reward")
+		player.hitpoints += hearts #hearts heal the player on 21
 	if damage < 0: #opponent won, deal difference of scores as damage
-		player.hitpoints = player.hitpoints + damage
+		player.hitpoints += damage
+	
+	opponent.hitpoints -= opponent.bleedpoints
+	opponent.bleedpoints -= 1
 	
 	player.update_UI()
 	
-	if opponent.hitpoints <= 0:
+	if player.hitpoints <= 0:
+		PlayerSettings.last_game_result = "lost"
+		# warning-ignore:return_value_discarded
+		get_tree().change_scene("res://Tavern.tscn")
+	elif opponent.hitpoints <= 0:
 		PlayerSettings.last_game_result = "won"
 		PlayerSettings.player_hitpoints = player.hitpoints
-# warning-ignore:return_value_discarded
+		# warning-ignore:return_value_discarded
 		get_tree().change_scene("res://Tavern.tscn")

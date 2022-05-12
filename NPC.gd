@@ -1,8 +1,8 @@
 extends StaticBody2D
 
 export var npc_type = "imp"
-#export var deck_list = ["006", "006", "006", "006", "006", "006"]
-export var deck_list = ["055", "055", "055", "055", "055"]
+export var deck_list = ["006", "006", "006", "006", "006", "006"]
+#export var deck_list = ["055", "055", "055", "055", "055"]
 export var health_points = 100
 export var flip_h: bool
 

@@ -56,6 +56,12 @@ func set_card_name(name):
 func get_card_name() -> String:
 	return card_name
 
+func set_card_suit(suit):
+	card_suit = suit
+
+func get_card_suit() -> String:
+	return card_suit
+
 func set_card_art(id):
 	#set card art according to position on sprite sheet
 	var card_sprite_index = float(id) - 1
