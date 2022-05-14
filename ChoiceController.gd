@@ -3,7 +3,7 @@ extends Node2D
 var choices
 var origin
 
-export var choice_y_position = 150
+export var choice_y_position = 10
 
 onready var Card = preload("res://Card.tscn")
 
@@ -46,9 +46,6 @@ func _on_Player_card_choice_selected(choice):
 	get_parent().update_UI()
 	choices = null
 	
-	get_tree().call_group("choices", "queue_free")
-	
-#	for child in grid_controller.get_children():
-#		child.queue_free()
+	get_tree().call_group("choices", "queue_free")\
 	
 	self.visible = false

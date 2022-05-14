@@ -34,7 +34,7 @@ texture = ExtResource( 19 )
 centered = false
 
 [node name="BattleScene" type="Node2D" parent="."]
-position = Vector2( 110, 110 )
+position = Vector2( 110, 10 )
 script = ExtResource( 25 )
 
 [node name="BackgroundSprite" type="Sprite" parent="BattleScene"]
@@ -80,7 +80,7 @@ script = ExtResource( 3 )
 position = Vector2( 442, 50 )
 
 [node name="PlayPilePosition" type="Position2D" parent="Opponent"]
-position = Vector2( 371, 10 )
+position = Vector2( 314, 100 )
 
 [node name="DeckDisplay" parent="Opponent" instance=ExtResource( 26 )]
 position = Vector2( 381, 100 )
@@ -103,9 +103,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -44.5
-margin_top = 81.5
+margin_top = 85.5
 margin_right = 44.5
-margin_bottom = 138.5
+margin_bottom = 142.5
 mouse_filter = 1
 texture_normal = ExtResource( 20 )
 __meta__ = {
@@ -118,9 +118,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -44.5
-margin_top = 24.5
+margin_top = 30.5
 margin_right = 44.5
-margin_bottom = 81.5
+margin_bottom = 87.5
 mouse_filter = 1
 texture_normal = ExtResource( 22 )
 __meta__ = {
@@ -132,10 +132,9 @@ position = Vector2( 19, 50 )
 
 [node name="ChoiceController" parent="Player" instance=ExtResource( 4 )]
 visible = false
-choice_y_position = 100
 
 [node name="PlayPilePosition" type="Position2D" parent="Player"]
-position = Vector2( 52, 10 )
+position = Vector2( 109, 100 )
 
 [node name="DeckDisplay" parent="Player" instance=ExtResource( 26 )]
 position = Vector2( 42, 100 )

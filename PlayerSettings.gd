@@ -4,6 +4,7 @@ var chosen_suit = ""
 
 var player_deck = []
 var player_sprite
+var player_max_hitpoints = 100
 var player_hitpoints = 100
 
 var opponent_deck = []

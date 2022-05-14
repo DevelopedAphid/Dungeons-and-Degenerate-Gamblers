@@ -54,13 +54,16 @@ func compare_score_and_deal_damage():
 					hearts += card.card_value
 		opponent.bleedpoints += spades
 		opponent.hitpoints -= (damage + clubs) #clubs deal double damage on 21
-		print("add " + str(diamonds) + "cash to the players reward")
+		print("add " + str(diamonds) + " cash to the players reward")
 		player.hitpoints += hearts #hearts heal the player on 21
+		if player.hitpoints > player.max_hitpoints:
+			player.hitpoints = player.max_hitpoints
 	if damage < 0: #opponent won, deal difference of scores as damage
 		player.hitpoints += damage
 	
-	opponent.hitpoints -= opponent.bleedpoints
-	opponent.bleedpoints -= 1
+	if opponent.bleedpoints > 0:
+		opponent.hitpoints -= opponent.bleedpoints
+		opponent.bleedpoints -= 1
 	
 	player.update_UI()
 	

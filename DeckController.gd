@@ -6,6 +6,7 @@ var play_pile = []
 var discard_pile = []
 var score = 0
 var hitpoints = 100
+var max_hitpoints
 var bleedpoints = 0
 var current_card_effect_id
 
@@ -14,8 +15,10 @@ var Card = preload("res://Card.tscn")
 func _ready():
 	if name == "Player":
 		hitpoints = PlayerSettings.player_hitpoints
+		max_hitpoints = PlayerSettings.player_max_hitpoints
 	elif name == "Opponent":
 		hitpoints = PlayerSettings.opponent_health_points
+		max_hitpoints = hitpoints
 
 func add_card_to_deck(card_id):
 	#add a defined card to the deck
@@ -103,9 +106,9 @@ func update_UI():
 	#todo: make this way less ugly - use signals and call from game controller instead of deck controller
 	#or... make the battle sprites and health labels children of the player/opponent nodes so we can just call them as children like everything else
 	if name == "Player":
-		get_parent().get_node("BattleScene/PlayerHealthLabel").text = str(hitpoints)
+		get_parent().get_node("BattleScene/PlayerHealthLabel").text = str(hitpoints) + "/" + str(max_hitpoints)
 	if name == "Opponent":
-		get_parent().get_node("BattleScene/OpponentHealthLabel").text = str(hitpoints)
+		get_parent().get_node("BattleScene/OpponentHealthLabel").text = str(hitpoints) + "/" + str(max_hitpoints)
 	
 	$ScoreBar.update_score(score)
 	
