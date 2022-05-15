@@ -10,6 +10,7 @@ var card_suit = ""
 var card_value = 0
 var card_sprite = ""
 var card_description = ""
+var card_does_burn = false
 
 var score_before_played
 var is_focused
@@ -32,6 +33,8 @@ func set_card_id(id):
 	card_value = CardList.card_dictionary[card_id].value
 	if CardList.card_dictionary[card_id].has("description"):
 		card_description = CardList.card_dictionary[card_id].description
+	if CardList.card_dictionary[card_id].has("burns"):
+		card_does_burn = CardList.card_dictionary[card_id].burns
 	
 	set_card_art(card_id)
 

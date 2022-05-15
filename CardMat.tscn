@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://GameController.gd" type="Script" id=1]
 [ext_resource path="res://DeckController.gd" type="Script" id=2]
@@ -20,6 +20,7 @@
 [ext_resource path="res://ScoreBar.tscn" type="PackedScene" id=18]
 [ext_resource path="res://assets/art/card_mat.png" type="Texture" id=19]
 [ext_resource path="res://assets/art/stand_button.png" type="Texture" id=20]
+[ext_resource path="res://ChipCounter.tscn" type="PackedScene" id=21]
 [ext_resource path="res://assets/art/hit_button.png" type="Texture" id=22]
 [ext_resource path="res://assets/art/battle_vignette.png" type="Texture" id=23]
 [ext_resource path="res://assets/art/characters/imp.png" type="Texture" id=24]
@@ -126,6 +127,9 @@ texture_normal = ExtResource( 22 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ChipCounter" parent="Player" instance=ExtResource( 21 )]
+position = Vector2( 60, 18 )
 
 [node name="ScoreBar" parent="Player" instance=ExtResource( 18 )]
 position = Vector2( 19, 50 )

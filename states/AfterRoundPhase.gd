@@ -37,13 +37,23 @@ func compare_score_and_deal_damage():
 	
 	#todo: should be replaced by a "deal damage" method later in case we add damage multiplier effects or anything
 	var damage = player_score - opponent_score
-	if damage > 0: #player won, deal difference of scores as damage
-		var spades = 0
-		var clubs = 0
-		var diamonds = 0
-		var hearts = 0
-		if player_score == 21:
-			for card in player.play_pile:
+	var winner
+	var loser
+	if damage > 0:
+		winner = player
+		loser = opponent
+	elif damage < 0:
+		winner = opponent
+		loser = player
+		damage = abs(damage)
+
+	var spades = 0
+	var clubs = 0
+	var diamonds = 0
+	var hearts = 0
+	if damage > 0: #if there is damage to apply then apply it
+		if winner.score == 21:
+			for card in winner.play_pile:
 				if card.card_suit == "spades":
 					spades += card.card_value
 				elif card.card_suit == "clubs":
@@ -52,15 +62,23 @@ func compare_score_and_deal_damage():
 					diamonds += card.card_value
 				elif card.card_suit == "hearts":
 					hearts += card.card_value
-		opponent.bleedpoints += spades
-		opponent.hitpoints -= (damage + clubs) #clubs deal double damage on 21
-		print("add " + str(diamonds) + " cash to the players reward")
-		player.hitpoints += hearts #hearts heal the player on 21
-		if player.hitpoints > player.max_hitpoints:
-			player.hitpoints = player.max_hitpoints
-	if damage < 0: #opponent won, deal difference of scores as damage
-		player.hitpoints += damage
+				elif card.card_suit == "all_suits_at_once": #Jack of All Trades
+					spades += 10
+					clubs += 10
+					diamonds += 10
+					hearts += 10
+		loser.bleedpoints += spades
+		loser.hitpoints -= (damage + clubs) #clubs deal double damage on 21
+		if winner.name == "Player":
+			winner.chips += diamonds
+		winner.hitpoints += hearts #hearts heal the player on 21
+		if winner.hitpoints > winner.max_hitpoints:
+			winner.hitpoints = winner.max_hitpoints
 	
+	#apply and then remove bleeds
+	if player.bleedpoints > 0:
+		player.hitpoints -= player.bleedpoints
+		player.bleedpoints -= 1
 	if opponent.bleedpoints > 0:
 		opponent.hitpoints -= opponent.bleedpoints
 		opponent.bleedpoints -= 1

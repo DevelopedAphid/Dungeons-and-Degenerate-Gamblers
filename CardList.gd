@@ -445,18 +445,29 @@ var card_dictionary = {
 		"name": "Double Back Card",
 		"suit": "special",
 		"value": 0,
-		"effect": false
+		"effect": false,
+		"description": ""
 	},
 	"074": {
 		"name": "Rules Card",
 		"suit": "special",
 		"value": 0,
-		"effect": false #Todo
+		"effect": false, #Todo
+		"description": ""
 	},
 	"075": {
 		"name": "Jack of All Trades",
-		"suit": "special",
+		"suit": "all_suits_at_once",
 		"value": 10,
-		"effect": false #Todo
+		"effect": false,
+		"description": "Has the blackjack effect of all four suits at once"
+	},
+		"076": {
+		"name": "Get Well Soon Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"burns": true,
+		"description": "Heals both players by 10, then burns"
 	}
 }

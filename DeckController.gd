@@ -4,11 +4,13 @@ var deck = []
 var draw_pile = []
 var play_pile = []
 var discard_pile = []
+var burn_pile = []
 var score = 0
 var hitpoints = 100
 var max_hitpoints
 var bleedpoints = 0
 var current_card_effect_id
+var chips = 0
 
 var Card = preload("res://Card.tscn")
 
@@ -79,8 +81,8 @@ func draw_top_card():
 
 func shuffle_discard_pile_into_draw_pile():
 	#put everything in discard pile into draw pile
-	for cards in discard_pile.size():
-		draw_pile.append(discard_pile[cards])
+	for card in discard_pile.size():
+		draw_pile.append(discard_pile[card])
 	for card in discard_pile:
 		card.set_card_art(card.get_card_id()) #reset card art to default
 		card.set_card_suit(CardList.card_dictionary[card.get_card_id()].suit)
@@ -91,8 +93,11 @@ func shuffle_discard_pile_into_draw_pile():
 	update_UI()
 
 func discard_played_cards():
-	for cards in play_pile.size():
-		discard_pile.append(play_pile[cards])
+	for card in play_pile:
+		if not card.card_does_burn:
+			discard_pile.append(card)
+		elif card.card_does_burn:
+			remove_child(card)
 	for cards in play_pile.size():
 		play_pile.pop_front()
 	score = 0
@@ -111,6 +116,9 @@ func update_UI():
 		get_parent().get_node("BattleScene/OpponentHealthLabel").text = str(hitpoints) + "/" + str(max_hitpoints)
 	
 	$ScoreBar.update_score(score)
+	
+	if name == "Player":
+		get_node("ChipCounter").change_chip_number(chips)
 	
 	$DeckDisplay.change_deck_size(draw_pile.size())
 	
