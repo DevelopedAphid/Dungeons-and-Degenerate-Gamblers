@@ -107,6 +107,12 @@ func discard_played_cards():
 #	#add a defined card to the draw pile at a defined position
 #	pass
 
+func heal(heal_amount: int):
+	if hitpoints + heal_amount > max_hitpoints:
+		hitpoints = max_hitpoints
+	else: 
+		hitpoints += heal_amount
+
 func update_UI():
 	#todo: make this way less ugly - use signals and call from game controller instead of deck controller
 	#or... make the battle sprites and health labels children of the player/opponent nodes so we can just call them as children like everything else
@@ -187,6 +193,9 @@ func play_card_effect(card, id):
 	elif id == "072": #Red Joker
 		if draw_pile.size() > 0:
 			get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
+	elif id == "076": #Get Well Soon card
+		get_parent().get_node("Player").heal(10)
+		get_parent().get_node("Opponent").heal(10)
 	
 	update_UI()
 

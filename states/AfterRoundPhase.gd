@@ -71,9 +71,7 @@ func compare_score_and_deal_damage():
 		loser.hitpoints -= (damage + clubs) #clubs deal double damage on 21
 		if winner.name == "Player":
 			winner.chips += diamonds
-		winner.hitpoints += hearts #hearts heal the player on 21
-		if winner.hitpoints > winner.max_hitpoints:
-			winner.hitpoints = winner.max_hitpoints
+		winner.heal(hearts) #hearts heal the player on 21
 	
 	#apply and then remove bleeds
 	if player.bleedpoints > 0:
