@@ -37,9 +37,58 @@ func compare_score_and_deal_damage():
 	
 	#todo: should be replaced by a "deal damage" method later in case we add damage multiplier effects or anything
 	var damage = player_score - opponent_score
-	if damage > 0: #player won, deal difference of scores as damage
-		opponent.hitpoints = opponent.hitpoints - damage
-	if damage < 0: #opponent won, deal difference of scores as damage
-		player.hitpoints = player.hitpoints + damage
+	var winner
+	var loser
+	if damage > 0:
+		winner = player
+		loser = opponent
+	elif damage < 0:
+		winner = opponent
+		loser = player
+		damage = abs(damage)
+
+	var spades = 0
+	var clubs = 0
+	var diamonds = 0
+	var hearts = 0
+	if damage > 0: #if there is damage to apply then apply it
+		if winner.score == 21:
+			for card in winner.play_pile:
+				if card.card_suit == "spades":
+					spades += card.card_value
+				elif card.card_suit == "clubs":
+					clubs += card.card_value
+				elif card.card_suit == "diamonds":
+					diamonds += card.card_value
+				elif card.card_suit == "hearts":
+					hearts += card.card_value
+				elif card.card_suit == "all_suits_at_once": #Jack of All Trades
+					spades += 10
+					clubs += 10
+					diamonds += 10
+					hearts += 10
+		loser.bleedpoints += spades
+		loser.hitpoints -= (damage + clubs) #clubs deal double damage on 21
+		if winner.name == "Player":
+			winner.chips += diamonds
+		winner.heal(hearts) #hearts heal the player on 21
+	
+	#apply and then remove bleeds
+	if player.bleedpoints > 0:
+		player.hitpoints -= player.bleedpoints
+		player.bleedpoints -= 1
+	if opponent.bleedpoints > 0:
+		opponent.hitpoints -= opponent.bleedpoints
+		opponent.bleedpoints -= 1
 	
 	player.update_UI()
+	
+	if player.hitpoints <= 0:
+		PlayerSettings.last_game_result = "lost"
+		# warning-ignore:return_value_discarded
+		get_tree().change_scene("res://Tavern.tscn")
+	elif opponent.hitpoints <= 0:
+		PlayerSettings.last_game_result = "won"
+		PlayerSettings.player_hitpoints = player.hitpoints
+		# warning-ignore:return_value_discarded
+		get_tree().change_scene("res://Tavern.tscn")

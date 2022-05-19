@@ -16,11 +16,11 @@
 [ext_resource path="res://states/OpponentWaitForCardChoice.gd" type="Script" id=14]
 [ext_resource path="res://states/AfterRoundPhase.gd" type="Script" id=15]
 [ext_resource path="res://states/DiscardPhase.gd" type="Script" id=16]
-[ext_resource path="res://HoverPanel.gd" type="Script" id=17]
+[ext_resource path="res://HoverPanel.tscn" type="PackedScene" id=17]
 [ext_resource path="res://ScoreBar.tscn" type="PackedScene" id=18]
 [ext_resource path="res://assets/art/card_mat.png" type="Texture" id=19]
 [ext_resource path="res://assets/art/stand_button.png" type="Texture" id=20]
-[ext_resource path="res://assets/art/hover_bubble.png" type="Texture" id=21]
+[ext_resource path="res://ChipCounter.tscn" type="PackedScene" id=21]
 [ext_resource path="res://assets/art/hit_button.png" type="Texture" id=22]
 [ext_resource path="res://assets/art/battle_vignette.png" type="Texture" id=23]
 [ext_resource path="res://assets/art/characters/imp.png" type="Texture" id=24]
@@ -35,7 +35,7 @@ texture = ExtResource( 19 )
 centered = false
 
 [node name="BattleScene" type="Node2D" parent="."]
-position = Vector2( 110, 110 )
+position = Vector2( 110, 10 )
 script = ExtResource( 25 )
 
 [node name="BackgroundSprite" type="Sprite" parent="BattleScene"]
@@ -45,13 +45,13 @@ centered = false
 [node name="PlayerSprite" type="Sprite" parent="BattleScene"]
 texture = ExtResource( 24 )
 centered = false
-offset = Vector2( 32, 32 )
+offset = Vector2( 32, 24 )
 flip_h = true
 
 [node name="OpponentSprite" type="Sprite" parent="BattleScene"]
 texture = ExtResource( 24 )
 centered = false
-offset = Vector2( 222, 32 )
+offset = Vector2( 222, 24 )
 
 [node name="PlayerHealthLabel" type="Label" parent="BattleScene"]
 margin_left = 17.0
@@ -81,7 +81,7 @@ script = ExtResource( 3 )
 position = Vector2( 442, 50 )
 
 [node name="PlayPilePosition" type="Position2D" parent="Opponent"]
-position = Vector2( 371, 10 )
+position = Vector2( 314, 100 )
 
 [node name="DeckDisplay" parent="Opponent" instance=ExtResource( 26 )]
 position = Vector2( 381, 100 )
@@ -104,9 +104,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -44.5
-margin_top = 81.5
+margin_top = 85.5
 margin_right = 44.5
-margin_bottom = 138.5
+margin_bottom = 142.5
 mouse_filter = 1
 texture_normal = ExtResource( 20 )
 __meta__ = {
@@ -119,24 +119,26 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -44.5
-margin_top = 24.5
+margin_top = 30.5
 margin_right = 44.5
-margin_bottom = 81.5
+margin_bottom = 87.5
 mouse_filter = 1
 texture_normal = ExtResource( 22 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ChipCounter" parent="Player" instance=ExtResource( 21 )]
+position = Vector2( 60, 18 )
+
 [node name="ScoreBar" parent="Player" instance=ExtResource( 18 )]
 position = Vector2( 19, 50 )
 
 [node name="ChoiceController" parent="Player" instance=ExtResource( 4 )]
 visible = false
-choice_y_position = 100
 
 [node name="PlayPilePosition" type="Position2D" parent="Player"]
-position = Vector2( 52, 10 )
+position = Vector2( 109, 100 )
 
 [node name="DeckDisplay" parent="Player" instance=ExtResource( 26 )]
 position = Vector2( 42, 100 )
@@ -150,84 +152,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HoverPanel" type="Node2D" parent="."]
-script = ExtResource( 17 )
-
-[node name="BubbleParts" type="Node2D" parent="HoverPanel"]
-visible = false
-
-[node name="TopLeftBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
-texture = ExtResource( 21 )
-centered = false
-hframes = 9
-
-[node name="TopMiddleBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
-position = Vector2( 5, 0 )
-texture = ExtResource( 21 )
-centered = false
-hframes = 9
-frame = 1
-
-[node name="TopRightBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
-position = Vector2( 10, 0 )
-texture = ExtResource( 21 )
-centered = false
-hframes = 9
-frame = 2
-
-[node name="MiddleLeftBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
-position = Vector2( 0, 5 )
-texture = ExtResource( 21 )
-centered = false
-hframes = 9
-frame = 3
-
-[node name="MiddleRightBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
-position = Vector2( 10, 5 )
-texture = ExtResource( 21 )
-centered = false
-hframes = 9
-frame = 4
-
-[node name="BottomLeftBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
-position = Vector2( 0, 10 )
-texture = ExtResource( 21 )
-centered = false
-hframes = 9
-frame = 5
-
-[node name="BottomMiddleBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
-position = Vector2( 5, 10 )
-texture = ExtResource( 21 )
-centered = false
-hframes = 9
-frame = 6
-
-[node name="BottomRightBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
-position = Vector2( 10, 10 )
-texture = ExtResource( 21 )
-centered = false
-hframes = 9
-frame = 7
-
-[node name="MiddleMiddleBubble" type="Sprite" parent="HoverPanel/BubbleParts"]
-position = Vector2( 5, 5 )
-texture = ExtResource( 21 )
-centered = false
-hframes = 9
-frame = 8
-
-[node name="HoverLabel" type="Label" parent="HoverPanel"]
-margin_right = 13.0
-margin_bottom = 30.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="DescriptionLabel" type="Label" parent="HoverPanel"]
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="HoverPanel" parent="." instance=ExtResource( 17 )]
 
 [node name="PlayerPreGameChoice" type="Node" parent="."]
 script = ExtResource( 5 )

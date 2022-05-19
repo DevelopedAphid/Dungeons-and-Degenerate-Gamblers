@@ -65,19 +65,19 @@ var card_dictionary = {
 	"011": {
 		"name": "Jack of Spades",
 		"suit": "spades",
-		"value": "J",
+		"value": 10,
 		"effect": false
 	},
 	"012": {
 		"name": "Queen of Spades",
 		"suit": "spades",
-		"value": "Q",
+		"value": 10,
 		"effect": false
 	},
 	"013": {
 		"name": "King of Spades",
 		"suit": "spades",
-		"value": "K",
+		"value": 10,
 		"effect": false
 	},
 	"014": {
@@ -144,19 +144,19 @@ var card_dictionary = {
 	"024": {
 		"name": "Jack of Clubs",
 		"suit": "clubs",
-		"value": "J",
+		"value": 10,
 		"effect": false
 	},
 	"025": {
 		"name": "Queen of Clubs",
 		"suit": "clubs",
-		"value": "Q",
+		"value": 10,
 		"effect": false
 	},
 	"026": {
 		"name": "King of Clubs",
 		"suit": "clubs",
-		"value": "K",
+		"value": 10,
 		"effect": false
 	},
 	"027": {
@@ -223,19 +223,19 @@ var card_dictionary = {
 	"037": {
 		"name": "Jack of Diamonds",
 		"suit": "diamonds",
-		"value": "J",
+		"value": 10,
 		"effect": false
 	},
 	"038": {
 		"name": "Queen of Diamonds",
 		"suit": "diamonds",
-		"value": "Q",
+		"value": 10,
 		"effect": false
 	},
 	"039": {
 		"name": "King of Diamonds",
 		"suit": "diamonds",
-		"value": "K",
+		"value": 10,
 		"effect": false
 	},
 	"040": {
@@ -302,19 +302,19 @@ var card_dictionary = {
 	"050": {
 		"name": "Jack of Hearts",
 		"suit": "hearts",
-		"value": "J",
+		"value": 10,
 		"effect": false
 	},
 	"051": {
 		"name": "Queen of Hearts",
 		"suit": "hearts",
-		"value": "Q",
+		"value": 10,
 		"effect": false
 	},
 	"052": {
 		"name": "King of Hearts",
 		"suit": "hearts",
-		"value": "K",
+		"value": 10,
 		"effect": false
 	},
 	"053": {
@@ -445,6 +445,45 @@ var card_dictionary = {
 		"name": "Double Back Card",
 		"suit": "special",
 		"value": 0,
-		"effect": false
+		"effect": false,
+		"description": ""
+	},
+	"074": {
+		"name": "Rules Card",
+		"suit": "special",
+		"value": 0,
+		"effect": false, #Todo
+		"description": ""
+	},
+	"075": {
+		"name": "Jack of All Trades",
+		"suit": "all_suits_at_once",
+		"value": 10,
+		"effect": false,
+		"description": "Has the blackjack effect of all four suits at once"
+	},
+		"076": {
+		"name": "Get Well Soon Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"burns": true,
+		"description": "Heals both players by 10, then burns"
+	},
+		"077": {
+		"name": "+2 Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"burns": false,
+		"description": "Your opponent immediately hits twice"
+	},
+		"078": {
+		"name": "Reverse Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"burns": false,
+		"description": "Swap currently played cards with your opponent"
 	}
 }
