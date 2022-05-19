@@ -11,6 +11,7 @@ var max_hitpoints
 var bleedpoints = 0
 var current_card_effect_id
 var chips = 0
+var card_movement_tween_speed = 0.25
 
 var Card = preload("res://Card.tscn")
 
@@ -35,6 +36,7 @@ func build_draw_pile():
 	#put deck list into draw pile
 	for cards in deck.size():
 		draw_pile.append(deck[cards])
+		deck[cards].position = get_node("DeckDisplay").position
 	
 	shuffle_draw_pile()
 	
@@ -138,11 +140,13 @@ func update_UI():
 	var play_pile_count = 0
 	var discard_pile_count = 0
 	for card in play_pile:
-		card.position = play_pile_pos + Vector2(play_pile_card_spacing * play_pile_count, 0)
+		card.get_node("PositionTween").interpolate_property(card, "position", card.position, play_pile_pos + Vector2(play_pile_card_spacing * play_pile_count, 0), card_movement_tween_speed, Tween.TRANS_BACK, Tween.EASE_IN_OUT)
+		card.get_node("PositionTween").start()
 		play_pile_count += 1
 	
 	for card in discard_pile:
-		card.position = discard_pile_pos + Vector2((discard_pile_count - 1) * discard_pile_card_spacing, 0)
+		card.get_node("PositionTween").interpolate_property(card, "position", card.position, discard_pile_pos + Vector2((discard_pile_count - 1) * discard_pile_card_spacing, 0), card_movement_tween_speed, Tween.TRANS_BACK, Tween.EASE_IN_OUT)
+		card.get_node("PositionTween").start()
 		discard_pile_count += 1
 
 func _on_Card_choice_to_make(choice_array, card):
