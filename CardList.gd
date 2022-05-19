@@ -469,5 +469,21 @@ var card_dictionary = {
 		"effect": true,
 		"burns": true,
 		"description": "Heals both players by 10, then burns"
+	},
+		"077": {
+		"name": "+2 Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"burns": false,
+		"description": "Your opponent immediately hits twice"
+	},
+		"078": {
+		"name": "Reverse Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"burns": false,
+		"description": "Swap currently played cards with your opponent"
 	}
 }

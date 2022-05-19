@@ -57,25 +57,22 @@ func draw_top_card():
 	if draw_pile.size() == 0:
 		shuffle_discard_pile_into_draw_pile()
 	
-	if score > 20:
-		pass
-	else:
-		#move top draw pile card to top of play pile
-		var top_card = draw_pile[0]
-		
-		top_card.score_before_played = score
-		
-		draw_pile.pop_front()
-		play_pile.append(top_card)
-		
-		#if first time drawn then add it as a child so we can display it
-		if top_card.get_parent() == null:
-			add_child(top_card)
-		
-		update_UI()
-		
-		if top_card.has_special_effect():
-			play_card_effect(top_card, top_card.get_card_id())
+	#move top draw pile card to top of play pile
+	var top_card = draw_pile[0]
+	
+	top_card.score_before_played = score
+	
+	draw_pile.pop_front()
+	play_pile.append(top_card)
+	
+	#if first time drawn then add it as a child so we can display it
+	if top_card.get_parent() == null:
+		add_child(top_card)
+	
+	update_UI()
+	
+	if top_card.has_special_effect():
+		play_card_effect(top_card, top_card.get_card_id())
 	
 	update_UI()
 
@@ -196,6 +193,26 @@ func play_card_effect(card, id):
 	elif id == "076": #Get Well Soon card
 		get_parent().get_node("Player").heal(10)
 		get_parent().get_node("Opponent").heal(10)
+	elif id == "077": #+2 Card
+		get_parent().get_node("Opponent").draw_top_card()
+		get_parent().get_node("Opponent").draw_top_card()
+	elif id == "078": #Reverse Card
+		#temporary play pile references
+		var player_play_pile = play_pile
+		var opponent_play_pile = get_parent().get_node("Opponent").play_pile
+		#remove children from parent
+		for card in play_pile:
+			remove_child(card)
+		for card in get_parent().get_node("Opponent").play_pile:
+			get_parent().get_node("Opponent").remove_child(card)
+		#swap the piles
+		play_pile = opponent_play_pile
+		get_parent().get_node("Opponent").play_pile = player_play_pile
+		#have to reparent to make sure children behaviour works as normal
+		for card in play_pile:
+			add_child(card)
+		for card in get_parent().get_node("Opponent").play_pile:
+			get_parent().get_node("Opponent").add_child(card)
 	
 	update_UI()
 
