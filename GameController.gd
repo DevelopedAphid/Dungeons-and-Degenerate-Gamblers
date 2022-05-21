@@ -37,6 +37,11 @@ func transition_to(target_state: String, _data: Dictionary):
 	if not has_node(target_state):
 		print("target_state: '" + target_state + "' does not exist")
 	
+	if player.UI_currently_updating:
+		yield(player, "UI_update_completed")
+	if opponent.UI_currently_updating:
+		yield(opponent, "UI_update_completed")
+	
 	current_state = target_state
 	state_label.text = current_state
 	get_node(target_state).enter_state()

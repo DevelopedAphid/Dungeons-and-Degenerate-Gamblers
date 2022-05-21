@@ -1,5 +1,9 @@
 extends Node
 
+signal UI_update_completed
+
+var UI_currently_updating = false
+
 var deck = []
 var draw_pile = []
 var play_pile = []
@@ -11,7 +15,6 @@ var max_hitpoints
 var bleedpoints = 0
 var current_card_effect_id
 var chips = 0
-var card_movement_tween_speed = 0.25
 
 #screen positions and spacing
 onready var play_pile_pos = $PlayPilePosition.position
@@ -37,6 +40,7 @@ func add_card_to_deck(card_id):
 	
 	new_card.connect("card_hover_started", get_parent().get_node("HoverPanel"), "_on_Card_hover_started")
 	new_card.connect("card_hover_ended", get_parent().get_node("HoverPanel"), "_on_Card_hover_ended")
+	new_card.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
 
 func build_draw_pile():
 	#put deck list into draw pile
@@ -79,6 +83,8 @@ func draw_top_card():
 	
 	update_UI()
 	
+	yield(self, "UI_update_completed")
+	
 	if top_card.has_special_effect():
 		play_card_effect(top_card, top_card.get_card_id())
 	
@@ -99,10 +105,10 @@ func shuffle_discard_pile_into_draw_pile():
 
 func discard_played_cards():
 	for card in play_pile:
-		if not card.card_does_burn:
+		if card.card_does_burn:
+			remove_child(card) #do not discard
+		else: #card does not burn, so should be discarded
 			discard_pile.append(card)
-		elif card.card_does_burn:
-			remove_child(card)
 	for cards in play_pile.size():
 		play_pile.pop_front()
 	score = 0
@@ -119,6 +125,7 @@ func heal(heal_amount: int):
 		hitpoints += heal_amount
 
 func update_UI():
+	UI_currently_updating = true
 	#todo: make this way less ugly - use signals and call from game controller instead of deck controller
 	#or... make the battle sprites and health labels children of the player/opponent nodes so we can just call them as children like everything else
 	if name == "Player":
@@ -146,6 +153,20 @@ func update_UI():
 	for card in discard_pile:
 		card.get_node("MovementHandler").move_card_to(discard_pile_pos + Vector2((discard_pile_count - 1) * discard_pile_card_spacing, 0))
 		discard_pile_count += 1
+	
+	if play_pile.size() == 0 and discard_pile.size() == 0:
+		UI_currently_updating = false
+
+func on_card_movement_completed():
+	UI_currently_updating = false
+	for card in play_pile:
+		if card.get_node("MovementHandler").is_moving:
+			UI_currently_updating = true
+	for card in discard_pile:
+		if card.get_node("MovementHandler").is_moving:
+			UI_currently_updating = true
+	if UI_currently_updating == false:
+		emit_signal("UI_update_completed")
 
 func _on_Card_choice_to_make(choice_array, card):
 	emit_signal("card_choice_to_make", choice_array, card)
