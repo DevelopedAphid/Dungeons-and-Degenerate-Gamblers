@@ -17,8 +17,8 @@ func enter_state():
 	if game_controller.player_last_turn_result == "stay" && game_controller.opponent_last_turn_result == "stay":
 		play_should_continue = false
 		compare_score_and_deal_damage()
-		game_controller.player_last_turn_result = "hit"
-		game_controller.opponent_last_turn_result = "hit"
+		game_controller.player_last_turn_result = ""
+		game_controller.opponent_last_turn_result = ""
 	else: 
 		play_should_continue = true
 	
@@ -52,8 +52,8 @@ func compare_score_and_deal_damage():
 	var diamonds = 0
 	var hearts = 0
 	if damage > 0: #if there is damage to apply then apply it
-		if winner.score == 21:
-			for card in winner.play_pile:
+		if winner.score == 21: #blackjacks trigger special effects
+			for card in winner.play_pile: #find which effects to trigger based on suits involved in the blackjack
 				if card.card_suit == "spades":
 					spades += card.card_value
 				elif card.card_suit == "clubs":
@@ -62,7 +62,7 @@ func compare_score_and_deal_damage():
 					diamonds += card.card_value
 				elif card.card_suit == "hearts":
 					hearts += card.card_value
-				elif card.card_suit == "all_suits_at_once": #Jack of All Trades
+				elif card.card_suit == "all_suits_at_once": #Jack of All Trades triggers the effect of all 4 suits
 					spades += 10
 					clubs += 10
 					diamonds += 10

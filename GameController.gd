@@ -8,7 +8,7 @@ var player_last_turn_result
 var opponent_last_turn_result
 var state_label
 
-var current_state
+var current_state = ""
 
 func _ready():
 	player = get_node("Player")

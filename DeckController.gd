@@ -13,6 +13,12 @@ var current_card_effect_id
 var chips = 0
 var card_movement_tween_speed = 0.25
 
+#screen positions and spacing
+onready var play_pile_pos = $PlayPilePosition.position
+onready var discard_pile_pos = $DiscardPilePosition.position
+var play_pile_card_spacing = 14
+var discard_pile_card_spacing = 4
+
 var Card = preload("res://Card.tscn")
 
 func _ready():
@@ -127,12 +133,6 @@ func update_UI():
 	
 	$DeckDisplay.change_deck_size(draw_pile.size())
 	
-	var play_pile_pos = $PlayPilePosition.position
-	var discard_pile_pos = $DiscardPilePosition.position
-	
-	var play_pile_card_spacing = 14
-	var discard_pile_card_spacing = 4
-	
 	if name == "Opponent":
 		play_pile_card_spacing = -14
 		discard_pile_card_spacing = -4
@@ -140,13 +140,11 @@ func update_UI():
 	var play_pile_count = 0
 	var discard_pile_count = 0
 	for card in play_pile:
-		card.get_node("PositionTween").interpolate_property(card, "position", card.position, play_pile_pos + Vector2(play_pile_card_spacing * play_pile_count, 0), card_movement_tween_speed, Tween.TRANS_BACK, Tween.EASE_IN_OUT)
-		card.get_node("PositionTween").start()
+		card.get_node("MovementHandler").move_card_to(play_pile_pos + Vector2(play_pile_card_spacing * play_pile_count, 0))
 		play_pile_count += 1
 	
 	for card in discard_pile:
-		card.get_node("PositionTween").interpolate_property(card, "position", card.position, discard_pile_pos + Vector2((discard_pile_count - 1) * discard_pile_card_spacing, 0), card_movement_tween_speed, Tween.TRANS_BACK, Tween.EASE_IN_OUT)
-		card.get_node("PositionTween").start()
+		card.get_node("MovementHandler").move_card_to(discard_pile_pos + Vector2((discard_pile_count - 1) * discard_pile_card_spacing, 0))
 		discard_pile_count += 1
 
 func _on_Card_choice_to_make(choice_array, card):
