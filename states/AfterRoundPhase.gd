@@ -81,7 +81,10 @@ func compare_score_and_deal_damage():
 		opponent.hitpoints -= opponent.bleedpoints
 		opponent.bleedpoints -= 1
 	
-	player.update_UI()
+	#update the relevant UI elements
+	get_parent().get_node("BattleScene/PlayerHealthLabel").text = str(player.hitpoints) + "/" + str(player.max_hitpoints)
+	get_parent().get_node("BattleScene/OpponentHealthLabel").text = str(opponent.hitpoints) + "/" + str(opponent.max_hitpoints)
+	player.get_node("ChipCounter").change_chip_number(player.chips)
 	
 	if player.hitpoints <= 0:
 		PlayerSettings.last_game_result = "lost"

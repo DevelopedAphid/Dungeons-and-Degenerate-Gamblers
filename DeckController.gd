@@ -2,8 +2,6 @@ extends Node
 
 signal UI_update_completed
 
-var UI_currently_updating = false
-
 var deck = []
 var draw_pile = []
 var play_pile = []
@@ -21,6 +19,8 @@ onready var play_pile_pos = $PlayPilePosition.position
 onready var discard_pile_pos = $DiscardPilePosition.position
 var play_pile_card_spacing = 14
 var discard_pile_card_spacing = 4
+
+var cards_currently_moving = []
 
 var Card = preload("res://Card.tscn")
 
@@ -46,11 +46,9 @@ func build_draw_pile():
 	#put deck list into draw pile
 	for cards in deck.size():
 		draw_pile.append(deck[cards])
-		deck[cards].position = get_node("DeckDisplay").position
+		deck[cards].position = $DeckDisplay.position
 	
 	shuffle_draw_pile()
-	
-	update_UI()
 
 func shuffle_draw_pile():
 	#randomise draw contents
@@ -63,56 +61,62 @@ func shuffle_draw_pile():
 		draw_pile[i] = temp
 
 func draw_top_card():
-	#if not yet busted, draw the top card and enact it's effect
-	
+	#draw the top card and enact it's effect\
 	#check draw_pile has at least 1 card first
 	if draw_pile.size() == 0:
 		shuffle_discard_pile_into_draw_pile()
+		yield(self, "UI_update_completed")
 	
 	#move top draw pile card to top of play pile
 	var top_card = draw_pile[0]
-	
 	top_card.score_before_played = score
-	
-	draw_pile.pop_front()
-	play_pile.append(top_card)
-	
 	#if first time drawn then add it as a child so we can display it
 	if top_card.get_parent() == null:
 		add_child(top_card)
-	
-	update_UI()
+	move_cards_to([top_card], "draw_pile", "play_pile")
 	
 	yield(self, "UI_update_completed")
 	
+	$DeckDisplay.change_deck_size(draw_pile.size())
+	
 	if top_card.has_special_effect():
 		play_card_effect(top_card, top_card.get_card_id())
-	
-	update_UI()
 
 func shuffle_discard_pile_into_draw_pile():
 	#put everything in discard pile into draw pile
-	for card in discard_pile.size():
-		draw_pile.append(discard_pile[card])
+	var cards_to_move = []
+	#reset card art, suit
 	for card in discard_pile:
 		card.set_card_art(card.get_card_id()) #reset card art to default
 		card.set_card_suit(CardList.card_dictionary[card.get_card_id()].suit)
+		cards_to_move.append(card)
+	
+	#move cards
+	move_cards_to(cards_to_move, "discard_pile", "draw_pile")
+	
+	#wait for cards to finish moving
+	yield(self, "UI_update_completed")	
+	
+	for card in cards_to_move:
 		remove_child(card)
-	for cards in discard_pile.size():
-		discard_pile.pop_front()
+	
 	shuffle_draw_pile()
-	update_UI()
 
 func discard_played_cards():
+	var cards_to_discard = []
 	for card in play_pile:
 		if card.card_does_burn:
-			remove_child(card) #do not discard
+			call_deferred("remove_child", card)
 		else: #card does not burn, so should be discarded
-			discard_pile.append(card)
-	for cards in play_pile.size():
-		play_pile.pop_front()
+			cards_to_discard.append(card)
+	
+	move_cards_to(cards_to_discard, "play_pile", "discard_pile")
+	
+	#wait for cards to finish moving
+	yield(self, "UI_update_completed")
+	
+	#set score to 0 since round is over
 	score = 0
-	update_UI()
 
 #func add_card_to_draw_pile(card, position):
 #	#add a defined card to the draw pile at a defined position
@@ -124,48 +128,49 @@ func heal(heal_amount: int):
 	else: 
 		hitpoints += heal_amount
 
-func update_UI():
-	UI_currently_updating = true
-	#todo: make this way less ugly - use signals and call from game controller instead of deck controller
-	#or... make the battle sprites and health labels children of the player/opponent nodes so we can just call them as children like everything else
-	if name == "Player":
-		get_parent().get_node("BattleScene/PlayerHealthLabel").text = str(hitpoints) + "/" + str(max_hitpoints)
-	if name == "Opponent":
-		get_parent().get_node("BattleScene/OpponentHealthLabel").text = str(hitpoints) + "/" + str(max_hitpoints)
-	
-	$ScoreBar.update_score(score)
-	
-	if name == "Player":
-		get_node("ChipCounter").change_chip_number(chips)
-	
-	$DeckDisplay.change_deck_size(draw_pile.size())
+func move_cards_to(cards, from_pile, to_pile):
+	#change spacing of cards depending on to_pile
+	var target_position = Vector2(0, 0)
+	var card_spacing = 0
+	if to_pile == "play_pile":
+		target_position = play_pile_pos
+		card_spacing = play_pile_card_spacing
+	elif to_pile == "discard_pile":
+		target_position = discard_pile_pos
+		card_spacing = discard_pile_card_spacing
+	elif to_pile == "draw_pile":
+		target_position = $DeckDisplay.position
+		card_spacing = 0
 	
 	if name == "Opponent":
-		play_pile_card_spacing = -14
-		discard_pile_card_spacing = -4
+		card_spacing = card_spacing * (-1) #stack in reverse for opponent
 	
-	var play_pile_count = 0
-	var discard_pile_count = 0
-	for card in play_pile:
-		card.get_node("MovementHandler").move_card_to(play_pile_pos + Vector2(play_pile_card_spacing * play_pile_count, 0))
-		play_pile_count += 1
-	
-	for card in discard_pile:
-		card.get_node("MovementHandler").move_card_to(discard_pile_pos + Vector2((discard_pile_count - 1) * discard_pile_card_spacing, 0))
-		discard_pile_count += 1
-	
-	if play_pile.size() == 0 and discard_pile.size() == 0:
-		UI_currently_updating = false
+	for card in cards:
+		#add card to an array tracking the cards that are currently moving (to be checked by on_card_movement_completed function
+		cards_currently_moving.append(card)
+		#add cards to to_pile and move them there
+		match to_pile:
+			"play_pile":
+				play_pile.append(card)
+				card.get_node("MovementHandler").move_card_to(target_position + Vector2(card_spacing * (play_pile.size() - 1), 0))
+			"discard_pile":
+				discard_pile.append(card)
+				card.get_node("MovementHandler").move_card_to(target_position + Vector2(card_spacing * (discard_pile.size() - 1), 0))
+			"draw_pile":
+				draw_pile.append(card)
+				card.get_node("MovementHandler").move_card_to(target_position + Vector2(card_spacing * (draw_pile.size() - 1), 0))
+		#remove cards from from_pile
+		match from_pile:
+			"play_pile":
+				play_pile.erase(card)
+			"discard_pile":
+				discard_pile.erase(card)
+			"draw_pile":
+				draw_pile.erase(card)
 
-func on_card_movement_completed():
-	UI_currently_updating = false
-	for card in play_pile:
-		if card.get_node("MovementHandler").is_moving:
-			UI_currently_updating = true
-	for card in discard_pile:
-		if card.get_node("MovementHandler").is_moving:
-			UI_currently_updating = true
-	if UI_currently_updating == false:
+func on_card_movement_completed(card):
+	cards_currently_moving.erase(card)
+	if cards_currently_moving.size() == 0:
 		emit_signal("UI_update_completed")
 
 func _on_Card_choice_to_make(choice_array, card):
@@ -236,8 +241,6 @@ func play_card_effect(card, id):
 			add_child(card)
 		for card in get_parent().get_node("Opponent").play_pile:
 			get_parent().get_node("Opponent").add_child(card)
-	
-	update_UI()
 
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
@@ -264,4 +267,3 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		origin_card.set_card_art(choice_made.get_card_id())
 		call_deferred("play_card_effect", origin_card, choice_made.get_card_id())
 	current_card_effect_id = null
-	update_UI()

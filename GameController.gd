@@ -31,15 +31,19 @@ func _ready():
 	player_last_turn_result = "hit"
 	opponent_last_turn_result = "hit"
 	
+	player.get_node("ScoreBar").update_score(player.score)
+	opponent.get_node("ScoreBar").update_score(opponent.score)
+	
 	transition_to("PlayerPreGameChoice", {})
 
 func transition_to(target_state: String, _data: Dictionary):
+#	print("attempting state transition from: " + current_state + " to: " + target_state)
 	if not has_node(target_state):
 		print("target_state: '" + target_state + "' does not exist")
 	
-	if player.UI_currently_updating:
+	if player.cards_currently_moving.size() > 0:
 		yield(player, "UI_update_completed")
-	if opponent.UI_currently_updating:
+	if opponent.cards_currently_moving.size() > 0:
 		yield(opponent, "UI_update_completed")
 	
 	current_state = target_state

@@ -1,6 +1,6 @@
 extends Node2D
 
-signal movement_completed
+signal movement_completed(card)
 
 var card_move_duration = 0.25
 onready var card = get_parent()
@@ -21,4 +21,4 @@ func _on_PositionTween_tween_started(_object, _key):
 
 func _on_PositionTween_tween_completed(_object, _key):
 	is_moving = false
-	emit_signal("movement_completed")
+	emit_signal("movement_completed", card)
