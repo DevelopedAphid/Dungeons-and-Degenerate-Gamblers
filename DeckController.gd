@@ -104,11 +104,17 @@ func shuffle_discard_pile_into_draw_pile():
 
 func discard_played_cards():
 	var cards_to_discard = []
+	var cards_to_burn = []
 	for card in play_pile:
 		if card.card_does_burn:
-			call_deferred("remove_child", card)
+			cards_to_burn.append(card)
 		else: #card does not burn, so should be discarded
 			cards_to_discard.append(card)
+	for card in cards_to_burn:
+		cards_currently_moving.erase(card)
+		if card.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+			card.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+		call_deferred("remove_child", card)
 	
 	move_cards_to(cards_to_discard, "play_pile", "discard_pile")
 	
@@ -180,14 +186,8 @@ func move_cards_to(cards, from_pile, to_pile):
 				draw_pile.erase(card)
 
 func on_card_movement_completed(card):
-	if name == "Opponent":
-		print(str(card) + ":" + card.card_name + " is finished moving")
 	cards_currently_moving.erase(card)
-	if name == "Opponent":
-		print(cards_currently_moving)
 	if cards_currently_moving.size() == 0:
-		print(str(cards_currently_moving))
-		print(name + " emitting done signal")
 		emit_signal("UI_update_completed")
 
 func _on_Card_choice_to_make(choice_array, card):
@@ -242,16 +242,22 @@ func play_card_effect(card, id):
 		get_parent().get_node("Opponent").draw_top_card()
 		get_parent().get_node("Opponent").draw_top_card()
 	elif id == "078": #Reverse Card
-		#move card to other player
-		move_cards_to([card], "play_pile", "other_play_pile")
-		yield(self, "UI_update_completed")
-		#remove this card as a child and disconnect movement signal
-		card.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
-		remove_child(card)
-		#add this card as a child of the other player and connect movement signal
-		get_parent().get_node("Opponent").add_child(card)
-		card.get_node("MovementHandler").connect("movement_completed", get_parent().get_node("Opponent"), "on_card_movement_completed")
-
+		var opponent = get_parent().get_node("Opponent")
+		var player_play_pile = []
+		for card_to_swap in play_pile:
+			player_play_pile.append(card_to_swap)
+		for card_to_swap in player_play_pile:
+			#move card to other player
+			move_cards_to([card_to_swap], "play_pile", "other_play_pile")
+			yield(self, "UI_update_completed")
+			#remove this card as a child and disconnect movement signal
+			if card_to_swap.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+				card_to_swap.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+			if is_a_parent_of(card_to_swap):
+				remove_child(card_to_swap)
+			#add this card as a child of the other player and connect movement signal
+			opponent.add_child(card_to_swap)
+			card_to_swap.get_node("MovementHandler").connect("movement_completed", opponent, "on_card_movement_completed")
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	var id = current_card_effect_id
