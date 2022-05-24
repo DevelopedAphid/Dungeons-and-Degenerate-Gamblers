@@ -41,10 +41,12 @@ func transition_to(target_state: String, _data: Dictionary):
 	if not has_node(target_state):
 		print("target_state: '" + target_state + "' does not exist")
 	
+#	print("yielding during transition from " + current_state)
 	if player.cards_currently_moving.size() > 0:
 		yield(player, "UI_update_completed")
 	if opponent.cards_currently_moving.size() > 0:
 		yield(opponent, "UI_update_completed")
+#	print("resuming after transition to " + target_state)
 	
 	current_state = target_state
 	state_label.text = current_state

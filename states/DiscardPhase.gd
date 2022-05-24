@@ -15,7 +15,6 @@ func enter_state():
 	game_controller.current_state = self.name
 	player.discard_played_cards()
 	opponent.discard_played_cards()
-	
 	exit_state()
 
 func exit_state():

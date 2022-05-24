@@ -129,6 +129,11 @@ func heal(heal_amount: int):
 		hitpoints += heal_amount
 
 func move_cards_to(cards, from_pile, to_pile):
+	var other_player
+	if name == "Player":
+		other_player = get_parent().get_node("Opponent")
+	else: 
+		other_player = get_parent().get_node("Player")
 	#change spacing of cards depending on to_pile
 	var target_position = Vector2(0, 0)
 	var card_spacing = 0
@@ -141,6 +146,9 @@ func move_cards_to(cards, from_pile, to_pile):
 	elif to_pile == "draw_pile":
 		target_position = $DeckDisplay.position
 		card_spacing = 0
+	elif to_pile == "other_play_pile":
+		target_position = other_player.play_pile_pos
+		card_spacing = play_pile_card_spacing
 	
 	if name == "Opponent":
 		card_spacing = card_spacing * (-1) #stack in reverse for opponent
@@ -159,6 +167,9 @@ func move_cards_to(cards, from_pile, to_pile):
 			"draw_pile":
 				draw_pile.append(card)
 				card.get_node("MovementHandler").move_card_to(target_position + Vector2(card_spacing * (draw_pile.size() - 1), 0))
+			"other_play_pile":
+				other_player.play_pile.append(card)
+				card.get_node("MovementHandler").move_card_to(target_position + Vector2(-1 * card_spacing * (other_player.play_pile.size() - 1), 0))
 		#remove cards from from_pile
 		match from_pile:
 			"play_pile":
@@ -169,8 +180,14 @@ func move_cards_to(cards, from_pile, to_pile):
 				draw_pile.erase(card)
 
 func on_card_movement_completed(card):
+	if name == "Opponent":
+		print(str(card) + ":" + card.card_name + " is finished moving")
 	cards_currently_moving.erase(card)
+	if name == "Opponent":
+		print(cards_currently_moving)
 	if cards_currently_moving.size() == 0:
+		print(str(cards_currently_moving))
+		print(name + " emitting done signal")
 		emit_signal("UI_update_completed")
 
 func _on_Card_choice_to_make(choice_array, card):
@@ -225,22 +242,15 @@ func play_card_effect(card, id):
 		get_parent().get_node("Opponent").draw_top_card()
 		get_parent().get_node("Opponent").draw_top_card()
 	elif id == "078": #Reverse Card
-		#temporary play pile references
-		var player_play_pile = play_pile
-		var opponent_play_pile = get_parent().get_node("Opponent").play_pile
-		#remove children from parent
-		for card in play_pile:
-			remove_child(card)
-		for card in get_parent().get_node("Opponent").play_pile:
-			get_parent().get_node("Opponent").remove_child(card)
-		#swap the piles
-		play_pile = opponent_play_pile
-		get_parent().get_node("Opponent").play_pile = player_play_pile
-		#have to reparent to make sure children behaviour works as normal
-		for card in play_pile:
-			add_child(card)
-		for card in get_parent().get_node("Opponent").play_pile:
-			get_parent().get_node("Opponent").add_child(card)
+		#move card to other player
+		move_cards_to([card], "play_pile", "other_play_pile")
+		yield(self, "UI_update_completed")
+		#remove this card as a child and disconnect movement signal
+		card.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+		remove_child(card)
+		#add this card as a child of the other player and connect movement signal
+		get_parent().get_node("Opponent").add_child(card)
+		card.get_node("MovementHandler").connect("movement_completed", get_parent().get_node("Opponent"), "on_card_movement_completed")
 
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
