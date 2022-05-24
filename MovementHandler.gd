@@ -7,17 +7,17 @@ onready var card = get_parent()
 var is_moving
 var tween_is_ready = false
 
-func move_card_to(to_position: Vector2):
-	if not tween_is_ready:
-		yield($PositionTween, "ready")
-	$PositionTween.interpolate_property(card, "position", card.position, to_position, card_move_duration, Tween.TRANS_BACK, Tween.EASE_IN_OUT)
-	$PositionTween.start()
-
 func _physics_process(_delta):
 	if is_moving:
 		#make it so movement is pixel perfect
 		card.position.x = round(card.position.x)
 		card.position.y = round(card.position.y)
+
+func move_card_to(to_position: Vector2):
+	if not tween_is_ready:
+		yield($PositionTween, "ready")
+	$PositionTween.interpolate_property(card, "position", card.position, to_position, card_move_duration, Tween.TRANS_BACK, Tween.EASE_IN_OUT)
+	$PositionTween.start()
 
 func _on_PositionTween_tween_started(_object, _key):
 	is_moving = true

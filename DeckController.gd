@@ -244,8 +244,11 @@ func play_card_effect(card, id):
 	elif id == "078": #Reverse Card
 		var opponent = get_parent().get_node("Opponent")
 		var player_play_pile = []
+		var opponent_play_pile = []
 		for card_to_swap in play_pile:
 			player_play_pile.append(card_to_swap)
+		for card_to_swap in opponent.play_pile:
+			opponent_play_pile.append(card_to_swap)
 		for card_to_swap in player_play_pile:
 			#move card to other player
 			move_cards_to([card_to_swap], "play_pile", "other_play_pile")
@@ -258,6 +261,17 @@ func play_card_effect(card, id):
 			#add this card as a child of the other player and connect movement signal
 			opponent.add_child(card_to_swap)
 			card_to_swap.get_node("MovementHandler").connect("movement_completed", opponent, "on_card_movement_completed")
+		for card_to_swap in opponent_play_pile:
+			opponent.move_cards_to([card_to_swap], "play_pile", "other_play_pile")
+			yield(opponent, "UI_update_completed")
+			#remove this card as a child and disconnect movement signal
+			if card_to_swap.get_node("MovementHandler").is_connected("movement_completed", opponent, "on_card_movement_completed"):
+				card_to_swap.get_node("MovementHandler").disconnect("movement_completed", opponent, "on_card_movement_completed")
+			if opponent.is_a_parent_of(card_to_swap):
+				opponent.remove_child(card_to_swap)
+			#add this card as a child of the other player and connect movement signal
+			add_child(card_to_swap)
+			card_to_swap.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	var id = current_card_effect_id
