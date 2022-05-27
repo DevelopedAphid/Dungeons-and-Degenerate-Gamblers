@@ -8,7 +8,7 @@ var player_last_turn_result
 var opponent_last_turn_result
 var state_label
 
-var current_state
+var current_state = ""
 
 func _ready():
 	player = get_node("Player")
@@ -31,11 +31,22 @@ func _ready():
 	player_last_turn_result = "hit"
 	opponent_last_turn_result = "hit"
 	
+	player.get_node("ScoreBar").update_score(player.score)
+	opponent.get_node("ScoreBar").update_score(opponent.score)
+	
 	transition_to("PlayerPreGameChoice", {})
 
 func transition_to(target_state: String, _data: Dictionary):
+#	print("attempting state transition from: " + current_state + " to: " + target_state)
 	if not has_node(target_state):
 		print("target_state: '" + target_state + "' does not exist")
+	
+#	print("yielding during transition from " + current_state)
+	if player.cards_currently_moving.size() > 0:
+		yield(player, "UI_update_completed")
+	if opponent.cards_currently_moving.size() > 0:
+		yield(opponent, "UI_update_completed")
+#	print("resuming after transition to " + target_state)
 	
 	current_state = target_state
 	state_label.text = current_state
@@ -84,4 +95,4 @@ func _on_AfterRoundPhase_state_exited(play_should_continue):
 		transition_to("DiscardPhase", {})
 
 func _on_DiscardPhase_state_exited():
-	transition_to("PlayerWaitForFirstPlayAreaInput", {})
+	transition_to("PlayerStartOfTurnActions", {})

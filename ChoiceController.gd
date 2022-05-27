@@ -43,7 +43,6 @@ func _on_Player_card_choice_selected(choice):
 	emit_signal("choice_made_", origin, choices, choice)
 
 	emit_signal("choice_made", choice)
-	get_parent().update_UI()
 	choices = null
 	
 	get_tree().call_group("choices", "queue_free")\

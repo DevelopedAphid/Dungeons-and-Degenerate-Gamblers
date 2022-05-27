@@ -16,7 +16,8 @@ func enter_state():
 		score = score + card.get_card_value()
 	player.score = score
 	
-	player.update_UI()
+	player.get_node("ScoreBar").update_score(player.score)
+	
 	exit_state()
 
 func exit_state():
