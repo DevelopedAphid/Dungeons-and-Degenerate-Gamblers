@@ -48,6 +48,7 @@ func build_draw_pile():
 		draw_pile.append(deck[cards])
 		deck[cards].position = $DeckDisplay.position
 	
+	$DeckDisplay.change_deck_size(draw_pile.size())
 	shuffle_draw_pile()
 
 func shuffle_draw_pile():
@@ -61,7 +62,7 @@ func shuffle_draw_pile():
 		draw_pile[i] = temp
 
 func draw_top_card():
-	#draw the top card and enact it's effect\
+	#draw the top card and enact it's effect
 	#check draw_pile has at least 1 card first
 	if draw_pile.size() == 0:
 		shuffle_discard_pile_into_draw_pile()
@@ -108,18 +109,25 @@ func discard_played_cards():
 	for card in play_pile:
 		if card.card_does_burn:
 			cards_to_burn.append(card)
+			card.start_burn_animation()
 		else: #card does not burn, so should be discarded
 			cards_to_discard.append(card)
-	for card in cards_to_burn:
-		cards_currently_moving.erase(card)
-		if card.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
-			card.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
-		call_deferred("remove_child", card)
+	if cards_to_burn.size() > 0:
+		#wait for burn animation
+		yield(cards_to_burn[0], "burn_complete")
+		#remove cards to burn as children
+		for card in cards_to_burn:
+			play_pile.erase(card)
+			cards_currently_moving.erase(card)
+			if card.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+				card.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+			call_deferred("remove_child", card)
 	
-	move_cards_to(cards_to_discard, "play_pile", "discard_pile")
+	if cards_to_discard.size() > 0:
+		move_cards_to(cards_to_discard, "play_pile", "discard_pile")
 	
-	#wait for cards to finish moving
-	yield(self, "UI_update_completed")
+		#wait for cards to finish moving
+		yield(self, "UI_update_completed")
 	
 	#set score to 0 since round is over
 	score = 0

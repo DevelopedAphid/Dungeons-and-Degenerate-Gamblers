@@ -3,6 +3,7 @@ extends Node2D
 signal card_clicked(card)
 signal card_hover_started(card)
 signal card_hover_ended(card)
+signal burn_complete
 
 export var card_id = "073" #default to card back
 var card_name = ""
@@ -84,6 +85,12 @@ func sprite_clicked():
 func highlight_card(to_highlight: bool):
 	$HighlightSprite.visible = to_highlight
 	is_focused = to_highlight
+
+func start_burn_animation():
+	$CardArtSprite.activate_burn_shader()
+
+func on_burn_timer_ended():
+	emit_signal("burn_complete")
 
 func _on_HoverArea_mouse_entered():
 	emit_signal("card_hover_started", self)

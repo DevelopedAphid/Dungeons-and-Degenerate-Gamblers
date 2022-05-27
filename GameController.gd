@@ -95,4 +95,4 @@ func _on_AfterRoundPhase_state_exited(play_should_continue):
 		transition_to("DiscardPhase", {})
 
 func _on_DiscardPhase_state_exited():
-	transition_to("PlayerWaitForFirstPlayAreaInput", {})
+	transition_to("PlayerStartOfTurnActions", {})
