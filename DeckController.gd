@@ -10,7 +10,7 @@ var burn_pile = []
 var score = 0
 var hitpoints = 100
 var max_hitpoints
-var bleedpoints = 0
+var shieldpoints = 0
 var current_card_effect_id
 var chips = 0
 
@@ -280,6 +280,18 @@ func play_card_effect(card, id):
 			#add this card as a child of the other player and connect movement signal
 			add_child(card_to_swap)
 			card_to_swap.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
+	elif id == "079": #negative ace of spades
+		var choice_array = [id, "089"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "090": #negative ace of clubs
+		var choice_array = [id, "100"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "101": #negative ace of diamonds
+		var choice_array = [id, "111"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "112": #negative ace of hearts
+		var choice_array = [id, "122"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	var id = current_card_effect_id
@@ -304,4 +316,8 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		origin_card.set_card_suit(choice_made.get_card_suit())
 		origin_card.set_card_art(choice_made.get_card_id())
 		call_deferred("play_card_effect", origin_card, choice_made.get_card_id())
+	elif id == "079" || id == "090" || id == "101" || id == "112" : #negative aces
+		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
+		origin_card.set_card_art(choice_made)
+		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + str(origin_card.get_card_value()) + ")")
 	current_card_effect_id = null

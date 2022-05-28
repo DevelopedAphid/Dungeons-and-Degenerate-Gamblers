@@ -51,6 +51,10 @@ func compare_score_and_deal_damage():
 	var clubs = 0
 	var diamonds = 0
 	var hearts = 0
+	var negative_spades = 0
+	var negative_clubs = 0
+	var negative_diamonds = 0
+	var negative_hearts = 0
 	if damage > 0: #if there is damage to apply then apply it
 		if winner.score == 21: #blackjacks trigger special effects
 			for card in winner.play_pile: #find which effects to trigger based on suits involved in the blackjack
@@ -67,19 +71,27 @@ func compare_score_and_deal_damage():
 					clubs += 10
 					diamonds += 10
 					hearts += 10
-		loser.bleedpoints += spades
-		loser.hitpoints -= (damage + clubs) #clubs deal double damage on 21
+				elif card.card_suit == "negative_spades": #these cards have negative value so have to minus by the value rather than add
+					negative_spades -= card.card_value
+				elif card.card_suit == "negative_clubs":
+					negative_clubs -= card.card_value
+				elif card.card_suit == "negative_diamonds":
+					negative_diamonds -= card.card_value
+				elif card.card_suit == "negative_hearts":
+					negative_hearts -= card.card_value
+		#clubs deal double damage on 21
+		#shield (if earned last round) blocks damage
+		#cannot deal negative damage
+		loser.hitpoints -= max(0, (damage + clubs - loser.shieldpoints))
+		winner.hitpoints -= negative_clubs #negative clubs deal damage to the winner if involved in blackjack
 		if winner.name == "Player":
 			winner.chips += diamonds
+			winner.chips -= negative_diamonds
 		winner.heal(hearts) #hearts heal the player on 21
-	
-	#apply and then remove bleeds
-	if player.bleedpoints > 0:
-		player.hitpoints -= player.bleedpoints
-		player.bleedpoints -= 1
-	if opponent.bleedpoints > 0:
-		opponent.hitpoints -= opponent.bleedpoints
-		opponent.bleedpoints -= 1
+		loser.heal(negative_hearts) #negative hearts heal opponent on player 21
+		#reset loser shiled to 0 and (if blackjacked with spades) set up winners shield
+		loser.shieldpoints = negative_spades #negative spades give the opponent a shield next round
+		winner.shieldpoints = spades
 	
 	#update the relevant UI elements
 	get_parent().get_node("BattleScene/PlayerHealthLabel").text = str(player.hitpoints) + "/" + str(player.max_hitpoints)
