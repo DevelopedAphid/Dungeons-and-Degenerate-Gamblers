@@ -28,7 +28,7 @@ func add_cards(number):
 		deck_sprite.centered = false
 		deck_sprite.texture = card_sprite
 		deck_sprite.hframes = 13
-		deck_sprite.vframes = 6
+		deck_sprite.vframes = 12
 		deck_sprite.frame_coords = Vector2(7,5)
 		deck_sprite.position = card_pos + card_spacing * i
 		

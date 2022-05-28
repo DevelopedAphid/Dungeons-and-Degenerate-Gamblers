@@ -111,7 +111,7 @@ material = SubResource( 3 )
 texture = ExtResource( 3 )
 centered = false
 hframes = 13
-vframes = 6
+vframes = 12
 script = ExtResource( 2 )
 
 [node name="HighlightSprite" type="Sprite" parent="."]
