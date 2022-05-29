@@ -8,6 +8,7 @@ signal starting_suit_chosen
 signal reward_card_chosen
 
 func _ready():
+	randomize()
 	change_choices_visibility(false)
 	
 	for card in starting_suit_cards:

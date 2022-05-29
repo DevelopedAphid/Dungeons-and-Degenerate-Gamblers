@@ -14,31 +14,44 @@ var opponent_health_points = 0
 var last_game_result = ""
 
 var game_controller
+var choice_UI
+
+var floor_name = "tavern"
+var encounter_count = 1
 
 func _ready():
-	$ChoiceUI.change_choices_visibility(true)
-	#todo: set_up_new_game function for game controller
+	allow_choices()
+	choice_UI.change_choices_visibility(true)
+
+func allow_choices():
+	choice_UI = load	("res://ChoiceUI.tscn").instance()
+	choice_UI.connect("starting_suit_chosen", self, "_on_ChoiceUI_starting_suit_chosen")
+	choice_UI.connect("reward_card_chosen", self, "_on_ChoiceUI_reward_card_chosen")
+	add_child(choice_UI)
 
 func start_a_game():
-	#instance first npc for testing - should later be loaded depending on level/progress todo:
-	opponent_deck = ["057", "058", "056", "044", "006", "006"]
-	opponent_sprite = "res://assets/art/characters/wizard.png"
-	opponent_health_points = 50
+	var encounter_key = floor_name + "." + str(encounter_count)
+	opponent_sprite = $EncounterList.encounter_dictionary[encounter_key].sprite
+	opponent_health_points = $EncounterList.encounter_dictionary[encounter_key].healthpoints
+	opponent_deck = $EncounterList.encounter_dictionary[encounter_key].deck
 	
 	game_controller = load("res://CardMat.tscn").instance()
 	game_controller.connect("game_over", self, "on_GameController_game_over")
 	add_child(game_controller)
 
-func _on_OverworldUI_starting_suit_chosen():
+func _on_ChoiceUI_starting_suit_chosen():
+	choice_UI.queue_free()
+	start_a_game()
+
+func _on_ChoiceUI_reward_card_chosen():
+	choice_UI.queue_free()
 	start_a_game()
 
 func on_GameController_game_over(result):
 	if result == "player_won":
+		allow_choices()
+		choice_UI.present_rewards()
 		remove_child(game_controller)
-		$ChoiceUI.present_rewards()
+		encounter_count += 1
 	elif result == "player_lost":
 		remove_child(game_controller)
-
-
-func _on_OverworldUI_reward_card_chosen():
-	start_a_game()

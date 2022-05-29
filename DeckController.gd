@@ -121,7 +121,7 @@ func discard_played_cards():
 			cards_currently_moving.erase(card)
 			if card.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
 				card.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
-			call_deferred("remove_child", card)
+			remove_child(card)
 	
 	if cards_to_discard.size() > 0:
 		move_cards_to(cards_to_discard, "play_pile", "discard_pile")
