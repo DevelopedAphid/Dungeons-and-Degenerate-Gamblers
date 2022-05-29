@@ -17,7 +17,6 @@ config/icon="res://icon.png"
 [autoload]
 
 CardList="*res://CardList.gd"
-PlayerSettings="*res://PlayerSettings.gd"
 Fonts="*res://Fonts.gd"
 
 [display]

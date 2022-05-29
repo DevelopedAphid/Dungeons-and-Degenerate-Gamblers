@@ -21,9 +21,9 @@ func _ready():
 
 func start_a_game():
 	#instance first npc for testing - should later be loaded depending on level/progress todo:
-	opponent_deck = ["057", "058", "056", "006", "006", "006"]
+	opponent_deck = ["057", "058", "056", "044", "006", "006"]
 	opponent_sprite = "res://assets/art/characters/wizard.png"
-	opponent_health_points = 10
+	opponent_health_points = 50
 	
 	game_controller = load("res://CardMat.tscn").instance()
 	game_controller.connect("game_over", self, "on_GameController_game_over")
