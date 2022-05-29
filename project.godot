@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="Dungeons and Degenerate Gamblers"
-run/main_scene="res://Tavern.tscn"
+run/main_scene="res://MacroController.tscn"
 config/icon="res://icon.png"
 
 [autoload]

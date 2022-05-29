@@ -99,11 +99,9 @@ func compare_score_and_deal_damage():
 	player.get_node("ChipCounter").change_chip_number(player.chips)
 	
 	if player.hitpoints <= 0:
-		PlayerSettings.last_game_result = "lost"
-		# warning-ignore:return_value_discarded
-		get_tree().change_scene("res://Tavern.tscn")
+		get_parent().macro_controller.last_game_result = "lost"
+		get_parent().emit_signal("game_over", "player_lost")
 	elif opponent.hitpoints <= 0:
-		PlayerSettings.last_game_result = "won"
-		PlayerSettings.player_hitpoints = player.hitpoints
-		# warning-ignore:return_value_discarded
-		get_tree().change_scene("res://Tavern.tscn")
+		get_parent().macro_controller.last_game_result = "won"
+		get_parent().macro_controller.player_hitpoints = player.hitpoints
+		get_parent().emit_signal("game_over", "player_won")

@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://MacroController.gd" type="Script" id=2]
+[ext_resource path="res://HoverPanel.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Card.tscn" type="PackedScene" id=4]
+[ext_resource path="res://ChoiceUI.gd" type="Script" id=5]
+
+[node name="MacroController" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="ChoiceUI" type="Node2D" parent="."]
+script = ExtResource( 5 )
+
+[node name="StartingSuitChoice" type="Node2D" parent="ChoiceUI"]
+visible = false
+
+[node name="Card1" parent="ChoiceUI/StartingSuitChoice" groups=["choices"] instance=ExtResource( 4 )]
+position = Vector2( 110, 90 )
+card_id = "001"
+
+[node name="Card2" parent="ChoiceUI/StartingSuitChoice" groups=["choices"] instance=ExtResource( 4 )]
+position = Vector2( 175, 90 )
+card_id = "014"
+
+[node name="Card3" parent="ChoiceUI/StartingSuitChoice" groups=["choices"] instance=ExtResource( 4 )]
+position = Vector2( 240, 90 )
+card_id = "027"
+
+[node name="Card4" parent="ChoiceUI/StartingSuitChoice" groups=["choices"] instance=ExtResource( 4 )]
+position = Vector2( 305, 90 )
+card_id = "040"
+
+[node name="RewardCardChoice" type="Node2D" parent="ChoiceUI"]
+visible = false
+
+[node name="Reward1" parent="ChoiceUI/RewardCardChoice" groups=["choices"] instance=ExtResource( 4 )]
+position = Vector2( 142, 90 )
+card_id = "001"
+
+[node name="Reward2" parent="ChoiceUI/RewardCardChoice" groups=["choices"] instance=ExtResource( 4 )]
+position = Vector2( 207, 90 )
+card_id = "001"
+
+[node name="Reward3" parent="ChoiceUI/RewardCardChoice" groups=["choices"] instance=ExtResource( 4 )]
+position = Vector2( 272, 90 )
+card_id = "001"
+
+[node name="HoverPanel" parent="ChoiceUI" instance=ExtResource( 3 )]
+
+[connection signal="reward_card_chosen" from="ChoiceUI" to="." method="_on_OverworldUI_reward_card_chosen"]
+[connection signal="starting_suit_chosen" from="ChoiceUI" to="." method="_on_OverworldUI_starting_suit_chosen"]

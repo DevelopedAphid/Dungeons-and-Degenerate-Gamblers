@@ -26,10 +26,10 @@ var Card = preload("res://Card.tscn")
 
 func _ready():
 	if name == "Player":
-		hitpoints = PlayerSettings.player_hitpoints
-		max_hitpoints = PlayerSettings.player_max_hitpoints
+		hitpoints = get_parent().get_parent().player_hitpoints
+		max_hitpoints = get_parent().get_parent().player_max_hitpoints
 	elif name == "Opponent":
-		hitpoints = PlayerSettings.opponent_health_points
+		hitpoints = get_parent().get_parent().opponent_health_points
 		max_hitpoints = hitpoints
 
 func add_card_to_deck(card_id):
