@@ -28,6 +28,8 @@ func exit_state():
 	emit_signal("state_exited", play_should_continue)
 
 func compare_score_and_deal_damage():
+	get_parent().get_node("BattleScene").hide_shields()
+	
 	var player_score = player.score
 	var opponent_score = opponent.score
 	if player.score > 21: #busted
@@ -97,6 +99,7 @@ func compare_score_and_deal_damage():
 	get_parent().get_node("BattleScene/PlayerHealthLabel").text = str(player.hitpoints) + "/" + str(player.max_hitpoints)
 	get_parent().get_node("BattleScene/OpponentHealthLabel").text = str(opponent.hitpoints) + "/" + str(opponent.max_hitpoints)
 	player.get_node("ChipCounter").change_chip_number(player.chips)
+	get_parent().get_node("BattleScene").display_shields(player.shieldpoints, opponent.shieldpoints)
 	
 	if player.hitpoints <= 0:
 		get_parent().macro_controller.last_game_result = "lost"
