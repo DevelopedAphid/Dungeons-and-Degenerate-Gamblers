@@ -12,7 +12,7 @@ var hitpoints = 100
 var max_hitpoints
 var shieldpoints = 0
 var current_card_effect_id
-var chips = 0
+var chips
 
 #screen positions and spacing
 onready var play_pile_pos = $PlayPilePosition.position
@@ -28,6 +28,7 @@ func _ready():
 	if name == "Player":
 		hitpoints = get_parent().get_parent().player_hitpoints
 		max_hitpoints = get_parent().get_parent().player_max_hitpoints
+		chips = get_parent().get_parent().player_chips
 	elif name == "Opponent":
 		hitpoints = get_parent().get_parent().opponent_health_points
 		max_hitpoints = hitpoints

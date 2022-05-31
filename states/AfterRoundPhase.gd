@@ -107,4 +107,5 @@ func compare_score_and_deal_damage():
 	elif opponent.hitpoints <= 0:
 		get_parent().macro_controller.last_game_result = "won"
 		get_parent().macro_controller.player_hitpoints = player.hitpoints
+		get_parent().macro_controller.player_chips = player.chips
 		get_parent().emit_signal("game_over", "player_won")
