@@ -19,6 +19,7 @@ var choice_UI
 
 var floor_name = "tavern"
 var encounter_count = 1
+var dialogue_showing = false
 
 func _ready():
 	allow_choices()
@@ -39,6 +40,10 @@ func start_a_game():
 	game_controller = load("res://CardMat.tscn").instance()
 	game_controller.connect("game_over", self, "on_GameController_game_over")
 	add_child(game_controller)
+	
+	#ensure dialogue is in front of game
+	move_child(game_controller, 1)
+	$DialogueManager.set_dialogue_text($EncounterList.encounter_dictionary[encounter_key].start_dialogue)
 
 func get_encounter_key() -> String:
 	var encounter_key = floor_name + "." + str(encounter_count)
@@ -61,3 +66,12 @@ func on_GameController_game_over(result):
 		encounter_count += 1
 	elif result == "player_lost":
 		remove_child(game_controller)
+
+func _on_DialogueManager_dialogue_cleared():
+	dialogue_showing = false
+	game_controller.transition_to("PlayerPreGameChoice", {})
+	#todo: handle end of game dialogue (this only handles start of game)
+
+func _on_DialogueManager_dialogue_set():
+	dialogue_showing = true
+	#todo: unsure if this is needed

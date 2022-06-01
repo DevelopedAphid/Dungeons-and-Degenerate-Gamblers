@@ -2,7 +2,6 @@ extends Node2D
 
 var hovered_cards = []
 var hover_position = Vector2(52, 9)
-var hover_bubble_texture = preload("res://assets/art/hover_bubble.png")
 var badge_position_offset = Vector2(49, -5)
 
 onready var font = Fonts.font_pixel_5_9

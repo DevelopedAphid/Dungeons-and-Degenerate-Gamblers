@@ -131,9 +131,6 @@ margin_right = 44.5
 margin_bottom = 142.5
 mouse_filter = 1
 texture_normal = ExtResource( 20 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HitButton" type="TextureButton" parent="Player"]
 anchor_left = 0.5

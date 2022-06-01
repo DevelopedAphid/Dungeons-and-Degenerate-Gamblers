@@ -39,8 +39,6 @@ func _ready():
 	
 	player.get_node("ScoreBar").update_score(player.score)
 	opponent.get_node("ScoreBar").update_score(opponent.score)
-	
-	transition_to("PlayerPreGameChoice", {})
 
 func transition_to(target_state: String, _data: Dictionary):
 #	print("attempting state transition from: " + current_state + " to: " + target_state)
