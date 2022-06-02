@@ -12,6 +12,8 @@ script = ExtResource( 2 )
 script = ExtResource( 1 )
 
 [node name="DialogueManager" parent="." instance=ExtResource( 3 )]
+position = Vector2( 0, 220 )
+z_index = 10
 
 [connection signal="dialogue_cleared" from="DialogueManager" to="." method="_on_DialogueManager_dialogue_cleared"]
 [connection signal="dialogue_set" from="DialogueManager" to="." method="_on_DialogueManager_dialogue_set"]

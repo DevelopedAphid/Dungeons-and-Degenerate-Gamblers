@@ -20,6 +20,7 @@ var choice_UI
 var floor_name = "tavern"
 var encounter_count = 1
 var dialogue_showing = false
+var dialogue_type = ""
 
 func _ready():
 	allow_choices()
@@ -41,9 +42,8 @@ func start_a_game():
 	game_controller.connect("game_over", self, "on_GameController_game_over")
 	add_child(game_controller)
 	
-	#ensure dialogue is in front of game
-	move_child(game_controller, 1)
 	$DialogueManager.set_dialogue_text($EncounterList.encounter_dictionary[encounter_key].start_dialogue)
+	dialogue_type = "start"
 
 func get_encounter_key() -> String:
 	var encounter_key = floor_name + "." + str(encounter_count)
@@ -59,6 +59,9 @@ func _on_ChoiceUI_reward_card_chosen():
 
 func on_GameController_game_over(result):
 	if result == "player_won":
+		var encounter_key = get_encounter_key()
+		$DialogueManager.set_dialogue_text($EncounterList.encounter_dictionary[encounter_key].end_dialogue)
+		dialogue_type = "end"
 		allow_choices()
 		choice_UI.present_rewards()
 		remove_child(game_controller)
@@ -69,8 +72,11 @@ func on_GameController_game_over(result):
 
 func _on_DialogueManager_dialogue_cleared():
 	dialogue_showing = false
-	game_controller.transition_to("PlayerPreGameChoice", {})
-	#todo: handle end of game dialogue (this only handles start of game)
+	if dialogue_type == "start":
+		game_controller.transition_to("PlayerPreGameChoice", {})
+	elif dialogue_type == "end":
+		pass
+	dialogue_type = ""
 
 func _on_DialogueManager_dialogue_set():
 	dialogue_showing = true

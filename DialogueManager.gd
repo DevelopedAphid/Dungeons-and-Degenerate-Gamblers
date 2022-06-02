@@ -1,5 +1,7 @@
 extends Node2D
 
+#has z index of 10 set in macro controller scene to ensure it always sits in front of any gameplay elements
+
 onready var dialogue_label = $DialogueLabel
 var showing_dialogue = false
 var can_clear_dialogue = false
@@ -24,6 +26,7 @@ func clear_dialogue_text():
 	dialogue_label.visible = false
 	$BubbleParts.visible = false
 	showing_dialogue = false
+	can_clear_dialogue = false
 	emit_signal("dialogue_cleared")
 
 func _input(event):
