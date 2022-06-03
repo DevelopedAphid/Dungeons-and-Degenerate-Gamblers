@@ -6,6 +6,7 @@ onready var macro_controller = get_parent()
 
 signal starting_suit_chosen
 signal reward_card_chosen
+signal shop_card_chosen
 
 func _ready():
 	randomize()
@@ -41,6 +42,24 @@ func present_rewards():
 	
 	$RewardCardChoice.visible = true
 
+func show_shop():
+	var shop_array = []
+	for i in 8:
+		shop_array.append(int(rand_range(1, CardList.card_dictionary.size())))
+	
+	var shop_cards = $Shop/ShopChoice.get_children()
+	var i = 0
+	for card in shop_cards:
+		card.set_card_id(shop_array[i])
+		i += 1
+		card.connect("card_hover_started", get_node("HoverPanel"), "_on_Card_hover_started")
+		card.connect("card_hover_ended", get_node("HoverPanel"), "_on_Card_hover_ended")
+		
+		card.connect("card_clicked", self, "_on_Card_clicked", [card])
+	
+	$Shop/ChipCounter.change_chip_number(macro_controller.player_chips)
+	$Shop.visible = true
+
 func _on_Card_clicked(card_choice):
 	if card_choice.get_parent().name == "RewardCardChoice":
 		macro_controller.player_deck.append(card_choice.card_id)
@@ -73,5 +92,16 @@ func _on_Card_clicked(card_choice):
 			macro_controller.player_deck.append(n)
 		
 		emit_signal("starting_suit_chosen")
+	elif card_choice.get_parent().name == "ShopChoice":
+		if macro_controller.player_chips >= 100:
+			macro_controller.player_deck.append(card_choice.card_id)
+			macro_controller.player_chips -= 100
+			$Shop/ChipCounter.change_chip_number(macro_controller.player_chips)
+			card_choice.visible = false
 	
 	change_choices_visibility(false)
+
+
+func _on_ShopFinishedButton_pressed():
+	$Shop.visible = false
+	emit_signal("shop_card_chosen")

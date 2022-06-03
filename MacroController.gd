@@ -30,20 +30,28 @@ func allow_choices():
 	choice_UI = load	("res://ChoiceUI.tscn").instance()
 	choice_UI.connect("starting_suit_chosen", self, "_on_ChoiceUI_starting_suit_chosen")
 	choice_UI.connect("reward_card_chosen", self, "_on_ChoiceUI_reward_card_chosen")
+	choice_UI.connect("shop_card_chosen", self, "_on_ChoiceUI_shop_card_chosen")
 	add_child(choice_UI)
 
 func start_a_game():
 	var encounter_key = get_encounter_key()
-	opponent_sprite = $EncounterList.encounter_dictionary[encounter_key].sprite
-	opponent_health_points = $EncounterList.encounter_dictionary[encounter_key].healthpoints
-	opponent_deck = $EncounterList.encounter_dictionary[encounter_key].deck
+	var encounter_type = $EncounterList.encounter_dictionary[encounter_key].type
 	
-	game_controller = load("res://CardMat.tscn").instance()
-	game_controller.connect("game_over", self, "on_GameController_game_over")
-	add_child(game_controller)
+	if encounter_type == "opponent":
+		opponent_sprite = $EncounterList.encounter_dictionary[encounter_key].sprite
+		opponent_health_points = $EncounterList.encounter_dictionary[encounter_key].healthpoints
+		opponent_deck = $EncounterList.encounter_dictionary[encounter_key].deck
+		
+		game_controller = load("res://GameController.tscn").instance()
+		game_controller.connect("game_over", self, "on_GameController_game_over")
+		add_child(game_controller)
+		
+		$DialogueManager.set_dialogue_text($EncounterList.encounter_dictionary[encounter_key].start_dialogue)
+		dialogue_type = "start"
 	
-	$DialogueManager.set_dialogue_text($EncounterList.encounter_dictionary[encounter_key].start_dialogue)
-	dialogue_type = "start"
+	if encounter_type == "shop":
+		allow_choices()
+		choice_UI.show_shop()
 
 func get_encounter_key() -> String:
 	var encounter_key = floor_name + "." + str(encounter_count)
@@ -55,6 +63,11 @@ func _on_ChoiceUI_starting_suit_chosen():
 
 func _on_ChoiceUI_reward_card_chosen():
 	choice_UI.queue_free()
+	start_a_game()
+
+func _on_ChoiceUI_shop_card_chosen():
+	choice_UI.queue_free()
+	encounter_count += 1
 	start_a_game()
 
 func on_GameController_game_over(result):
