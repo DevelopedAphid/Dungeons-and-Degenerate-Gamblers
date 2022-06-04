@@ -44,15 +44,15 @@ texture = ExtResource( 6 )
 centered = false
 
 [node name="PlayerSprite" type="Sprite" parent="BattleScene"]
+position = Vector2( 32, 24 )
 texture = ExtResource( 4 )
 centered = false
-offset = Vector2( 32, 24 )
 flip_h = true
 
 [node name="OpponentSprite" type="Sprite" parent="BattleScene"]
+position = Vector2( 222, 24 )
 texture = ExtResource( 4 )
 centered = false
-offset = Vector2( 222, 24 )
 
 [node name="PlayerHealthLabel" type="Label" parent="BattleScene"]
 margin_left = 17.0

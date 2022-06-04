@@ -89,8 +89,8 @@ func compare_score_and_deal_damage():
 		if winner.name == "Player":
 			winner.chips += diamonds
 			winner.chips -= negative_diamonds
-		winner.heal(hearts) #hearts heal the player on 21
-		loser.heal(negative_hearts) #negative hearts heal opponent on player 21
+		winner.heal(hearts, self) #hearts heal the player on 21
+		loser.heal(negative_hearts, self) #negative hearts heal opponent on player 21
 		#reset loser shiled to 0 and (if blackjacked with spades) set up winners shield
 		loser.shieldpoints = negative_spades #negative spades give the opponent a shield next round
 		winner.shieldpoints = spades

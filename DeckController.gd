@@ -137,11 +137,31 @@ func discard_played_cards():
 #	#add a defined card to the draw pile at a defined position
 #	pass
 
-func heal(heal_amount: int):
-	if hitpoints + heal_amount > max_hitpoints:
-		hitpoints = max_hitpoints
-	else: 
-		hitpoints += heal_amount
+func heal(heal_amount: int, heal_source):
+	if heal_amount > 0:
+		if hitpoints + heal_amount > max_hitpoints:
+			hitpoints = max_hitpoints
+		else:
+			hitpoints += heal_amount
+		#todo: handle blackjack/21 as a heal source better
+		#todo: move creating the heart and moving it to it's own method and then loop on it in the heal method
+		for i in heal_amount/3: #create hearts and then send them toward the heal target
+			var heart = load("res://HealHeart.tscn").instance()
+			heart.position = heal_source.global_position
+			add_child(heart)
+			var target_pos
+			if name == "Player":
+				target_pos = get_parent().get_node("BattleScene/PlayerSprite").global_position
+			elif name == "Opponent":
+				target_pos = get_parent().get_node("BattleScene/OpponentSprite").global_position
+			heart.set_target_position(target_pos)
+			heart.start_tweening_to_target()
+			#delay to create spacing between
+			var timer = Timer.new()
+			add_child(timer)
+			timer.wait_time = 0.1
+			timer.start()
+			yield(timer, "timeout")
 
 func move_cards_to(cards, from_pile, to_pile):
 	var other_player
@@ -232,7 +252,7 @@ func play_card_effect(card, id):
 		card.add_child(candle)
 		candle.texture = load("res://assets/art/candles.png")
 		candle.hframes = 5
-		candle.frame = round(rand_range(1,5)) #choose a random candle colour
+		candle.frame = round(rand_range(0,4)) #choose a random candle colour
 		var spacing = 2
 		if not card_value % 2 == 0: #odd
 			candle.position = Vector2(27 + spacing * card_value, 51)
@@ -245,8 +265,8 @@ func play_card_effect(card, id):
 		if draw_pile.size() > 0:
 			get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
 	elif id == "076": #Get Well Soon card
-		get_parent().get_node("Player").heal(10)
-		get_parent().get_node("Opponent").heal(10)
+		get_parent().get_node("Player").heal(10, card)
+		get_parent().get_node("Opponent").heal(10, card)
 	elif id == "077": #+2 Card
 		get_parent().get_node("Opponent").draw_top_card()
 		get_parent().get_node("Opponent").draw_top_card()
