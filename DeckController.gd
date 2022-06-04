@@ -144,8 +144,9 @@ func heal(heal_amount: int, heal_source):
 		else:
 			hitpoints += heal_amount
 		#todo: handle blackjack/21 as a heal source better
-		#todo: move creating the heart and moving it to it's own method and then loop on it in the heal method
-		for i in heal_amount/3: #create hearts and then send them toward the heal target
+		var skip_count = 3
+		var i = 0
+		while i < heal_amount: #create hearts and then send them toward the heal target
 			var heart = load("res://HealHeart.tscn").instance()
 			heart.position = heal_source.global_position
 			add_child(heart)
@@ -162,6 +163,7 @@ func heal(heal_amount: int, heal_source):
 			timer.wait_time = 0.1
 			timer.start()
 			yield(timer, "timeout")
+			i += skip_count
 
 func move_cards_to(cards, from_pile, to_pile):
 	var other_player
