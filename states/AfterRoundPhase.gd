@@ -28,7 +28,8 @@ func exit_state():
 	emit_signal("state_exited", play_should_continue)
 
 func compare_score_and_deal_damage():
-	get_parent().get_node("BattleScene").hide_shields()
+	var battle_scene = game_controller.get_node("BattleScene")
+	battle_scene.hide_shields()
 	
 	var player_score = player.score
 	var opponent_score = opponent.score
@@ -36,6 +37,8 @@ func compare_score_and_deal_damage():
 		player_score = 0
 	if opponent.score > 21: #busted
 		opponent_score = 0
+	
+	battle_scene.play_attack_animation(bool(player_score), bool(opponent_score))
 	
 	#todo: should be replaced by a "deal damage" method later in case we add damage multiplier effects or anything
 	var damage = player_score - opponent_score
@@ -84,22 +87,21 @@ func compare_score_and_deal_damage():
 		#clubs deal double damage on 21
 		#shield (if earned last round) blocks damage
 		#cannot deal negative damage
-		loser.hitpoints -= max(0, (damage + clubs - loser.shieldpoints))
-		winner.hitpoints -= negative_clubs #negative clubs deal damage to the winner if involved in blackjack
+		loser.damage(max(0, (damage + clubs - loser.shieldpoints)))
+		winner.damage(negative_clubs) #negative clubs deal damage to the winner if involved in blackjack
 		if winner.name == "Player":
 			winner.chips += diamonds
 			winner.chips -= negative_diamonds
-		winner.heal(hearts, self) #hearts heal the player on 21
-		loser.heal(negative_hearts, self) #negative hearts heal opponent on player 21
+		winner.heal(hearts, Vector2(240, 150)) #hearts heal the player on 21
+		loser.heal(negative_hearts, Vector2(240, 150)) #negative hearts heal opponent on player 21
 		#reset loser shiled to 0 and (if blackjacked with spades) set up winners shield
 		loser.shieldpoints = negative_spades #negative spades give the opponent a shield next round
 		winner.shieldpoints = spades
 	
 	#update the relevant UI elements
-	get_parent().get_node("BattleScene/PlayerHealthLabel").text = str(player.hitpoints) + "/" + str(player.max_hitpoints)
-	get_parent().get_node("BattleScene/OpponentHealthLabel").text = str(opponent.hitpoints) + "/" + str(opponent.max_hitpoints)
+	battle_scene.update_health_points()
 	player.get_node("ChipCounter").change_chip_number(player.chips)
-	get_parent().get_node("BattleScene").display_shields(player.shieldpoints, opponent.shieldpoints)
+	battle_scene.display_shields(player.shieldpoints, opponent.shieldpoints)
 	
 	if player.hitpoints <= 0:
 		get_parent().macro_controller.last_game_result = "lost"

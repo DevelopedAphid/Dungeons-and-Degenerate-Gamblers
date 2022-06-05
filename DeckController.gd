@@ -137,18 +137,20 @@ func discard_played_cards():
 #	#add a defined card to the draw pile at a defined position
 #	pass
 
-func heal(heal_amount: int, heal_source):
+func heal(heal_amount: int, heal_source_pos: Vector2):
 	if heal_amount > 0:
 		if hitpoints + heal_amount > max_hitpoints:
 			hitpoints = max_hitpoints
 		else:
 			hitpoints += heal_amount
-		#todo: handle blackjack/21 as a heal source better
+		get_parent().get_node("BattleScene").update_health_points()
+		
+		#create hearts and then send them toward the heal target
 		var skip_count = 3
 		var i = 0
-		while i < heal_amount: #create hearts and then send them toward the heal target
+		while i < heal_amount: 
 			var heart = load("res://HealHeart.tscn").instance()
-			heart.position = heal_source.global_position
+			heart.position = heal_source_pos
 			add_child(heart)
 			var target_pos
 			if name == "Player":
@@ -164,6 +166,11 @@ func heal(heal_amount: int, heal_source):
 			timer.start()
 			yield(timer, "timeout")
 			i += skip_count
+
+func damage(damage_amount: int):
+	if damage_amount > 0:
+		hitpoints -= damage_amount
+		get_parent().get_node("BattleScene").play_damage_animation(self, damage_amount)
 
 func move_cards_to(cards, from_pile, to_pile):
 	var other_player
@@ -267,8 +274,8 @@ func play_card_effect(card, id):
 		if draw_pile.size() > 0:
 			get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
 	elif id == "076": #Get Well Soon card
-		get_parent().get_node("Player").heal(10, card)
-		get_parent().get_node("Opponent").heal(10, card)
+		get_parent().get_node("Player").heal(10, card.position)
+		get_parent().get_node("Opponent").heal(10, card.position)
 	elif id == "077": #+2 Card
 		get_parent().get_node("Opponent").draw_top_card()
 		get_parent().get_node("Opponent").draw_top_card()

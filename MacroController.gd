@@ -3,7 +3,7 @@ extends Node2D
 var chosen_suit = ""
 
 var player_deck = []
-var player_sprite = "res://assets/art/characters/player1.png"
+var player_sprite = "res://assets/art/characters/player.png"
 var player_max_hitpoints = 100
 var player_hitpoints = 100
 var player_chips = 0
