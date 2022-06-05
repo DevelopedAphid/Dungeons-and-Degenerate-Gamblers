@@ -44,6 +44,10 @@ func start_a_game():
 		
 		game_controller = load("res://GameController.tscn").instance()
 		game_controller.connect("game_over", self, "on_GameController_game_over")
+		game_controller.get_node("HitButton").connect("mouse_entered", $Cursor, "on_HitButton_mouse_entered")
+		game_controller.get_node("HitButton").connect("mouse_exited", $Cursor, "on_HitButton_mouse_exited")
+		game_controller.get_node("StayButton").connect("mouse_entered", $Cursor, "on_StayButton_mouse_entered")
+		game_controller.get_node("StayButton").connect("mouse_exited", $Cursor, "on_StayButton_mouse_exited")
 		add_child(game_controller)
 		
 		$DialogueManager.set_dialogue_text($EncounterList.encounter_dictionary[encounter_key].start_dialogue)

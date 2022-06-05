@@ -35,6 +35,33 @@ script = ExtResource( 11 )
 texture = ExtResource( 3 )
 centered = false
 
+[node name="StayButton" type="TextureButton" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -44.5
+margin_top = 85.5
+margin_right = 44.5
+margin_bottom = 142.5
+mouse_filter = 1
+texture_normal = ExtResource( 26 )
+
+[node name="HitButton" type="TextureButton" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -44.5
+margin_top = 30.5
+margin_right = 44.5
+margin_bottom = 87.5
+mouse_filter = 1
+texture_normal = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="BattleScene" type="Node2D" parent="."]
 position = Vector2( 110, 10 )
 script = ExtResource( 2 )
@@ -131,33 +158,6 @@ anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource( 9 )
 
-[node name="StayButton" type="TextureButton" parent="Player"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -44.5
-margin_top = 85.5
-margin_right = 44.5
-margin_bottom = 142.5
-mouse_filter = 1
-texture_normal = ExtResource( 26 )
-
-[node name="HitButton" type="TextureButton" parent="Player"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -44.5
-margin_top = 30.5
-margin_right = 44.5
-margin_bottom = 87.5
-mouse_filter = 1
-texture_normal = ExtResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="ChipCounter" parent="Player" instance=ExtResource( 27 )]
 position = Vector2( 60, 18 )
 
@@ -220,8 +220,8 @@ script = ExtResource( 8 )
 [node name="DiscardPhase" type="Node" parent="."]
 script = ExtResource( 10 )
 
-[connection signal="pressed" from="Player/StayButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_StayButton_pressed"]
-[connection signal="pressed" from="Player/HitButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_HitButton_pressed"]
+[connection signal="pressed" from="StayButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_StayButton_pressed"]
+[connection signal="pressed" from="HitButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_HitButton_pressed"]
 [connection signal="choice_made_" from="Player/ChoiceController" to="Player" method="_on_ChoiceController_choice_made_"]
 [connection signal="state_exited" from="PlayerPreGameChoice" to="." method="_on_PlayerPreGameChoice_state_exited"]
 [connection signal="state_exited" from="OpponentPreGameChoice" to="." method="_on_OpponentPreGameChoice_state_exited"]

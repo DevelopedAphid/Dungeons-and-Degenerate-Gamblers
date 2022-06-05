@@ -1,12 +1,15 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://EncounterList.gd" type="Script" id=1]
 [ext_resource path="res://MacroController.gd" type="Script" id=2]
 [ext_resource path="res://DialogueManager.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Cursor.tscn" type="PackedScene" id=4]
 
 [node name="MacroController" type="Node2D"]
 z_index = 5
 script = ExtResource( 2 )
+
+[node name="Cursor" parent="." instance=ExtResource( 4 )]
 
 [node name="EncounterList" type="Node" parent="."]
 script = ExtResource( 1 )
