@@ -8,7 +8,8 @@ func _ready():
 
 func enter_state():
 	game_controller.current_state = self.name
-	exit_state() #for now we just skip this state completely
+	game_controller.get_node("BattleScene").set_turn_indicator(false)
+	exit_state()
 
 func exit_state():
 	emit_signal("state_exited")

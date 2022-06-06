@@ -28,12 +28,17 @@ func exit_state():
 	emit_signal("state_exited", play_should_continue)
 
 func compare_score_and_deal_damage():
+	var battle_scene = game_controller.get_node("BattleScene")
+	battle_scene.hide_shields()
+	
 	var player_score = player.score
 	var opponent_score = opponent.score
 	if player.score > 21: #busted
 		player_score = 0
 	if opponent.score > 21: #busted
 		opponent_score = 0
+	
+	battle_scene.play_attack_animation(bool(player_score), bool(opponent_score))
 	
 	#todo: should be replaced by a "deal damage" method later in case we add damage multiplier effects or anything
 	var damage = player_score - opponent_score
@@ -51,6 +56,10 @@ func compare_score_and_deal_damage():
 	var clubs = 0
 	var diamonds = 0
 	var hearts = 0
+	var negative_spades = 0
+	var negative_clubs = 0
+	var negative_diamonds = 0
+	var negative_hearts = 0
 	if damage > 0: #if there is damage to apply then apply it
 		if winner.score == 21: #blackjacks trigger special effects
 			for card in winner.play_pile: #find which effects to trigger based on suits involved in the blackjack
@@ -67,31 +76,38 @@ func compare_score_and_deal_damage():
 					clubs += 10
 					diamonds += 10
 					hearts += 10
-		loser.bleedpoints += spades
-		loser.hitpoints -= (damage + clubs) #clubs deal double damage on 21
+				elif card.card_suit == "negative_spades": #these cards have negative value so have to minus by the value rather than add
+					negative_spades -= card.card_value
+				elif card.card_suit == "negative_clubs":
+					negative_clubs -= card.card_value
+				elif card.card_suit == "negative_diamonds":
+					negative_diamonds -= card.card_value
+				elif card.card_suit == "negative_hearts":
+					negative_hearts -= card.card_value
+		#clubs deal double damage on 21
+		#shield (if earned last round) blocks damage
+		#cannot deal negative damage
+		loser.damage(max(0, (damage + clubs - loser.shieldpoints)))
+		winner.damage(negative_clubs) #negative clubs deal damage to the winner if involved in blackjack
 		if winner.name == "Player":
 			winner.chips += diamonds
-		winner.heal(hearts) #hearts heal the player on 21
-	
-	#apply and then remove bleeds
-	if player.bleedpoints > 0:
-		player.hitpoints -= player.bleedpoints
-		player.bleedpoints -= 1
-	if opponent.bleedpoints > 0:
-		opponent.hitpoints -= opponent.bleedpoints
-		opponent.bleedpoints -= 1
+			winner.chips -= negative_diamonds
+		winner.heal(hearts, Vector2(240, 150)) #hearts heal the player on 21
+		loser.heal(negative_hearts, Vector2(240, 150)) #negative hearts heal opponent on player 21
+		#reset loser shiled to 0 and (if blackjacked with spades) set up winners shield
+		loser.shieldpoints = negative_spades #negative spades give the opponent a shield next round
+		winner.shieldpoints = spades
 	
 	#update the relevant UI elements
-	get_parent().get_node("BattleScene/PlayerHealthLabel").text = str(player.hitpoints) + "/" + str(player.max_hitpoints)
-	get_parent().get_node("BattleScene/OpponentHealthLabel").text = str(opponent.hitpoints) + "/" + str(opponent.max_hitpoints)
+	battle_scene.update_health_points()
 	player.get_node("ChipCounter").change_chip_number(player.chips)
+	battle_scene.display_shields(player.shieldpoints, opponent.shieldpoints)
 	
 	if player.hitpoints <= 0:
-		PlayerSettings.last_game_result = "lost"
-		# warning-ignore:return_value_discarded
-		get_tree().change_scene("res://Tavern.tscn")
+		get_parent().macro_controller.last_game_result = "lost"
+		get_parent().emit_signal("game_over", "player_lost")
 	elif opponent.hitpoints <= 0:
-		PlayerSettings.last_game_result = "won"
-		PlayerSettings.player_hitpoints = player.hitpoints
-		# warning-ignore:return_value_discarded
-		get_tree().change_scene("res://Tavern.tscn")
+		get_parent().macro_controller.last_game_result = "won"
+		get_parent().macro_controller.player_hitpoints = player.hitpoints
+		get_parent().macro_controller.player_chips = player.chips
+		get_parent().emit_signal("game_over", "player_won")

@@ -475,7 +475,6 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"burns": false,
 		"description": "Your opponent immediately hits twice"
 	},
 		"078": {
@@ -483,7 +482,274 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"burns": false,
 		"description": "Swap currently played cards with your opponent"
+	},
+		"079": {
+		"name": "Negative Ace of Spades",
+		"suit": "negative_spades",
+		"value": -1,
+		"effect": true,
+		"description": "When played, choose value of either -1 or -11"
+	},
+		"080": {
+		"name": "Negative Two of Spades",
+		"suit": "negative_spades",
+		"value": -2,
+		"effect": false
+	},
+		"081": {
+		"name": "Negative Three of Spades",
+		"suit": "negative_spades",
+		"value": -3,
+		"effect": false
+	},
+		"082": {
+		"name": "Negative Four of Spades",
+		"suit": "negative_spades",
+		"value": -4,
+		"effect": false
+	},
+		"083": {
+		"name": "Negative Five of Spades",
+		"suit": "negative_spades",
+		"value": -5,
+		"effect": false
+	},
+		"084": {
+		"name": "Negative Six of Spades",
+		"suit": "negative_spades",
+		"value": -6,
+		"effect": false
+	},
+		"085": {
+		"name": "Negative Seven of Spades",
+		"suit": "negative_spades",
+		"value": -7,
+		"effect": false
+	},
+		"086": {
+		"name": "Negative Eight of Spades",
+		"suit": "negative_spades",
+		"value": -8,
+		"effect": false
+	},
+		"087": {
+		"name": "Negative Nine of Spades",
+		"suit": "negative_spades",
+		"value": -9,
+		"effect": false
+	},
+		"088": {
+		"name": "Negative Ten of Spades",
+		"suit": "negative_spades",
+		"value": -10,
+		"effect": false
+	},
+		"089": {
+		"name": "Negative Eleven of Spades",
+		"suit": "negative_spades",
+		"value": -11,
+		"effect": false,
+		"description": "When played, choose value of either -1 or -11"
+	},
+		"090": {
+		"name": "Negative Ace of Clubs",
+		"suit": "negative_clubs",
+		"value": -1,
+		"effect": true
+	},
+		"091": {
+		"name": "Negative Two of Clubs",
+		"suit": "negative_clubs",
+		"value": -2,
+		"effect": false
+	},
+		"092": {
+		"name": "Negative Three of Clubs",
+		"suit": "negative_clubs",
+		"value": -3,
+		"effect": false
+	},
+		"093": {
+		"name": "Negative Four of Clubs",
+		"suit": "negative_clubs",
+		"value": -4,
+		"effect": false
+	},
+		"094": {
+		"name": "Negative Five of Clubs",
+		"suit": "negative_clubs",
+		"value": -5,
+		"effect": false
+	},
+		"095": {
+		"name": "Negative Six of Clubs",
+		"suit": "negative_clubs",
+		"value": -6,
+		"effect": false
+	},
+		"096": {
+		"name": "Negative Seven of Clubs",
+		"suit": "negative_clubs",
+		"value": -7,
+		"effect": false
+	},
+		"097": {
+		"name": "Negative Eight of Clubs",
+		"suit": "negative_clubs",
+		"value": -8,
+		"effect": false
+	},
+		"098": {
+		"name": "Negative Nine of Clubs",
+		"suit": "negative_clubs",
+		"value": -9,
+		"effect": false
+	},
+		"099": {
+		"name": "Negative Ten of Clubs",
+		"suit": "negative_clubs",
+		"value": -10,
+		"effect": false
+	},
+		"100": {
+		"name": "Negative Eleven of Clubs",
+		"suit": "negative_clubs",
+		"value": -11,
+		"effect": false
+	},
+		"101": {
+		"name": "Negative Ace of Diamonds",
+		"suit": "negative_diamonds",
+		"value": -1,
+		"effect": true,
+		"description": "When played, choose value of either -1 or -11"
+	},
+		"102": {
+		"name": "Negative Two of Diamonds",
+		"suit": "negative_diamonds",
+		"value": -2,
+		"effect": false
+	},
+		"103": {
+		"name": "Negative Three of Diamonds",
+		"suit": "negative_diamonds",
+		"value": -3,
+		"effect": false
+	},
+		"104": {
+		"name": "Negative Four of Diamonds",
+		"suit": "negative_diamonds",
+		"value": -4,
+		"effect": false
+	},
+		"105": {
+		"name": "Negative Five of Diamonds",
+		"suit": "negative_diamonds",
+		"value": -5,
+		"effect": false
+	},
+		"106": {
+		"name": "Negative Six of Diamonds",
+		"suit": "negative_diamonds",
+		"value": -6,
+		"effect": false
+	},
+		"107": {
+		"name": "Negative Seven of Diamonds",
+		"suit": "negative_diamonds",
+		"value": -7,
+		"effect": false
+	},
+		"108": {
+		"name": "Negative Eight of Diamonds",
+		"suit": "negative_diamonds",
+		"value": -8,
+		"effect": false
+	},
+		"109": {
+		"name": "Negative Nine of Diamonds",
+		"suit": "negative_diamonds",
+		"value": -9,
+		"effect": false
+	},
+		"110": {
+		"name": "Negative Ten of Diamonds",
+		"suit": "negative_diamonds",
+		"value": -10,
+		"effect": false
+	},
+		"111": {
+		"name": "Negative Eleven of Diamonds",
+		"suit": "negative_diamonds",
+		"value": -11,
+		"effect": false
+	},
+		"112": {
+		"name": "Negative Ace of Hearts",
+		"suit": "negative_hearts",
+		"value": -1,
+		"effect": true,
+		"description": "When played, choose value of either -1 or -11"
+	},
+		"113": {
+		"name": "Negative Two of Hearts",
+		"suit": "negative_hearts",
+		"value": -2,
+		"effect": false
+	},
+		"114": {
+		"name": "Negative Three of Hearts",
+		"suit": "negative_hearts",
+		"value": -3,
+		"effect": false
+	},
+		"115": {
+		"name": "Negative Four of Hearts",
+		"suit": "negative_hearts",
+		"value": -4,
+		"effect": false
+	},
+		"116": {
+		"name": "Negative Five of Hearts",
+		"suit": "negative_hearts",
+		"value": -5,
+		"effect": false
+	},
+		"117": {
+		"name": "Negative Six of Hearts",
+		"suit": "negative_hearts",
+		"value": -6,
+		"effect": false
+	},
+		"118": {
+		"name": "Negative Seven of Hearts",
+		"suit": "negative_hearts",
+		"value": -7,
+		"effect": false
+	},
+		"119": {
+		"name": "Negative Eight of Hearts",
+		"suit": "negative_hearts",
+		"value": -8,
+		"effect": false
+	},
+		"120": {
+		"name": "Negative Nine of Hearts",
+		"suit": "negative_hearts",
+		"value": -9,
+		"effect": false
+	},
+		"121": {
+		"name": "Negative Ten of Hearts",
+		"suit": "negative_hearts",
+		"value": -10,
+		"effect": false
+	},
+		"122": {
+		"name": "Negative Eleven of Hearts",
+		"suit": "negative_hearts",
+		"value": -11,
+		"effect": false
 	}
 }

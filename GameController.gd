@@ -1,5 +1,9 @@
 extends Node
 
+# warning-ignore:unused_signal
+# called by AfterRoundPhase since that's where we check hp - but signal for this node in case we have other win conditions later
+signal game_over(result)
+
 var rng
 var player
 var opponent
@@ -10,6 +14,8 @@ var state_label
 
 var current_state = ""
 
+onready var macro_controller = get_parent()
+
 func _ready():
 	player = get_node("Player")
 	opponent = get_node("Opponent")
@@ -18,10 +24,10 @@ func _ready():
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
 	
-	for n in PlayerSettings.player_deck:
+	for n in macro_controller.player_deck:
 		player.add_card_to_deck(n)
 	
-	for n in PlayerSettings.opponent_deck:
+	for n in macro_controller.opponent_deck:
 		opponent.add_card_to_deck(n)
 	
 	player.build_draw_pile()
@@ -33,8 +39,6 @@ func _ready():
 	
 	player.get_node("ScoreBar").update_score(player.score)
 	opponent.get_node("ScoreBar").update_score(opponent.score)
-	
-	transition_to("PlayerPreGameChoice", {})
 
 func transition_to(target_state: String, _data: Dictionary):
 #	print("attempting state transition from: " + current_state + " to: " + target_state)
@@ -90,7 +94,7 @@ func _on_OpponentScoreUpdate_state_exited():
 
 func _on_AfterRoundPhase_state_exited(play_should_continue):
 	if play_should_continue:
-		transition_to("PlayerWaitForFirstPlayAreaInput", {})
+		transition_to("PlayerStartOfTurnActions", {})
 	else:
 		transition_to("DiscardPhase", {})
 

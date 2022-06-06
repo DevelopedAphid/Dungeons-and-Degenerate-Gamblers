@@ -11,21 +11,20 @@ config_version=4
 [application]
 
 config/name="Dungeons and Degenerate Gamblers"
-run/main_scene="res://Tavern.tscn"
+run/main_scene="res://MacroController.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 CardList="*res://CardList.gd"
-PlayerSettings="*res://PlayerSettings.gd"
 Fonts="*res://Fonts.gd"
 
 [display]
 
 window/size/width=480
 window/size/height=300
-window/size/test_width=1920
-window/size/test_height=1200
+window/size/test_width=960
+window/size/test_height=600
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 

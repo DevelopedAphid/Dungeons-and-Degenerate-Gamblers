@@ -1,0 +1,240 @@
+[gd_scene load_steps=29 format=2]
+
+[ext_resource path="res://assets/art/spade_shield.png" type="Texture" id=1]
+[ext_resource path="res://BattleScene.gd" type="Script" id=2]
+[ext_resource path="res://assets/art/card_mat.png" type="Texture" id=3]
+[ext_resource path="res://assets/art/characters/imp.png" type="Texture" id=4]
+[ext_resource path="res://assets/art/hit_button.png" type="Texture" id=5]
+[ext_resource path="res://assets/art/battle_vignette.png" type="Texture" id=6]
+[ext_resource path="res://HoverPanel.tscn" type="PackedScene" id=7]
+[ext_resource path="res://states/AfterRoundPhase.gd" type="Script" id=8]
+[ext_resource path="res://DeckController.gd" type="Script" id=9]
+[ext_resource path="res://states/DiscardPhase.gd" type="Script" id=10]
+[ext_resource path="res://GameController.gd" type="Script" id=11]
+[ext_resource path="res://OpponentAI.gd" type="Script" id=12]
+[ext_resource path="res://states/OpponentPreGameChoice.gd" type="Script" id=13]
+[ext_resource path="res://states/OpponentScoreUpdate.gd" type="Script" id=14]
+[ext_resource path="res://states/OpponentStartOfTurnActions.gd" type="Script" id=15]
+[ext_resource path="res://states/OpponentWaitForCardChoice.gd" type="Script" id=16]
+[ext_resource path="res://states/OpponentWaitForFirstPlayAreaInput.gd" type="Script" id=17]
+[ext_resource path="res://states/PlayerPreGameChoice.gd" type="Script" id=18]
+[ext_resource path="res://states/PlayerScoreUpdate.gd" type="Script" id=19]
+[ext_resource path="res://states/PlayerStartOfTurnActions.gd" type="Script" id=20]
+[ext_resource path="res://states/PlayerWaitForCardChoice.gd" type="Script" id=21]
+[ext_resource path="res://states/PlayerWaitForFirstPlayAreaInput.gd" type="Script" id=22]
+[ext_resource path="res://ScoreBar.tscn" type="PackedScene" id=23]
+[ext_resource path="res://DeckDisplay.tscn" type="PackedScene" id=24]
+[ext_resource path="res://ChoiceController.tscn" type="PackedScene" id=25]
+[ext_resource path="res://assets/art/stand_button.png" type="Texture" id=26]
+[ext_resource path="res://ChipCounter.tscn" type="PackedScene" id=27]
+[ext_resource path="res://assets/art/turn_indicator.png" type="Texture" id=28]
+
+[node name="GameController" type="Node"]
+script = ExtResource( 11 )
+
+[node name="MatSprite" type="Sprite" parent="."]
+texture = ExtResource( 3 )
+centered = false
+
+[node name="StayButton" type="TextureButton" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -44.5
+margin_top = 85.5
+margin_right = 44.5
+margin_bottom = 142.5
+mouse_filter = 1
+texture_normal = ExtResource( 26 )
+
+[node name="HitButton" type="TextureButton" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -44.5
+margin_top = 30.5
+margin_right = 44.5
+margin_bottom = 87.5
+mouse_filter = 1
+texture_normal = ExtResource( 5 )
+
+[node name="BattleScene" type="Node2D" parent="."]
+position = Vector2( 110, 10 )
+script = ExtResource( 2 )
+
+[node name="BackgroundSprite" type="Sprite" parent="BattleScene"]
+texture = ExtResource( 6 )
+centered = false
+
+[node name="PlayerSprite" type="Sprite" parent="BattleScene"]
+position = Vector2( 32, 24 )
+texture = ExtResource( 4 )
+centered = false
+
+[node name="OpponentSprite" type="Sprite" parent="BattleScene"]
+position = Vector2( 222, 24 )
+texture = ExtResource( 4 )
+centered = false
+
+[node name="PlayerHealthLabel" type="Label" parent="BattleScene"]
+margin_left = 17.0
+margin_top = 16.0
+margin_right = 57.0
+margin_bottom = 30.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerDamageLabel" type="Label" parent="BattleScene"]
+margin_left = 17.0
+margin_top = 32.0
+margin_right = 57.0
+margin_bottom = 46.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OpponentHealthLabel" type="Label" parent="BattleScene"]
+margin_left = 208.0
+margin_top = 16.0
+margin_right = 248.0
+margin_bottom = 30.0
+
+[node name="OpponentDamageLabel" type="Label" parent="BattleScene"]
+margin_left = 208.0
+margin_top = 32.0
+margin_right = 248.0
+margin_bottom = 46.0
+
+[node name="TurnIndicator" type="Sprite" parent="BattleScene"]
+position = Vector2( -5, 30 )
+texture = ExtResource( 28 )
+flip_h = true
+
+[node name="Shields" type="Node2D" parent="BattleScene"]
+
+[node name="PlayerShieldSprite" type="Sprite" parent="BattleScene/Shields"]
+visible = false
+position = Vector2( 55, 45 )
+texture = ExtResource( 1 )
+
+[node name="PlayerShieldLabel" type="Label" parent="BattleScene/Shields"]
+margin_left = 65.0
+margin_top = 40.0
+margin_right = 105.0
+margin_bottom = 54.0
+
+[node name="OpponentShieldSprite" type="Sprite" parent="BattleScene/Shields"]
+visible = false
+position = Vector2( 215, 45 )
+texture = ExtResource( 1 )
+
+[node name="OpponentShieldLabel" type="Label" parent="BattleScene/Shields"]
+margin_left = 180.0
+margin_top = 40.0
+margin_right = 220.0
+margin_bottom = 54.0
+
+[node name="Opponent" type="Node2D" parent="."]
+script = ExtResource( 9 )
+
+[node name="AI" type="Node2D" parent="Opponent"]
+script = ExtResource( 12 )
+
+[node name="ScoreBar" parent="Opponent" instance=ExtResource( 23 )]
+position = Vector2( 442, 50 )
+
+[node name="PlayPilePosition" type="Position2D" parent="Opponent"]
+position = Vector2( 314, 100 )
+
+[node name="DeckDisplay" parent="Opponent" instance=ExtResource( 24 )]
+position = Vector2( 381, 100 )
+
+[node name="DiscardPilePosition" type="Position2D" parent="Opponent"]
+position = Vector2( 376, 200 )
+
+[node name="Player" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 9 )
+
+[node name="ChipCounter" parent="Player" instance=ExtResource( 27 )]
+position = Vector2( 60, 18 )
+
+[node name="ScoreBar" parent="Player" instance=ExtResource( 23 )]
+position = Vector2( 19, 50 )
+
+[node name="ChoiceController" parent="Player" instance=ExtResource( 25 )]
+visible = false
+
+[node name="PlayPilePosition" type="Position2D" parent="Player"]
+position = Vector2( 109, 100 )
+
+[node name="DeckDisplay" parent="Player" instance=ExtResource( 24 )]
+position = Vector2( 42, 100 )
+
+[node name="DiscardPilePosition" type="Position2D" parent="Player"]
+position = Vector2( 46, 200 )
+
+[node name="StateLabel" type="Label" parent="."]
+visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HoverPanel" parent="." instance=ExtResource( 7 )]
+
+[node name="PlayerPreGameChoice" type="Node" parent="."]
+script = ExtResource( 18 )
+
+[node name="OpponentPreGameChoice" type="Node" parent="."]
+script = ExtResource( 13 )
+
+[node name="PlayerStartOfTurnActions" type="Node" parent="."]
+script = ExtResource( 20 )
+
+[node name="PlayerWaitForFirstPlayAreaInput" type="Node" parent="."]
+script = ExtResource( 22 )
+
+[node name="PlayerWaitForCardChoice" type="Node" parent="."]
+script = ExtResource( 21 )
+
+[node name="PlayerScoreUpdate" type="Node" parent="."]
+script = ExtResource( 19 )
+
+[node name="OpponentStartOfTurnActions" type="Node" parent="."]
+script = ExtResource( 15 )
+
+[node name="OpponentWaitForFirstPlayAreaInput" type="Node" parent="."]
+script = ExtResource( 17 )
+
+[node name="OpponentWaitForCardChoice" type="Node" parent="."]
+script = ExtResource( 16 )
+
+[node name="OpponentScoreUpdate" type="Node" parent="."]
+script = ExtResource( 14 )
+
+[node name="AfterRoundPhase" type="Node" parent="."]
+script = ExtResource( 8 )
+
+[node name="DiscardPhase" type="Node" parent="."]
+script = ExtResource( 10 )
+
+[connection signal="pressed" from="StayButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_StayButton_pressed"]
+[connection signal="pressed" from="HitButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_HitButton_pressed"]
+[connection signal="choice_made_" from="Player/ChoiceController" to="Player" method="_on_ChoiceController_choice_made_"]
+[connection signal="state_exited" from="PlayerPreGameChoice" to="." method="_on_PlayerPreGameChoice_state_exited"]
+[connection signal="state_exited" from="OpponentPreGameChoice" to="." method="_on_OpponentPreGameChoice_state_exited"]
+[connection signal="state_exited" from="PlayerStartOfTurnActions" to="." method="_on_PlayerStartOfTurnActions_state_exited"]
+[connection signal="state_exited" from="PlayerWaitForFirstPlayAreaInput" to="." method="_on_PlayerWaitForFirstPlayAreaInput_state_exited"]
+[connection signal="state_exited" from="PlayerWaitForCardChoice" to="." method="_on_PlayerWaitForCardChoice_state_exited"]
+[connection signal="state_exited" from="PlayerScoreUpdate" to="." method="_on_PlayerScoreUpdate_state_exited"]
+[connection signal="state_exited" from="OpponentStartOfTurnActions" to="." method="_on_OpponentStartOfTurnActions_state_exited"]
+[connection signal="state_exited" from="OpponentWaitForFirstPlayAreaInput" to="." method="_on_OpponentWaitForFirstPlayAreaInput_state_exited"]
+[connection signal="state_exited" from="OpponentWaitForCardChoice" to="." method="_on_OpponentWaitForCardChoice_state_exited"]
+[connection signal="state_exited" from="OpponentScoreUpdate" to="." method="_on_OpponentScoreUpdate_state_exited"]
+[connection signal="state_exited" from="AfterRoundPhase" to="." method="_on_AfterRoundPhase_state_exited"]
+[connection signal="state_exited" from="DiscardPhase" to="." method="_on_DiscardPhase_state_exited"]

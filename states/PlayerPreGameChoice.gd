@@ -13,10 +13,9 @@ func _ready():
 func enter_state():
 	game_controller.current_state = self.name
 	#update the relevant UI elements
-	get_parent().get_node("BattleScene/PlayerHealthLabel").text = str(player.hitpoints) + "/" + str(player.max_hitpoints)
-	get_parent().get_node("BattleScene/OpponentHealthLabel").text = str(opponent.hitpoints) + "/" + str(opponent.max_hitpoints)
+	get_parent().get_node("BattleScene").update_health_points()
 	player.get_node("ChipCounter").change_chip_number(player.chips)
-	exit_state() #for now we just skip this state completely
+	exit_state() 
 
 func exit_state():
 	emit_signal("state_exited")

@@ -34,6 +34,8 @@ func set_card_id(id):
 	card_value = CardList.card_dictionary[card_id].value
 	if CardList.card_dictionary[card_id].has("description"):
 		card_description = CardList.card_dictionary[card_id].description
+	else:
+		card_description = ""
 	if CardList.card_dictionary[card_id].has("burns"):
 		card_does_burn = CardList.card_dictionary[card_id].burns
 	

@@ -10,9 +10,9 @@ var burn_pile = []
 var score = 0
 var hitpoints = 100
 var max_hitpoints
-var bleedpoints = 0
+var shieldpoints = 0
 var current_card_effect_id
-var chips = 0
+var chips
 
 #screen positions and spacing
 onready var play_pile_pos = $PlayPilePosition.position
@@ -26,10 +26,11 @@ var Card = preload("res://Card.tscn")
 
 func _ready():
 	if name == "Player":
-		hitpoints = PlayerSettings.player_hitpoints
-		max_hitpoints = PlayerSettings.player_max_hitpoints
+		hitpoints = get_parent().get_parent().player_hitpoints
+		max_hitpoints = get_parent().get_parent().player_max_hitpoints
+		chips = get_parent().get_parent().player_chips
 	elif name == "Opponent":
-		hitpoints = PlayerSettings.opponent_health_points
+		hitpoints = get_parent().get_parent().opponent_health_points
 		max_hitpoints = hitpoints
 
 func add_card_to_deck(card_id):
@@ -121,7 +122,7 @@ func discard_played_cards():
 			cards_currently_moving.erase(card)
 			if card.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
 				card.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
-			call_deferred("remove_child", card)
+			remove_child(card)
 	
 	if cards_to_discard.size() > 0:
 		move_cards_to(cards_to_discard, "play_pile", "discard_pile")
@@ -136,11 +137,40 @@ func discard_played_cards():
 #	#add a defined card to the draw pile at a defined position
 #	pass
 
-func heal(heal_amount: int):
-	if hitpoints + heal_amount > max_hitpoints:
-		hitpoints = max_hitpoints
-	else: 
-		hitpoints += heal_amount
+func heal(heal_amount: int, heal_source_pos: Vector2):
+	if heal_amount > 0:
+		if hitpoints + heal_amount > max_hitpoints:
+			hitpoints = max_hitpoints
+		else:
+			hitpoints += heal_amount
+		get_parent().get_node("BattleScene").update_health_points()
+		
+		#create hearts and then send them toward the heal target
+		var skip_count = 3
+		var i = 0
+		while i < heal_amount: 
+			var heart = load("res://HealHeart.tscn").instance()
+			heart.position = heal_source_pos
+			add_child(heart)
+			var target_pos
+			if name == "Player":
+				target_pos = get_parent().get_node("BattleScene/PlayerSprite").global_position
+			elif name == "Opponent":
+				target_pos = get_parent().get_node("BattleScene/OpponentSprite").global_position
+			heart.set_target_position(target_pos)
+			heart.start_tweening_to_target()
+			#delay to create spacing between
+			var timer = Timer.new()
+			add_child(timer)
+			timer.wait_time = 0.1
+			timer.start()
+			yield(timer, "timeout")
+			i += skip_count
+
+func damage(damage_amount: int):
+	if damage_amount > 0:
+		hitpoints -= damage_amount
+		get_parent().get_node("BattleScene").play_damage_animation(self, damage_amount)
 
 func move_cards_to(cards, from_pile, to_pile):
 	var other_player
@@ -231,7 +261,7 @@ func play_card_effect(card, id):
 		card.add_child(candle)
 		candle.texture = load("res://assets/art/candles.png")
 		candle.hframes = 5
-		candle.frame = round(rand_range(1,5)) #choose a random candle colour
+		candle.frame = round(rand_range(0,4)) #choose a random candle colour
 		var spacing = 2
 		if not card_value % 2 == 0: #odd
 			candle.position = Vector2(27 + spacing * card_value, 51)
@@ -244,8 +274,8 @@ func play_card_effect(card, id):
 		if draw_pile.size() > 0:
 			get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
 	elif id == "076": #Get Well Soon card
-		get_parent().get_node("Player").heal(10)
-		get_parent().get_node("Opponent").heal(10)
+		get_parent().get_node("Player").heal(10, card.position)
+		get_parent().get_node("Opponent").heal(10, card.position)
 	elif id == "077": #+2 Card
 		get_parent().get_node("Opponent").draw_top_card()
 		get_parent().get_node("Opponent").draw_top_card()
@@ -280,6 +310,18 @@ func play_card_effect(card, id):
 			#add this card as a child of the other player and connect movement signal
 			add_child(card_to_swap)
 			card_to_swap.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
+	elif id == "079": #negative ace of spades
+		var choice_array = [id, "089"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "090": #negative ace of clubs
+		var choice_array = [id, "100"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "101": #negative ace of diamonds
+		var choice_array = [id, "111"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "112": #negative ace of hearts
+		var choice_array = [id, "122"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	var id = current_card_effect_id
@@ -304,4 +346,8 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		origin_card.set_card_suit(choice_made.get_card_suit())
 		origin_card.set_card_art(choice_made.get_card_id())
 		call_deferred("play_card_effect", origin_card, choice_made.get_card_id())
+	elif id == "079" || id == "090" || id == "101" || id == "112" : #negative aces
+		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
+		origin_card.set_card_art(choice_made)
+		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + str(origin_card.get_card_value()) + ")")
 	current_card_effect_id = null

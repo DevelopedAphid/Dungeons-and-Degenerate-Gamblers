@@ -17,6 +17,8 @@ func enter_state():
 	player.get_node("ScoreBar").update_score(player.score)
 	opponent.get_node("ScoreBar").update_score(opponent.score)
 	
+	game_controller.get_node("BattleScene").set_turn_indicator(true)
+	
 	exit_state()
 
 func exit_state():

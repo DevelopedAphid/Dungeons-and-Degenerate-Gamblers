@@ -1,0 +1,94 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://ChipCounter.tscn" type="PackedScene" id=1]
+[ext_resource path="res://HoverPanel.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Card.tscn" type="PackedScene" id=3]
+[ext_resource path="res://ChoiceUI.gd" type="Script" id=4]
+
+[node name="ChoiceUI" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="StartingSuitChoice" type="Node2D" parent="."]
+visible = false
+
+[node name="Card1" parent="StartingSuitChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 110, 90 )
+card_id = "001"
+
+[node name="Card2" parent="StartingSuitChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 175, 90 )
+card_id = "014"
+
+[node name="Card3" parent="StartingSuitChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 240, 90 )
+card_id = "027"
+
+[node name="Card4" parent="StartingSuitChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 305, 90 )
+card_id = "040"
+
+[node name="RewardCardChoice" type="Node2D" parent="."]
+visible = false
+
+[node name="Reward1" parent="RewardCardChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 142, 90 )
+card_id = "001"
+
+[node name="Reward2" parent="RewardCardChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 207, 90 )
+card_id = "001"
+
+[node name="Reward3" parent="RewardCardChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 272, 90 )
+card_id = "001"
+
+[node name="Shop" type="Node2D" parent="."]
+visible = false
+
+[node name="ChipCounter" parent="Shop" instance=ExtResource( 1 )]
+position = Vector2( 60, 18 )
+
+[node name="ShopFinishedButton" type="Button" parent="Shop"]
+margin_left = 180.0
+margin_top = 260.0
+margin_right = 281.0
+margin_bottom = 280.0
+text = "Done shopping"
+
+[node name="ShopChoice" type="Node2D" parent="Shop"]
+
+[node name="Card1" parent="Shop/ShopChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 110, 55 )
+card_id = "001"
+
+[node name="Card2" parent="Shop/ShopChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 175, 55 )
+card_id = "014"
+
+[node name="Card3" parent="Shop/ShopChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 240, 55 )
+card_id = "027"
+
+[node name="Card4" parent="Shop/ShopChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 305, 55 )
+card_id = "040"
+
+[node name="Card5" parent="Shop/ShopChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 110, 155 )
+card_id = "001"
+
+[node name="Card6" parent="Shop/ShopChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 175, 155 )
+card_id = "014"
+
+[node name="Card7" parent="Shop/ShopChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 240, 155 )
+card_id = "027"
+
+[node name="Card8" parent="Shop/ShopChoice" groups=["choices"] instance=ExtResource( 3 )]
+position = Vector2( 305, 155 )
+card_id = "040"
+
+[node name="HoverPanel" parent="." instance=ExtResource( 2 )]
+
+[connection signal="pressed" from="Shop/ShopFinishedButton" to="." method="_on_ShopFinishedButton_pressed"]

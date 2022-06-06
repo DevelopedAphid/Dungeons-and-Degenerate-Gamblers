@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/table_small.png-3cf7c4bb7407d1901872672d49b4bca4.stex"
+path="res://.import/spade_shield.png-d48fd964781fb9ae84c53e3088f07025.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/floors/furniture/table_small.png"
-dest_files=[ "res://.import/table_small.png-3cf7c4bb7407d1901872672d49b4bca4.stex" ]
+source_file="res://assets/art/spade_shield.png"
+dest_files=[ "res://.import/spade_shield.png-d48fd964781fb9ae84c53e3088f07025.stex" ]
 
 [params]
 
