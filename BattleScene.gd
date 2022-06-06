@@ -84,3 +84,11 @@ func play_damage_animation(target, damage_amount: int):
 		add_child(pos_tween)
 		pos_tween.interpolate_property($OpponentDamageLabel, "rect_position", opponent_damage_label_orig_pos, opponent_damage_label_orig_pos + Vector2(0, -5), 0.5)
 		pos_tween.start()
+
+func set_turn_indicator(is_player_turn: bool):
+	if is_player_turn:
+		$TurnIndicator.position = Vector2(-5, 30)
+		$TurnIndicator.flip_h = true
+	else:
+		$TurnIndicator.position = Vector2(266, 30)
+		$TurnIndicator.flip_h = false

@@ -94,7 +94,7 @@ func _on_OpponentScoreUpdate_state_exited():
 
 func _on_AfterRoundPhase_state_exited(play_should_continue):
 	if play_should_continue:
-		transition_to("PlayerWaitForFirstPlayAreaInput", {})
+		transition_to("PlayerStartOfTurnActions", {})
 	else:
 		transition_to("DiscardPhase", {})
 
