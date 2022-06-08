@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Card.tscn" type="PackedScene" id=1]
+[ext_resource path="res://HoverPanel.tscn" type="PackedScene" id=2]
+[ext_resource path="res://FortuneTeller.gd" type="Script" id=3]
+
+[node name="FortuneTeller" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="Cards" type="Node2D" parent="."]
+
+[node name="Card1" parent="Cards" groups=["choices"] instance=ExtResource( 1 )]
+position = Vector2( 142, 90 )
+
+[node name="Card2" parent="Cards" groups=["choices"] instance=ExtResource( 1 )]
+position = Vector2( 207, 90 )
+
+[node name="Card3" parent="Cards" groups=["choices"] instance=ExtResource( 1 )]
+position = Vector2( 272, 90 )
+
+[node name="HoverPanel" parent="." instance=ExtResource( 2 )]
