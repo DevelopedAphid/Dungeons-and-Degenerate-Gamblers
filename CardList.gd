@@ -751,5 +751,159 @@ var card_dictionary = {
 		"suit": "negative_hearts",
 		"value": -11,
 		"effect": false
+	},
+		"123": {
+		"name": "I The Magician",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"124": {
+		"name": "II The High Priestess",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"125": {
+		"name": "III The Empress",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"126": {
+		"name": "IV The Emporer",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"127": {
+		"name": "V The Heirophant",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"128": {
+		"name": "VI The Lovers",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"129": {
+		"name": "VII The Chariot",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"130": {
+		"name": "VIII Justice",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"131": {
+		"name": "IX The Hermit",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"132": {
+		"name": "X Wheel of Fortune",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"133": {
+		"name": "XI Strength",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"134": {
+		"name": "XII The Hanged Man",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"135": {
+		"name": "XIII Death",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"136": {
+		"name": "XIV Temperance",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"137": {
+		"name": "XV The Devli",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"138": {
+		"name": "XVI The Tower",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"139": {
+		"name": "XVII The Star",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"140": {
+		"name": "XVIII The Moon",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"141": {
+		"name": "XIX The Sun",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"142": {
+		"name": "XX Judgment",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"143": {
+		"name": "XXI The World",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
+	},
+		"144": {
+		"name": "0 The Fool",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"tarot": true
 	}
 }

@@ -40,7 +40,7 @@ func _on_CardBack_clicked(card):
 				return
 			else:
 				card3_flipped = true
-	card.set_card_id(get_random_card_id())
+	card.set_card_id(get_random_tarot_card_id())
 
-func get_random_card_id() -> int:
-	return int(rand_range(1, CardList.card_dictionary.size()))
+func get_random_tarot_card_id() -> int:
+	return int(rand_range(123, 144))
