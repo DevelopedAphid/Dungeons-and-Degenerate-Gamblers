@@ -11,7 +11,7 @@ onready var font = Fonts.font_pixel_5_9
 func _ready():
 	$ScoreLabel.add_font_override("font", font)
 
-func update_score(score):
+func update_score():
 	#remove current icons
 	var sprite_array = []
 	for child in get_children():
@@ -19,6 +19,11 @@ func update_score(score):
 			sprite_array.append(child)
 	for child in sprite_array:
 		child.queue_free()
+	
+	var score = 0
+	for card in get_parent().play_pile:
+		score = score + card.get_card_value()
+	get_parent().score = score
 	
 	$ScoreLabel.text = str(score)
 	if $ScoreLabel.text.length() == 1:

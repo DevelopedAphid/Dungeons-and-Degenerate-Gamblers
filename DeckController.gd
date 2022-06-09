@@ -225,6 +225,7 @@ func move_cards_to(cards, from_pile, to_pile):
 
 func on_card_movement_completed(card):
 	cards_currently_moving.erase(card)
+	get_parent().update_scores() #since cards may have moved into or out of play piles and therefore changed scores
 	if cards_currently_moving.size() == 0:
 		emit_signal("UI_update_completed")
 

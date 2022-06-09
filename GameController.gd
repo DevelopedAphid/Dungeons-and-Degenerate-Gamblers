@@ -37,8 +37,11 @@ func _ready():
 	player_last_turn_result = "hit"
 	opponent_last_turn_result = "hit"
 	
-	player.get_node("ScoreBar").update_score(player.score)
-	opponent.get_node("ScoreBar").update_score(opponent.score)
+	update_scores()
+
+func update_scores():
+	player.get_node("ScoreBar").update_score()
+	opponent.get_node("ScoreBar").update_score()
 
 func transition_to(target_state: String, _data: Dictionary):
 #	print("attempting state transition from: " + current_state + " to: " + target_state)
@@ -51,6 +54,8 @@ func transition_to(target_state: String, _data: Dictionary):
 	if opponent.cards_currently_moving.size() > 0:
 		yield(opponent, "UI_update_completed")
 #	print("resuming after transition to " + target_state)
+	
+	update_scores()
 	
 	current_state = target_state
 	state_label.text = current_state
