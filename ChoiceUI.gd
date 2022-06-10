@@ -27,7 +27,7 @@ func change_choices_visibility(visibility: bool):
 func present_rewards():
 	var reward_array = []
 	for i in 3:
-		reward_array.append(int(rand_range(1, CardList.card_dictionary.size())))
+		reward_array.append(int(CardList.get_random_reward_card_id()))
 	
 	$RewardCardChoice/Reward1.set_card_id(reward_array[0])
 	$RewardCardChoice/Reward2.set_card_id(reward_array[1])
@@ -45,7 +45,7 @@ func present_rewards():
 func show_shop():
 	var shop_array = []
 	for i in 8:
-		shop_array.append(int(rand_range(1, CardList.card_dictionary.size())))
+		shop_array.append(int(CardList.get_random_reward_card_id()))
 	
 	var shop_cards = $Shop/ShopChoice.get_children()
 	var i = 0
