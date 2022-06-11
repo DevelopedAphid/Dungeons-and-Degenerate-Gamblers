@@ -18,8 +18,8 @@ var game_controller
 var choice_UI
 var fortune_teller
 
-var floor_name = "tavern"
-var encounter_count = 1
+var floor_name = "tavern" #start floor, set to tavern to begin at start of game
+var encounter_count = 1 #start level, set to 1 to begin at start of floor
 var dialogue_type = ""
 
 func _ready():

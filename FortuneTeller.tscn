@@ -7,6 +7,16 @@
 [node name="FortuneTeller" type="Node2D"]
 script = ExtResource( 3 )
 
+[node name="CardLabel" type="Label" parent="."]
+margin_top = 185.0
+margin_right = 480.0
+margin_bottom = 199.0
+align = 1
+
+[node name="CardLabelTimer" type="Timer" parent="CardLabel"]
+wait_time = 3.0
+one_shot = true
+
 [node name="Cards" type="Node2D" parent="."]
 
 [node name="Card1" parent="Cards" groups=["choices"] instance=ExtResource( 1 )]
@@ -19,3 +29,5 @@ position = Vector2( 207, 90 )
 position = Vector2( 272, 90 )
 
 [node name="HoverPanel" parent="." instance=ExtResource( 2 )]
+
+[connection signal="timeout" from="CardLabel/CardLabelTimer" to="." method="_on_CardLabelTimer_timeout"]
