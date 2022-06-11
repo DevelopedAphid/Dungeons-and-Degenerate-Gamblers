@@ -1041,5 +1041,11 @@ var card_dictionary = {
 		"value": 0,
 		"effect": true,
 		"tarot": true
+	},
+		"145": {
+		"name": "Ace Up Your Sleeve",
+		"suit": "special",
+		"value": 0,
+		"effect": true
 	}
 }

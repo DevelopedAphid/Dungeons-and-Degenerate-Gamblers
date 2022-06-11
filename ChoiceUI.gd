@@ -87,7 +87,7 @@ func _on_Card_clicked(card_choice):
 				"040", "041", "042", "043", "044", "045", 
 				"046", "047", "048", "049", "050", "051", "052"]
 		
-		var testing_cards = ["069", "070", "071", "072", "076", "077", "078", "118", "119"]
+		var testing_cards = ["069", "070", "071", "072", "076", "077", "078", "145"]
 		for n in testing_cards:
 			macro_controller.player_deck.append(n)
 		

@@ -7,6 +7,7 @@ var draw_pile = []
 var play_pile = []
 var discard_pile = []
 var burn_pile = []
+var sleeve_pile = []
 var score = 0
 var hitpoints = 100
 var max_hitpoints
@@ -82,7 +83,7 @@ func draw_top_card():
 	$DeckDisplay.change_deck_size(draw_pile.size())
 	
 	if top_card.has_special_effect():
-		play_card_effect(top_card, top_card.get_card_id())
+		play_card_draw_effect(top_card, top_card.get_card_id())
 
 func shuffle_discard_pile_into_draw_pile():
 	#put everything in discard pile into draw pile
@@ -172,7 +173,7 @@ func damage(damage_amount: int):
 		hitpoints -= damage_amount
 		get_parent().get_node("BattleScene").play_damage_animation(self, damage_amount)
 
-func move_cards_to(cards, from_pile, to_pile):
+func move_cards_to(cards: Array, from_pile: String, to_pile: String):
 	var other_player
 	if name == "Player":
 		other_player = get_parent().get_node("Opponent")
@@ -192,6 +193,9 @@ func move_cards_to(cards, from_pile, to_pile):
 		card_spacing = 0
 	elif to_pile == "other_play_pile":
 		target_position = other_player.play_pile_pos
+		card_spacing = play_pile_card_spacing
+	elif to_pile == "sleeve_pile":
+		target_position = $SleevePilePosition.position
 		card_spacing = play_pile_card_spacing
 	
 	if name == "Opponent":
@@ -214,6 +218,9 @@ func move_cards_to(cards, from_pile, to_pile):
 			"other_play_pile":
 				other_player.play_pile.append(card)
 				card.get_node("MovementHandler").move_card_to(target_position + Vector2(-1 * card_spacing * (other_player.play_pile.size() - 1), 0))
+			"sleeve_pile":
+				sleeve_pile.append(card)
+				card.get_node("MovementHandler").move_card_to(target_position + Vector2(card_spacing * (sleeve_pile.size() - 1), 0))
 		#remove cards from from_pile
 		match from_pile:
 			"play_pile":
@@ -222,6 +229,8 @@ func move_cards_to(cards, from_pile, to_pile):
 				discard_pile.erase(card)
 			"draw_pile":
 				draw_pile.erase(card)
+			"sleeve_pile":
+				sleeve_pile.erase(card)
 
 func on_card_movement_completed(card):
 	cards_currently_moving.erase(card)
@@ -232,7 +241,7 @@ func on_card_movement_completed(card):
 func _on_Card_choice_to_make(choice_array, card):
 	emit_signal("card_choice_to_make", choice_array, card)
 
-func play_card_effect(card, id):
+func play_card_draw_effect(card, id):
 	if self.name == "Opponent": #currently this means opponents are unable to use special cards
 		return
 	
@@ -323,6 +332,33 @@ func play_card_effect(card, id):
 	elif id == "112": #negative ace of hearts
 		var choice_array = [id, "122"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "145": #ace up your sleeve
+		var ace_id
+		#creates an ace with random suit
+		var random_suit_id = randi() % 4 + 1
+		match random_suit_id:
+			1:
+				ace_id = "001"
+			2:
+				ace_id = "014"
+			3:
+				ace_id = "027"
+			4:
+				ace_id = "040"
+		move_cards_to([card], "play_pile", "discard_pile") #discard ace up your sleeve card
+		
+		#move the ace to sleeve pile
+		var new_card = Card.instance()
+		new_card.add_to_group("sleeve_cards")
+		add_child(new_card)
+		new_card.set_card_id(ace_id)
+		play_pile.append(new_card)
+		new_card.connect("card_hover_started", get_parent().get_node("HoverPanel"), "_on_Card_hover_started")
+		new_card.connect("card_hover_ended", get_parent().get_node("HoverPanel"), "_on_Card_hover_ended")
+		new_card.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
+		new_card.connect("card_clicked", self, "_on_SleveCard_clicked", [new_card])
+		
+		move_cards_to([new_card], "play_pile", "sleeve_pile")
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	var id = current_card_effect_id
@@ -346,9 +382,31 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		origin_card.set_card_value(choice_made.get_card_value())
 		origin_card.set_card_suit(choice_made.get_card_suit())
 		origin_card.set_card_art(choice_made.get_card_id())
-		call_deferred("play_card_effect", origin_card, choice_made.get_card_id())
+		call_deferred("play_card_draw_effect", origin_card, choice_made.get_card_id())
 	elif id == "079" || id == "090" || id == "101" || id == "112" : #negative aces
 		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
 		origin_card.set_card_art(choice_made)
 		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + str(origin_card.get_card_value()) + ")")
 	current_card_effect_id = null
+
+func _on_SleveCard_clicked(card):
+	move_cards_to([card], "sleeve_pile", "play_pile")
+	play_card_draw_effect(card, card.card_id)
+
+func play_card_start_of_turn_effect(card, id):
+	if self.name == "Opponent": #currently this means opponents are unable to use special cards
+		return
+	
+	current_card_effect_id = id
+	
+	if id == "":
+		pass
+
+func play_card_discard_effect(card, id):
+	if self.name == "Opponent": #currently this means opponents are unable to use special cards
+		return
+	
+	current_card_effect_id = id
+	
+	if id == "":
+		pass

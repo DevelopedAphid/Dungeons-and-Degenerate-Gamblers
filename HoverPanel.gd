@@ -102,8 +102,9 @@ func find_and_focus_top_card():
 	score_badge.visible = true
 	score_label.visible = true
 	
-	if not top_card.is_in_group("choices"): #choices don't have a score contribution to highlight
-		top_card.get_parent().get_node("ScoreBar").highlight_scores(top_card.score_before_played + 1, top_card.score_before_played + top_card.get_card_value())
+	if not top_card.is_in_group("choices"): #choices and sleeve cards don't have a score contribution to highlight
+		if not top_card.is_in_group("sleeve_cards"):
+			top_card.get_parent().get_node("ScoreBar").highlight_scores(top_card.score_before_played + 1, top_card.score_before_played + top_card.get_card_value())
 
 func _on_Card_hover_started(card):
 	hovered_cards.append(card)
