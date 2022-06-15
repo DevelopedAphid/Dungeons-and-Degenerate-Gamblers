@@ -34,21 +34,28 @@ func _ready():
 		hitpoints = get_parent().get_parent().opponent_health_points
 		max_hitpoints = hitpoints
 
-func add_card_to_deck(card_id):
-	#add a defined card to the deck
+func instance_new_card(card_id) -> Object:
 	var new_card = Card.instance()
 	new_card.call_deferred("set_card_id", card_id)
-	deck.append(new_card)
 	
 	new_card.connect("card_hover_started", get_parent().get_node("HoverPanel"), "_on_Card_hover_started")
 	new_card.connect("card_hover_ended", get_parent().get_node("HoverPanel"), "_on_Card_hover_ended")
 	new_card.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
+	
+	return new_card
+
+func add_card_to_deck(card_id):
+	#add a defined card to the deck
+	deck.append(instance_new_card(card_id))
 
 func build_draw_pile():
-	#put deck list into draw pile
-	for cards in deck.size():
-		draw_pile.append(deck[cards])
-		deck[cards].position = $DeckDisplay.position
+	add_cards_to_draw_pile(deck)
+
+func add_cards_to_draw_pile(cards: Array):
+	#put array of cards into draw pile
+	for card in cards:
+		draw_pile.append(card)
+		card.position = $DeckDisplay.position
 	
 	$DeckDisplay.change_deck_size(draw_pile.size())
 	shuffle_draw_pile()
@@ -332,6 +339,13 @@ func play_card_draw_effect(card, id):
 	elif id == "112": #negative ace of hearts
 		var choice_array = [id, "122"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "123": #I the Magician
+		var card_array = ["071", "071", "071", "001", "040", "145"]
+		var new_cards = []
+		for new_card_id in card_array:
+			var new_card = instance_new_card(new_card_id)
+			new_cards.append(new_card)
+		add_cards_to_draw_pile(new_cards)
 	elif id == "145": #ace up your sleeve
 		var ace_id
 		#creates an ace with random suit
@@ -393,20 +407,20 @@ func _on_SleveCard_clicked(card):
 	move_cards_to([card], "sleeve_pile", "play_pile")
 	play_card_draw_effect(card, card.card_id)
 
-func play_card_start_of_turn_effect(card, id):
-	if self.name == "Opponent": #currently this means opponents are unable to use special cards
-		return
-	
-	current_card_effect_id = id
-	
-	if id == "":
-		pass
-
-func play_card_discard_effect(card, id):
-	if self.name == "Opponent": #currently this means opponents are unable to use special cards
-		return
-	
-	current_card_effect_id = id
-	
-	if id == "":
-		pass
+#func play_card_start_of_turn_effect(card, id):
+#	if self.name == "Opponent": #currently this means opponents are unable to use special cards
+#		return
+#
+#	current_card_effect_id = id
+#
+#	if id == "":
+#		pass
+#
+#func play_card_discard_effect(card, id):
+#	if self.name == "Opponent": #currently this means opponents are unable to use special cards
+#		return
+#
+#	current_card_effect_id = id
+#
+#	if id == "":
+#		pass

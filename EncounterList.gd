@@ -1,6 +1,12 @@
 extends Node
 
 var encounter_dictionary = {
+	"tavern.0": {
+		"name": "testing_room",
+		"type": "testing_room",
+		"start_dialogue": "welcome to the test room",
+		"end_dialogue": "come again soon"
+	},
 	"tavern.1": {
 		"name": "imp",
 		"type": "opponent",

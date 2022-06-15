@@ -7,6 +7,9 @@ onready var macro_controller = get_parent()
 signal starting_suit_chosen
 signal reward_card_chosen
 signal shop_card_chosen
+signal test_room_finished
+
+var shop_card_price = 100
 
 func _ready():
 	randomize()
@@ -60,6 +63,24 @@ func show_shop():
 	$Shop/ChipCounter.change_chip_number(macro_controller.player_chips)
 	$Shop.visible = true
 
+func show_testing_room():
+	var i = 0
+	for card_id in CardList.card_dictionary:
+		var card = load("res://Card.tscn").instance()
+		$TestChoice.add_child(card)
+		card.set_card_id(card_id)
+		i += 3
+		card.position = Vector2(i, 0)
+		
+		card.add_to_group("choices")
+		
+		card.connect("card_hover_started", get_node("HoverPanel"), "_on_Card_hover_started")
+		card.connect("card_hover_ended", get_node("HoverPanel"), "_on_Card_hover_ended")
+		
+		card.connect("card_clicked", self, "_on_Card_clicked", [card])
+	
+	$TestChoice.visible = true
+
 func _on_Card_clicked(card_choice):
 	if card_choice.get_parent().name == "RewardCardChoice":
 		macro_controller.player_deck.append(card_choice.card_id)
@@ -87,21 +108,26 @@ func _on_Card_clicked(card_choice):
 				"040", "041", "042", "043", "044", "045", 
 				"046", "047", "048", "049", "050", "051", "052"]
 		
-		var testing_cards = ["069", "070", "071", "072", "076", "077", "078", "145"]
+		var testing_cards = []
 		for n in testing_cards:
 			macro_controller.player_deck.append(n)
 		
 		emit_signal("starting_suit_chosen")
 	elif card_choice.get_parent().name == "ShopChoice":
-		if macro_controller.player_chips >= 100:
+		if macro_controller.player_chips >= shop_card_price:
 			macro_controller.player_deck.append(card_choice.card_id)
-			macro_controller.player_chips -= 100
+			macro_controller.player_chips -= shop_card_price
 			$Shop/ChipCounter.change_chip_number(macro_controller.player_chips)
 			card_choice.visible = false
+	elif card_choice.get_parent().name == "TestChoice":
+		macro_controller.player_deck.append(card_choice.card_id)
 	
 	change_choices_visibility(false)
-
 
 func _on_ShopFinishedButton_pressed():
 	$Shop.visible = false
 	emit_signal("shop_card_chosen")
+
+func _on_TestFinishedButton_pressed():
+	$TestChoice.visible = false
+	emit_signal("test_room_finished")

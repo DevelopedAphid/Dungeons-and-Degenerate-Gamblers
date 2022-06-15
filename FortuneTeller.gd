@@ -8,6 +8,7 @@ onready var macro_controller = get_parent()
 var card1_flipped = false
 var card2_flipped = false
 var card3_flipped = false
+var card_id_array = []
 
 func _ready():
 	connect_to_card_backs()
@@ -23,6 +24,7 @@ func connect_to_card_backs():
 func _on_CardBack_clicked(card):
 	if card1_flipped && card2_flipped && card3_flipped: #if all flipped then add card to deck and move on
 		macro_controller.player_deck.append(card.card_id)
+		card_id_array.clear()
 		emit_signal("tarot_card_chosen")
 		print("all flipped")
 	
@@ -45,6 +47,9 @@ func _on_CardBack_clicked(card):
 				card3_flipped = true
 	
 	var tarot_id = CardList.get_random_tarot_card_id()
+	while card_id_array.has(tarot_id): #randomize the card until it's not a match
+		tarot_id = CardList.get_random_tarot_card_id()
+	card_id_array.append(tarot_id)
 	card.set_card_id(tarot_id)
 	$CardLabel.modulate.a = 1.0 #set to be fully opaque again
 	$CardLabel.text = get_tarot_message(tarot_id)

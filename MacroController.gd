@@ -19,7 +19,7 @@ var choice_UI
 var fortune_teller
 
 var floor_name = "tavern" #start floor, set to tavern to begin at start of game
-var encounter_count = 1 #start level, set to 1 to begin at start of floor
+var encounter_count = 0 #start level, set to 1 to begin at start of floor, 0 to start at test room
 var dialogue_type = ""
 
 func _ready():
@@ -31,6 +31,7 @@ func allow_choices():
 	choice_UI.connect("starting_suit_chosen", self, "_on_ChoiceUI_starting_suit_chosen")
 	choice_UI.connect("reward_card_chosen", self, "_on_ChoiceUI_reward_card_chosen")
 	choice_UI.connect("shop_card_chosen", self, "_on_ChoiceUI_shop_card_chosen")
+	choice_UI.connect("test_room_finished", self, "_on_ChoiceUI_test_room_finished")
 	add_child(choice_UI)
 
 func start_a_game():
@@ -65,6 +66,12 @@ func start_a_game():
 		add_child(fortune_teller)
 		
 		$DialogueManager.set_dialogue_text($EncounterList.encounter_dictionary[encounter_key].start_dialogue)
+	
+	elif encounter_type == "testing_room":
+		allow_choices()
+		choice_UI.show_testing_room()
+		
+		$DialogueManager.set_dialogue_text($EncounterList.encounter_dictionary[encounter_key].start_dialogue)
 
 func get_encounter_key() -> String:
 	var encounter_key = floor_name + "." + str(encounter_count)
@@ -79,6 +86,11 @@ func _on_ChoiceUI_reward_card_chosen():
 	start_a_game()
 
 func _on_ChoiceUI_shop_card_chosen():
+	choice_UI.queue_free()
+	encounter_count += 1
+	start_a_game()
+
+func _on_ChoiceUI_test_room_finished():
 	choice_UI.queue_free()
 	encounter_count += 1
 	start_a_game()
