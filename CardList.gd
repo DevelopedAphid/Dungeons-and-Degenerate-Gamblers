@@ -907,7 +907,8 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"burns": true
 	},
 		"126": {
 		"name": "IV The Emporer",

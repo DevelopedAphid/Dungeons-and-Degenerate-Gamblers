@@ -12,6 +12,7 @@ var card_value = 0
 var card_sprite = ""
 var card_description = ""
 var card_does_burn = false
+var card_locked = false
 
 var score_before_played
 var is_focused
@@ -87,6 +88,15 @@ func sprite_clicked():
 func highlight_card(to_highlight: bool):
 	$HighlightSprite.visible = to_highlight
 	is_focused = to_highlight
+
+func lock_card():
+	card_locked = true
+	$LockIconSprite.visible = true
+	$LockIconSprite.is_moving = true
+	$LockIconSprite/FrameTween.interpolate_property($LockIconSprite, "frame", 0, 11, 1.0)
+	$LockIconSprite/FrameTween.start()
+	$LockIconSprite/PositionTween.interpolate_property($LockIconSprite, "position", Vector2(29, 65), Vector2(29, 77), 1.0)
+	$LockIconSprite/PositionTween.start()
 
 func start_burn_animation():
 	$CardArtSprite.activate_burn_shader()

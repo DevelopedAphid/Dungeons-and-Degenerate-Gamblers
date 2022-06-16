@@ -119,7 +119,7 @@ func discard_played_cards():
 		if card.card_does_burn:
 			cards_to_burn.append(card)
 			card.start_burn_animation()
-		else: #card does not burn, so should be discarded
+		elif not card.card_locked: #card does not burn, so should be discarded
 			cards_to_discard.append(card)
 	if cards_to_burn.size() > 0:
 		#wait for burn animation
@@ -137,6 +137,16 @@ func discard_played_cards():
 	
 		#wait for cards to finish moving
 		yield(self, "UI_update_completed")
+	
+	#move any remaining cards in play pile to starting positions (i.e. locked cards)
+	var card_spacing = play_pile_card_spacing
+	if name == "Opponent":
+		card_spacing = card_spacing * (-1)
+	var cards_moved = 0
+	for card in play_pile:
+		card.get_node("MovementHandler").move_card_to(play_pile_pos + Vector2(card_spacing * (cards_moved), 0))
+		#todo: track and reset score before played here
+		cards_moved += 1
 	
 	#set score to 0 since round is over
 	score = 0
@@ -346,6 +356,17 @@ func play_card_draw_effect(card, id):
 			var new_card = instance_new_card(new_card_id)
 			new_cards.append(new_card)
 		add_cards_to_draw_pile(new_cards)
+	elif id == "124": #II The High Priestess
+		#- reveal the next X cards in your draw pile in order. burns
+		pass
+	elif id == "125": #III The Empress
+		# locks an 11 of hearts to players play pile
+		var eleven_of_hearts = instance_new_card("062")
+		add_child(eleven_of_hearts)
+		add_cards_to_draw_pile([eleven_of_hearts])
+		move_cards_to([eleven_of_hearts], "draw_pile", "play_pile")
+		eleven_of_hearts.score_before_played = score
+		eleven_of_hearts.lock_card()
 	elif id == "145": #ace up your sleeve
 		var ace_id
 		#creates an ace with random suit
