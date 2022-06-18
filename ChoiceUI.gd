@@ -64,13 +64,18 @@ func show_shop():
 	$Shop.visible = true
 
 func show_testing_room():
-	var i = 0
+	var x_pos = 0
+	var y_pos = 0
 	for card_id in CardList.card_dictionary:
 		var card = load("res://Card.tscn").instance()
 		$TestChoice.add_child(card)
 		card.set_card_id(card_id)
-		i += 3
-		card.position = Vector2(i, 0)
+		if(x_pos > 440):
+			y_pos += 90
+			x_pos = 0
+		card.position = Vector2(x_pos, y_pos)
+		x_pos += 8 #card spacing
+
 		
 		card.add_to_group("choices")
 		

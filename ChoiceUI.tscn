@@ -94,9 +94,9 @@ visible = false
 
 [node name="TestFinishedButton" type="Button" parent="TestChoice"]
 margin_left = 180.0
-margin_top = 260.0
+margin_top = 276.0
 margin_right = 288.0
-margin_bottom = 280.0
+margin_bottom = 296.0
 text = "Done shopping"
 
 [node name="HoverPanel" parent="." instance=ExtResource( 2 )]

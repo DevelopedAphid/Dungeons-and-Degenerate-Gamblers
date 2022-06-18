@@ -302,7 +302,6 @@ func play_card_draw_effect(card, id):
 			get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
 	elif id == "076": #Get Well Soon card
 		get_parent().get_node("Player").heal(10, card.position)
-		get_parent().get_node("Opponent").heal(10, card.position)
 	elif id == "077": #+2 Card
 		get_parent().get_node("Opponent").draw_top_card()
 		get_parent().get_node("Opponent").draw_top_card()
@@ -367,6 +366,14 @@ func play_card_draw_effect(card, id):
 		move_cards_to([eleven_of_hearts], "draw_pile", "play_pile")
 		eleven_of_hearts.score_before_played = score
 		eleven_of_hearts.lock_card()
+	elif id == "126":
+		pass
+	elif id == "127":
+		pass
+	elif id == "128": #VI The Lovers
+		#choose from the following to add to draw pile: valentines card, ace of hearts, another 6 The Lovers
+		var choice_array = ["146", "040" ,"128"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 	elif id == "145": #ace up your sleeve
 		var ace_id
 		#creates an ace with random suit
@@ -391,9 +398,12 @@ func play_card_draw_effect(card, id):
 		new_card.connect("card_hover_started", get_parent().get_node("HoverPanel"), "_on_Card_hover_started")
 		new_card.connect("card_hover_ended", get_parent().get_node("HoverPanel"), "_on_Card_hover_ended")
 		new_card.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
-		new_card.connect("card_clicked", self, "_on_SleveCard_clicked", [new_card])
+		new_card.connect("card_clicked", self, "_on_SleeveCard_clicked", [new_card])
 		
 		move_cards_to([new_card], "play_pile", "sleeve_pile")
+	elif id == "146": #valentines card
+		get_parent().get_node("Player").heal(14, card.position)
+		get_parent().get_node("Opponent").heal(14, card.position)
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	var id = current_card_effect_id
@@ -422,9 +432,12 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
 		origin_card.set_card_art(choice_made)
 		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + str(origin_card.get_card_value()) + ")")
+	elif id == "128": #VI The Lovers
+		var new_card = instance_new_card(choice_made)
+		add_cards_to_draw_pile([new_card])
 	current_card_effect_id = null
 
-func _on_SleveCard_clicked(card):
+func _on_SleeveCard_clicked(card):
 	move_cards_to([card], "sleeve_pile", "play_pile")
 	play_card_draw_effect(card, card.card_id)
 

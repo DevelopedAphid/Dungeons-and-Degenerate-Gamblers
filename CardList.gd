@@ -562,7 +562,7 @@ var card_dictionary = {
 		"effect": true,
 		"burns": true,
 		"reward": true,
-		"description": "Heals both players by 10, then burns"
+		"description": "Heals the player by 10. Burns"
 	},
 		"077": {
 		"name": "+2 Card",
@@ -893,7 +893,8 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "Adds cards to draw pile: 3x magic trick card, 2x aces, 1x ace up your sleeve. burns"
 	},
 		"124": {
 		"name": "II The High Priestess",
@@ -908,7 +909,8 @@ var card_dictionary = {
 		"value": 0,
 		"effect": true,
 		"tarot": true,
-		"burns": true
+		"burns": true,
+		"description": "locks an 11 of hearts to players play pile. burns"
 	},
 		"126": {
 		"name": "IV The Emporer",
@@ -929,7 +931,8 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "choose from the following to add to draw pile: valentines card, ace of hearts, another VI The Lovers"
 	},
 		"129": {
 		"name": "VII The Chariot",
@@ -1047,6 +1050,14 @@ var card_dictionary = {
 		"name": "Ace Up Your Sleeve",
 		"suit": "special",
 		"value": 0,
-		"effect": true
+		"effect": true,
+		"description": "Puts an ace of a random suit up your sleeve to be played later"
+	},
+		"146": {
+		"name": "Valentines Card",
+		"suit": "special",
+		"value": 14,
+		"effect": true,
+		"description": "Heals both players by 14"
 	}
 }
