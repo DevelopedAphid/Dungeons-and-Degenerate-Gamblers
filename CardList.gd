@@ -901,7 +901,8 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "Reveals the next 3 cards in your draw pile"
 	},
 		"125": {
 		"name": "III The Empress",
@@ -946,7 +947,9 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"burns": true,
+		"description": "Replaces all of your jacks with jack of all trades. Adds a jack of all trades to draw pile. Burns"
 	},
 		"131": {
 		"name": "IX The Hermit",
@@ -1030,7 +1033,9 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"burns": true,
+		"description": "take no damage from the next opponent blackjack. burns"
 	},
 		"143": {
 		"name": "XXI The World",

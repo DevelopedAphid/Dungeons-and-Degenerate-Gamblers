@@ -12,6 +12,7 @@ var score = 0
 var hitpoints = 100
 var max_hitpoints
 var shieldpoints = 0
+var judgment_shield_active = false
 var current_card_effect_id
 var chips
 
@@ -150,10 +151,6 @@ func discard_played_cards():
 	
 	#set score to 0 since round is over
 	score = 0
-
-#func add_card_to_draw_pile(card, position):
-#	#add a defined card to the draw pile at a defined position
-#	pass
 
 func heal(heal_amount: int, heal_source_pos: Vector2):
 	if heal_amount > 0:
@@ -357,7 +354,12 @@ func play_card_draw_effect(card, id):
 		add_cards_to_draw_pile(new_cards)
 	elif id == "124": #II The High Priestess
 		#- reveal the next X cards in your draw pile in order. burns
-		pass
+		var i = 0
+		var choice_array = []
+		while draw_pile[i] != null and i < 3: #need to protect against checking a draw pile that has less than 3 items
+			choice_array.append(draw_pile[i].card_id)
+			i += 1
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 	elif id == "125": #III The Empress
 		# locks an 11 of hearts to players play pile
 		var eleven_of_hearts = instance_new_card("062")
@@ -366,14 +368,36 @@ func play_card_draw_effect(card, id):
 		move_cards_to([eleven_of_hearts], "draw_pile", "play_pile")
 		eleven_of_hearts.score_before_played = score
 		eleven_of_hearts.lock_card()
-	elif id == "126":
+	elif id == "126": #IV The Emperer
 		pass
-	elif id == "127":
+	elif id == "127": #V The Hierophant
 		pass
 	elif id == "128": #VI The Lovers
 		#choose from the following to add to draw pile: valentines card, ace of hearts, another 6 The Lovers
 		var choice_array = ["146", "040" ,"128"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "129": #VII The Chariot
+		pass
+	elif id == "130": #VIII Justice
+		#replaces all of your jacks with jack of all trades. Adds a jack of all trades to draw pile. Burns.
+		#get all the jacks in all piles in an array
+		var jacks = []
+		var all_piles = []
+		all_piles.append_array(draw_pile)
+		all_piles.append_array(play_pile)
+		all_piles.append_array(discard_pile)
+		for card in all_piles:
+			if card.card_id == "011" or card.card_id == "024" or card.card_id == "037" or card.card_id == "050":
+				jacks.append(card)
+		#set jacks to be jack of all trades
+		for jack in jacks: 
+			jack.set_card_id("075")
+		#add a new jack of all trades to draw pile
+		var new_jack = instance_new_card("075")
+		add_cards_to_draw_pile([new_jack])
+	elif id == "142": #XX Judgment
+		#take no damage from the next opponent blackjack. burns
+		judgment_shield_active = true
 	elif id == "145": #ace up your sleeve
 		var ace_id
 		#creates an ace with random suit
@@ -432,6 +456,8 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
 		origin_card.set_card_art(choice_made)
 		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + str(origin_card.get_card_value()) + ")")
+	elif id == "124": #II The High Priestess
+		pass #literally do nothing since all we are doing is showing the order of the next few cards in draw pile and the choice UI is just a convenient way to do that
 	elif id == "128": #VI The Lovers
 		var new_card = instance_new_card(choice_made)
 		add_cards_to_draw_pile([new_card])

@@ -40,7 +40,6 @@ func compare_score_and_deal_damage():
 	
 	battle_scene.play_attack_animation(bool(player_score), bool(opponent_score))
 	
-	#todo: should be replaced by a "deal damage" method later in case we add damage multiplier effects or anything
 	var damage = player_score - opponent_score
 	var winner
 	var loser
@@ -84,6 +83,10 @@ func compare_score_and_deal_damage():
 					negative_diamonds -= card.card_value
 				elif card.card_suit == "negative_hearts":
 					negative_hearts -= card.card_value
+			if loser.judgment_shield_active: #if judgment shield active the loser takes no damamge from winners blackjack
+				damage = 0
+				clubs = 0
+				loser.judgment_shield_active = false #disable judgment shield once used once
 		#clubs deal double damage on 21
 		#shield (if earned last round) blocks damage
 		#cannot deal negative damage
