@@ -13,6 +13,9 @@ func enter_state():
 	
 	if game_controller.player_last_turn_result == "stay":
 		exit_state("stay")
+	if player.rounds_to_skip > 0:
+		game_controller.player_last_turn_result = "stay"
+		exit_state("stay")
 
 func exit_state(action_taken):
 	emit_signal("state_exited", action_taken)

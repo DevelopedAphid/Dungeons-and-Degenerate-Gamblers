@@ -12,9 +12,11 @@ var score = 0
 var hitpoints = 100
 var max_hitpoints
 var shieldpoints = 0
-var judgment_shield_active = false
 var current_card_effect_id
 var chips
+
+var rounds_to_skip = 0
+var judgment_shield_active = false
 
 #screen positions and spacing
 onready var play_pile_pos = $PlayPilePosition.position
@@ -301,7 +303,9 @@ func play_card_draw_effect(card, id):
 		get_parent().get_node("Player").heal(10, card.position)
 	elif id == "077": #+2 Card
 		get_parent().get_node("Opponent").draw_top_card()
+		yield(get_parent().get_node("Opponent"), "UI_update_completed")
 		get_parent().get_node("Opponent").draw_top_card()
+		yield(get_parent().get_node("Opponent"), "UI_update_completed")
 	elif id == "078": #Reverse Card
 		var opponent = get_parent().get_node("Opponent")
 		var player_play_pile = []
@@ -395,6 +399,9 @@ func play_card_draw_effect(card, id):
 		#add a new jack of all trades to draw pile
 		var new_jack = instance_new_card("075")
 		add_cards_to_draw_pile([new_jack])
+	elif id == "133": #XI Strength
+		#opponent cannot hit again this round
+		get_parent().get_node("Opponent").rounds_to_skip += 1
 	elif id == "142": #XX Judgment
 		#take no damage from the next opponent blackjack. burns
 		judgment_shield_active = true

@@ -17,6 +17,11 @@ func enter_state():
 	player.discard_played_cards()
 	opponent.discard_played_cards()
 	
+	if player.rounds_to_skip > 0:
+		player.rounds_to_skip -= 1
+	if opponent.rounds_to_skip > 0:
+		opponent.rounds_to_skip -= 1
+	
 	exit_state()
 
 func exit_state():

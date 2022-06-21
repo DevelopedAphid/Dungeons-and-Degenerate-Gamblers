@@ -970,7 +970,8 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "opponent cannot hit again this round"
 	},
 		"134": {
 		"name": "XII The Hanged Man",
