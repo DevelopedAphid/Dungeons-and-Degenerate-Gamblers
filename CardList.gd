@@ -940,7 +940,9 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"burns": true,
+		"description": "opponent cannot hit next round. burns"
 	},
 		"130": {
 		"name": "VIII Justice",

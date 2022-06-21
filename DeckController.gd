@@ -17,6 +17,7 @@ var chips
 
 var rounds_to_skip = 0
 var judgment_shield_active = false
+var chariot_effect_active = false
 
 #screen positions and spacing
 onready var play_pile_pos = $PlayPilePosition.position
@@ -381,7 +382,7 @@ func play_card_draw_effect(card, id):
 		var choice_array = ["146", "040" ,"128"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 	elif id == "129": #VII The Chariot
-		pass
+		chariot_effect_active = true
 	elif id == "130": #VIII Justice
 		#replaces all of your jacks with jack of all trades. Adds a jack of all trades to draw pile. Burns.
 		#get all the jacks in all piles in an array

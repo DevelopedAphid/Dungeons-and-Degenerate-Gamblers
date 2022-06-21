@@ -21,6 +21,12 @@ func enter_state():
 		player.rounds_to_skip -= 1
 	if opponent.rounds_to_skip > 0:
 		opponent.rounds_to_skip -= 1
+	if player.chariot_effect_active:
+		opponent.rounds_to_skip += 1
+		player.chariot_effect_active = false
+	if opponent.chariot_effect_active:
+		player.rounds_to_skip += 1
+		opponent.chariot_effect_active = false
 	
 	exit_state()
 
