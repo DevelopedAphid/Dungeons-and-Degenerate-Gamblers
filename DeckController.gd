@@ -64,6 +64,11 @@ func add_cards_to_draw_pile(cards: Array):
 	$DeckDisplay.change_deck_size(draw_pile.size())
 	shuffle_draw_pile()
 
+func add_card_to_draw_pile_at_position(card: Object, pile_pos: int):
+	draw_pile.insert(pile_pos, card)
+	card.position = $DeckDisplay.position
+	$DeckDisplay.change_deck_size(draw_pile.size())
+
 func shuffle_draw_pile():
 	#randomise draw contents
 	var rng = RandomNumberGenerator.new()
@@ -403,6 +408,9 @@ func play_card_draw_effect(card, id):
 	elif id == "133": #XI Strength
 		#opponent cannot hit again this round
 		get_parent().get_node("Opponent").rounds_to_skip += 1
+	elif id == "141": #XIX The Sun
+		#choose a card in your draw pile to put on top of draw pile.
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
 	elif id == "142": #XX Judgment
 		#take no damage from the next opponent blackjack. burns
 		judgment_shield_active = true
@@ -469,6 +477,10 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	elif id == "128": #VI The Lovers
 		var new_card = instance_new_card(choice_made)
 		add_cards_to_draw_pile([new_card])
+	elif id == "141": #XIX The Sun
+		draw_pile.erase(choice_made)
+		add_card_to_draw_pile_at_position(choice_made, 0)
+	
 	current_card_effect_id = null
 
 func _on_SleeveCard_clicked(card):

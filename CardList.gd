@@ -1029,7 +1029,8 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "choose a card in your draw pile to put on top of draw pile"
 	},
 		"142": {
 		"name": "XX Judgment",
