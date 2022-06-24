@@ -997,7 +997,7 @@ var card_dictionary = {
 		"tarot": true
 	},
 		"137": {
-		"name": "XV The Devli",
+		"name": "XV The Devil",
 		"suit": "special",
 		"value": 0,
 		"effect": true,
@@ -1015,7 +1015,8 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "heal self by 17, do double damage this round win. burns"
 	},
 		"140": {
 		"name": "XVIII The Moon",

@@ -87,6 +87,9 @@ func compare_score_and_deal_damage():
 				damage = 0
 				clubs = 0
 				loser.judgment_shield_active = false #disable judgment shield once used once
+			if winner.star_effect_active: #double damage if the star effect active
+				damage = damage * 2
+				winner.star_effect_active = false #disable star effect once used once
 		#clubs deal double damage on 21
 		#shield (if earned last round) blocks damage
 		#cannot deal negative damage

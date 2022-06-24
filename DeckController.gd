@@ -18,6 +18,7 @@ var chips
 var rounds_to_skip = 0
 var judgment_shield_active = false
 var chariot_effect_active = false
+var star_effect_active = false
 
 #screen positions and spacing
 onready var play_pile_pos = $PlayPilePosition.position
@@ -408,6 +409,10 @@ func play_card_draw_effect(card, id):
 	elif id == "133": #XI Strength
 		#opponent cannot hit again this round
 		get_parent().get_node("Opponent").rounds_to_skip += 1
+	elif id == "139": #XVII The Star
+		#heal self by 17, do double damage this round win
+		heal(17, card.position)
+		star_effect_active = true
 	elif id == "141": #XIX The Sun
 		#choose a card in your draw pile to put on top of draw pile.
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
