@@ -1005,7 +1005,8 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "if you get blackjack with this card in play multiply damage dealt by 6. Otherwise deal 6 damage to self"
 	},
 		"138": {
 		"name": "XVI The Tower",

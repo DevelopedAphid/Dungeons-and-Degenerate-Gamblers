@@ -49,11 +49,14 @@ func compare_score_and_deal_damage():
 	var damage = player_score - opponent_score
 	var winner
 	var loser
+	var winner_score = 0
 	if damage > 0:
 		winner = player
+		winner_score = player_score
 		loser = opponent
 	elif damage < 0:
 		winner = opponent
+		winner_score = opponent_score
 		loser = player
 		damage = abs(damage)
 
@@ -65,8 +68,9 @@ func compare_score_and_deal_damage():
 	var negative_clubs = 0
 	var negative_diamonds = 0
 	var negative_hearts = 0
+	
 	if damage > 0: #if there is damage to apply then apply it
-		if winner.score == 21: #blackjacks trigger special effects
+		if winner_score == 21: #blackjacks trigger special effects
 			for card in winner.play_pile: #find which effects to trigger based on suits involved in the blackjack
 				if card.card_suit == "spades":
 					spades += card.card_value
@@ -96,6 +100,9 @@ func compare_score_and_deal_damage():
 			if winner.star_effect_active: #double damage if the star effect active
 				damage = damage * 2
 				winner.star_effect_active = false #disable star effect once used once
+			if winner.devil_effect_active: #x6 damage if devil effect active and get a blackjack
+				damage = damage * 6
+				winner.devil_effect_active = false
 		#clubs deal double damage on 21
 		#shield (if earned last round) blocks damage
 		#cannot deal negative damage
@@ -118,6 +125,14 @@ func compare_score_and_deal_damage():
 			"heal_both":
 				winner.heal(excess_score, Vector2(240, 150))
 				loser.heal(excess_score, Vector2(240, 150))
+	
+	#apply damage if devil effect still active (has already been set to false if winner got a 21)
+	if player.devil_effect_active:
+		player.damage(6)
+		player.devil_effect_active = false
+	if opponent.devil_effect_active:
+		opponent.damage(6)
+		opponent.devil_effect_active = false
 	
 	#remove blackjack effects
 	player.blackjack_cap_type = "none"

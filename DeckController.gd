@@ -19,6 +19,7 @@ var rounds_to_skip = 0
 var judgment_shield_active = false
 var chariot_effect_active = false
 var star_effect_active = false
+var devil_effect_active = false
 var blackjack_cap_type = "none"
 
 #screen positions and spacing
@@ -424,6 +425,9 @@ func play_card_draw_effect(card, id):
 		chips += card.x_value
 		#change x value in array in macro_controller
 		get_parent().get_parent().player_x_values[card.index_in_deck] = card.x_value * 2
+	elif id == "137": #XV The Devil
+		#if you get blackjack with this card in play pile it multiplies damage dealt by 6. if you do not get blackjack deals 6 damage to player
+		devil_effect_active = true
 	elif id == "139": #XVII The Star
 		#heal self by 17, do double damage this round win
 		heal(17, card.position)
