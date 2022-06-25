@@ -5,6 +5,8 @@ signal card_hover_started(card)
 signal card_hover_ended(card)
 signal burn_complete(card)
 
+var index_in_deck
+
 export var card_id = "073" #default to card back
 var card_name = ""
 var card_suit = ""
@@ -13,6 +15,7 @@ var card_sprite = ""
 var card_description = ""
 var card_does_burn = false
 var card_locked = false
+var x_value = 0
 
 var score_before_played
 var is_focused

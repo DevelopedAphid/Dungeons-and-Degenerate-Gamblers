@@ -996,7 +996,9 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"burns": true,
+		"description": "Adds X chips. Multiply X by 2. Burns"
 	},
 		"137": {
 		"name": "XV The Devil",

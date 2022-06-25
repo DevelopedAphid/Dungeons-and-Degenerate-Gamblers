@@ -50,12 +50,17 @@ func instance_new_card(card_id) -> Object:
 	
 	return new_card
 
-func add_card_to_deck(card_id):
-	#add a defined card to the deck
-	deck.append(instance_new_card(card_id))
-
-func build_draw_pile():
-	add_cards_to_draw_pile(deck)
+func build_draw_pile_from_deck(deck_to_build, x_values):
+	var draw_pile_to_add = []
+	var i = 0
+	for n in deck_to_build:
+		var new_card = instance_new_card(n)
+		new_card.index_in_deck = i
+		new_card.x_value = x_values[i]
+		i += 1
+		draw_pile_to_add.append(new_card)
+	
+	add_cards_to_draw_pile(draw_pile_to_add)
 
 func add_cards_to_draw_pile(cards: Array):
 	#put array of cards into draw pile
@@ -412,6 +417,13 @@ func play_card_draw_effect(card, id):
 	elif id == "133": #XI Strength
 		#opponent cannot hit again this round
 		get_parent().get_node("Opponent").rounds_to_skip += 1
+	elif id == "136": #XIV Temperence
+		#Adds X chips. Multiply X by 2
+		if card.x_value == 0:
+			card.x_value = 1
+		chips += card.x_value
+		#change x value in array in macro_controller
+		get_parent().get_parent().player_x_values[card.index_in_deck] = card.x_value * 2
 	elif id == "139": #XVII The Star
 		#heal self by 17, do double damage this round win
 		heal(17, card.position)

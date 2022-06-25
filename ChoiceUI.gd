@@ -89,6 +89,7 @@ func show_testing_room():
 func _on_Card_clicked(card_choice):
 	if card_choice.get_parent().name == "RewardCardChoice":
 		macro_controller.player_deck.append(card_choice.card_id)
+		macro_controller.player_x_values.append(0)
 		$RewardCardChoice.visible = false
 		emit_signal("reward_card_chosen")
 	elif card_choice.get_parent().name == "StartingSuitChoice":
@@ -112,20 +113,20 @@ func _on_Card_clicked(card_choice):
 			macro_controller.player_deck = [
 				"040", "041", "042", "043", "044", "045", 
 				"046", "047", "048", "049", "050", "051", "052"]
-		
-		var testing_cards = []
-		for n in testing_cards:
-			macro_controller.player_deck.append(n)
+		for n in macro_controller.player_deck:
+			macro_controller.player_x_values.append(0)
 		
 		emit_signal("starting_suit_chosen")
 	elif card_choice.get_parent().name == "ShopChoice":
 		if macro_controller.player_chips >= shop_card_price:
 			macro_controller.player_deck.append(card_choice.card_id)
+			macro_controller.player_x_values.append(0)
 			macro_controller.player_chips -= shop_card_price
 			$Shop/ChipCounter.change_chip_number(macro_controller.player_chips)
 			card_choice.visible = false
 	elif card_choice.get_parent().name == "TestChoice":
 		macro_controller.player_deck.append(card_choice.card_id)
+		macro_controller.player_x_values.append(0)
 	
 	change_choices_visibility(false)
 

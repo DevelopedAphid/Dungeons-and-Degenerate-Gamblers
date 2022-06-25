@@ -3,12 +3,14 @@ extends Node2D
 var chosen_suit = ""
 
 var player_deck = []
+var player_x_values = []
 var player_sprite = "res://assets/art/characters/player.png"
 var player_max_hitpoints = 100
 var player_hitpoints = 100
 var player_chips = 0
 
 var opponent_deck = []
+var opponent_x_values = []
 var opponent_sprite = ""
 var opponent_health_points = 0
 
@@ -42,6 +44,8 @@ func start_a_game():
 		opponent_sprite = $EncounterList.encounter_dictionary[encounter_key].sprite
 		opponent_health_points = $EncounterList.encounter_dictionary[encounter_key].healthpoints
 		opponent_deck = $EncounterList.encounter_dictionary[encounter_key].deck
+		for n in opponent_deck:
+			opponent_x_values.append(0)
 		
 		game_controller = load("res://GameController.tscn").instance()
 		game_controller.connect("game_over", self, "on_GameController_game_over")

@@ -23,15 +23,9 @@ func _ready():
 	
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
-	
-	for n in macro_controller.player_deck:
-		player.add_card_to_deck(n)
-	
-	for n in macro_controller.opponent_deck:
-		opponent.add_card_to_deck(n)
-	
-	player.build_draw_pile()
-	opponent.build_draw_pile()
+
+	player.build_draw_pile_from_deck(macro_controller.player_deck, macro_controller.player_x_values)
+	opponent.build_draw_pile_from_deck(macro_controller.opponent_deck, macro_controller.opponent_x_values)
 	
 	current_turn = "player"
 	player_last_turn_result = "hit"
