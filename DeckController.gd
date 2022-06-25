@@ -11,6 +11,7 @@ var sleeve_pile = []
 var score = 0
 var hitpoints = 100
 var max_hitpoints
+var decaying_healing = 0
 var shieldpoints = 0
 var current_card_effect_id
 var chips
@@ -415,6 +416,13 @@ func play_card_draw_effect(card, id):
 		#add a new jack of all trades to draw pile
 		var new_jack = instance_new_card("075")
 		add_cards_to_draw_pile([new_jack])
+	elif id == "131": #IX The Hermit
+		#add X decaying healing per turn, add 1 to X
+		if card.x_value == 0:
+			card.x_value = 1
+		decaying_healing += card.x_value
+		#change x value in array in macro_controller
+		get_parent().get_parent().player_x_values[card.index_in_deck] = card.x_value + 1
 	elif id == "133": #XI Strength
 		#opponent cannot hit again this round
 		get_parent().get_node("Opponent").rounds_to_skip += 1

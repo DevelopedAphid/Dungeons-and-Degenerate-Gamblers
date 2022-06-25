@@ -17,6 +17,13 @@ func enter_state():
 	player.discard_played_cards()
 	opponent.discard_played_cards()
 	
+	if player.decaying_healing > 0:
+		player.heal(player.decaying_healing, Vector2(240, 150))
+		player.decaying_healing -= 1
+	if opponent.decaying_healing > 0:
+		opponent.heal(opponent.decaying_healing, Vector2(240, 150))
+		opponent.decaying_healing -= 1
+	
 	if player.rounds_to_skip > 0:
 		player.rounds_to_skip -= 1
 	if opponent.rounds_to_skip > 0:

@@ -960,7 +960,9 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"burns": true,
+		"description": "add X decaying healing per turn, add 1 to X. Burns"
 	},
 		"132": {
 		"name": "X Wheel of Fortune",
