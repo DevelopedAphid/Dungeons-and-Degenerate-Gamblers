@@ -21,3 +21,9 @@ margin_top = -25.0
 margin_right = 22.0
 margin_bottom = -11.0
 text = "21"
+
+[node name="ExcessLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_top = -11.0
+margin_right = 72.0
+margin_bottom = 3.0

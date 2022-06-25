@@ -19,6 +19,7 @@ var rounds_to_skip = 0
 var judgment_shield_active = false
 var chariot_effect_active = false
 var star_effect_active = false
+var blackjack_cap_type = "none"
 
 #screen positions and spacing
 onready var play_pile_pos = $PlayPilePosition.position
@@ -380,9 +381,11 @@ func play_card_draw_effect(card, id):
 		eleven_of_hearts.score_before_played = score
 		eleven_of_hearts.lock_card()
 	elif id == "126": #IV The Emperer
-		pass
+		#score over 21 this turn will instead be taken as damage to both players
+		blackjack_cap_type = "damage_both"
 	elif id == "127": #V The Hierophant
-		pass
+		#score over 21 this turn will instead heal both players
+		blackjack_cap_type = "heal_both"
 	elif id == "128": #VI The Lovers
 		#choose from the following to add to draw pile: valentines card, ace of hearts, another 6 The Lovers
 		var choice_array = ["146", "040" ,"128"]

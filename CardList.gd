@@ -918,14 +918,16 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "score over 21 this turn will instead be taken as damage to both players"
 	},
 		"127": {
 		"name": "V The Heirophant",
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "score over 21 this turn will instead heal both players"
 	},
 		"128": {
 		"name": "VI The Lovers",

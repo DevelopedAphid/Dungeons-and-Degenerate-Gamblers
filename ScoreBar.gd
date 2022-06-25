@@ -10,6 +10,7 @@ onready var font = Fonts.font_pixel_5_9
 
 func _ready():
 	$ScoreLabel.add_font_override("font", font)
+	$ExcessLabel.add_font_override("font", font)
 
 func update_score():
 	#remove current icons
@@ -26,6 +27,13 @@ func update_score():
 	get_parent().score = score
 	
 	$ScoreLabel.text = str(score)
+	$ExcessLabel.visible = false
+	if score > 21:
+		if get_parent().blackjack_cap_type != "none":
+			$ScoreLabel.text = str(21)
+			$ExcessLabel.text = str(score - 21)
+			$ExcessLabel.visible = true
+	
 	if $ScoreLabel.text.length() == 1:
 		$ScoreLabel.rect_position = Vector2(6, -25)
 	else: #doesn't handle 3 digit score but not sure if that matters

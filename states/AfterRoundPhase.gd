@@ -33,9 +33,15 @@ func compare_score_and_deal_damage():
 	
 	var player_score = player.score
 	var opponent_score = opponent.score
-	if player.score > 21: #busted
+	
+	var excess_score = 0
+	if player.blackjack_cap_type != "none":
+		excess_score = player_score - 21
+		player_score = 21
+	
+	if player_score > 21: #busted
 		player_score = 0
-	if opponent.score > 21: #busted
+	if opponent_score > 21: #busted
 		opponent_score = 0
 	
 	battle_scene.play_attack_animation(bool(player_score), bool(opponent_score))
@@ -100,9 +106,22 @@ func compare_score_and_deal_damage():
 			winner.chips -= negative_diamonds
 		winner.heal(hearts, Vector2(240, 150)) #hearts heal the player on 21
 		loser.heal(negative_hearts, Vector2(240, 150)) #negative hearts heal opponent on player 21
-		#reset loser shiled to 0 and (if blackjacked with spades) set up winners shield
+		#reset loser shield to 0 and (if blackjacked with spades) set up winners shield
 		loser.shieldpoints = negative_spades #negative spades give the opponent a shield next round
 		winner.shieldpoints = spades
+		
+		#blackjack cap effects
+		match winner.blackjack_cap_type:
+			"damage_both":
+				winner.damage(excess_score)
+				loser.damage(excess_score)
+			"heal_both":
+				winner.heal(excess_score, Vector2(240, 150))
+				loser.heal(excess_score, Vector2(240, 150))
+	
+	#remove blackjack effects
+	player.blackjack_cap_type = "none"
+	opponent.blackjack_cap_type = "none"
 	
 	#update the relevant UI elements
 	battle_scene.update_health_points()
