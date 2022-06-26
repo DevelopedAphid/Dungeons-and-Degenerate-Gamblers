@@ -129,6 +129,9 @@ func shuffle_discard_pile_into_draw_pile():
 		remove_child(card)
 	
 	shuffle_draw_pile()
+	
+	for card in play_pile: #play on shuffle effect for any cards locked in play
+		play_end_of_shuffle_effect(card, card.card_id)
 
 func discard_played_cards():
 	var cards_to_discard = []
@@ -479,6 +482,8 @@ func play_card_draw_effect(card, id):
 	elif id == "142": #XX Judgment
 		#take no damage from the next opponent blackjack
 		judgment_shield_active = true
+	elif id == "143": #XXI The World
+		card.lock_card()
 	elif id == "145": #ace up your sleeve
 		var ace_id
 		#creates an ace with random suit
@@ -589,12 +594,30 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	elif id == "141": #XIX The Sun
 		draw_pile.erase(choice_made)
 		add_card_to_draw_pile_at_position(choice_made, 0)
+	if id == "143": #XXI The World
+		var new_tarot_card = instance_new_card(choice_made)
+		add_card_to_draw_pile_at_position(new_tarot_card, 0)
 	
 	current_card_effect_id = null
 
 func _on_SleeveCard_clicked(card):
 	move_cards_to([card], "sleeve_pile", "play_pile")
 	play_card_draw_effect(card, card.card_id)
+
+func play_end_of_shuffle_effect(card, id):
+	if self.name == "Opponent": #currently this means opponents are unable to use special cards
+		return
+	
+	current_card_effect_id = id
+	
+	if id == "143": #XXI The World
+		var choice_array = []
+		for n in 3:
+			var tarot_id = CardList.get_random_tarot_card_id()
+			while choice_array.has(tarot_id) or tarot_id == "143": #don't allow it to pick an id already in list or the world card
+				tarot_id = CardList.get_random_tarot_card_id()
+			choice_array.append(tarot_id)
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 
 #func play_card_start_of_turn_effect(card, id):
 #	if self.name == "Opponent": #currently this means opponents are unable to use special cards
