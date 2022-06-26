@@ -985,7 +985,8 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "choose a card in discard pile to burn"
 	},
 		"135": {
 		"name": "XIII Death",

@@ -448,6 +448,10 @@ func play_card_draw_effect(card, id):
 	elif id == "133": #XI Strength
 		#opponent cannot hit again this round
 		get_parent().get_node("Opponent").rounds_to_skip += 1
+	elif id == "134": #XII The Hanged Man
+		# burn a card in discard pile
+		if discard_pile.size() > 0:
+			get_node("ChoiceController")._on_Player_card_choice_to_make(card, discard_pile)
 	elif id == "136": #XIV Temperence
 		#Adds X chips. Multiply X by 2
 		if card.x_value == 0:
@@ -545,6 +549,16 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		elif origin_card.get_node("WheelOfFortune").wheel_frame < 20:
 			var new_card = instance_new_card(choice_made)
 			add_cards_to_draw_pile([new_card])
+	elif id == "134": #XII The Hanged Man
+		choice_made.start_burn_animation()
+		#wait for burn animation
+		yield(choice_made, "burn_complete")
+		#remove card burnt as children
+		discard_pile.erase(choice_made)
+		cards_currently_moving.erase(choice_made)
+		if choice_made.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+			choice_made.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+		remove_child(choice_made)
 	elif id == "141": #XIX The Sun
 		draw_pile.erase(choice_made)
 		add_card_to_draw_pile_at_position(choice_made, 0)
