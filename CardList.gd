@@ -969,7 +969,8 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "Spin the wheel of fortune and receive a gift!"
 	},
 		"133": {
 		"name": "XI Strength",

@@ -204,6 +204,11 @@ func damage(damage_amount: int):
 		hitpoints -= damage_amount
 		get_parent().get_node("BattleScene").play_damage_animation(self, damage_amount)
 
+func add_chips(chips_to_add):
+	if name == "Player":
+		chips += chips_to_add
+		get_node("ChipCounter").change_chip_number(chips)
+
 func move_cards_to(cards: Array, from_pile: String, to_pile: String):
 	var other_player
 	if name == "Player":
@@ -372,7 +377,7 @@ func play_card_draw_effect(card, id):
 			new_cards.append(new_card)
 		add_cards_to_draw_pile(new_cards)
 	elif id == "124": #II The High Priestess
-		#- reveal the next X cards in your draw pile in order. burns
+		#- reveal the next X cards in your draw pile in order
 		var i = 0
 		var choice_array = []
 		while draw_pile[i] != null and i < 3: #need to protect against checking a draw pile that has less than 3 items
@@ -400,7 +405,7 @@ func play_card_draw_effect(card, id):
 	elif id == "129": #VII The Chariot
 		chariot_effect_active = true
 	elif id == "130": #VIII Justice
-		#replaces all of your jacks with jack of all trades. Adds a jack of all trades to draw pile. Burns.
+		#replaces all of your jacks with jack of all trades. Adds a jack of all trades to draw pile
 		#get all the jacks in all piles in an array
 		var jacks = []
 		var all_piles = []
@@ -423,6 +428,23 @@ func play_card_draw_effect(card, id):
 		decaying_healing += card.x_value
 		#change x value in array in macro_controller
 		get_parent().get_parent().player_x_values[card.index_in_deck] = card.x_value + 1
+	elif id == "132": #X Wheel of Fortune
+		var wheel = load("res://WheelOfFortune.tscn").instance()
+		wheel.position = Vector2(57/2, 89/2)
+		card.add_child(wheel)
+		yield(wheel, "spin_completed")
+		if wheel.wheel_frame < 5: # add chips
+			add_chips(5)
+		elif wheel.wheel_frame < 10: # burn a card in discard pile
+			if discard_pile.size() > 0:
+				get_node("ChoiceController")._on_Player_card_choice_to_make(card, discard_pile)
+		elif wheel.wheel_frame < 15: # heal
+			heal(5, card.position)
+		elif wheel.wheel_frame < 20: # add a random reward card to draw pile
+			var choice_array = []
+			for n in 5:
+				choice_array.append(CardList.get_random_reward_card_id())
+			get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 	elif id == "133": #XI Strength
 		#opponent cannot hit again this round
 		get_parent().get_node("Opponent").rounds_to_skip += 1
@@ -430,7 +452,7 @@ func play_card_draw_effect(card, id):
 		#Adds X chips. Multiply X by 2
 		if card.x_value == 0:
 			card.x_value = 1
-		chips += card.x_value
+		add_chips(card.x_value)
 		#change x value in array in macro_controller
 		get_parent().get_parent().player_x_values[card.index_in_deck] = card.x_value * 2
 	elif id == "137": #XV The Devil
@@ -444,7 +466,7 @@ func play_card_draw_effect(card, id):
 		#choose a card in your draw pile to put on top of draw pile.
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
 	elif id == "142": #XX Judgment
-		#take no damage from the next opponent blackjack. burns
+		#take no damage from the next opponent blackjack
 		judgment_shield_active = true
 	elif id == "145": #ace up your sleeve
 		var ace_id
@@ -509,6 +531,20 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	elif id == "128": #VI The Lovers
 		var new_card = instance_new_card(choice_made)
 		add_cards_to_draw_pile([new_card])
+	elif id == "132": #X Wheel of Fortune
+		if origin_card.get_node("WheelOfFortune").wheel_frame < 10:
+			choice_made.start_burn_animation()
+			#wait for burn animation
+			yield(choice_made, "burn_complete")
+			#remove card burnt as children
+			discard_pile.erase(choice_made)
+			cards_currently_moving.erase(choice_made)
+			if choice_made.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+				choice_made.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+			remove_child(choice_made)
+		elif origin_card.get_node("WheelOfFortune").wheel_frame < 20:
+			var new_card = instance_new_card(choice_made)
+			add_cards_to_draw_pile([new_card])
 	elif id == "141": #XIX The Sun
 		draw_pile.erase(choice_made)
 		add_card_to_draw_pile_at_position(choice_made, 0)
