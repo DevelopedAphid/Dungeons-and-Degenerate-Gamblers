@@ -452,6 +452,13 @@ func play_card_draw_effect(card, id):
 		# burn a card in discard pile
 		if discard_pile.size() > 0:
 			get_node("ChoiceController")._on_Player_card_choice_to_make(card, discard_pile)
+	elif id == "135": #XIII Death
+		var all_piles = []
+		all_piles.append_array(draw_pile)
+		all_piles.append_array(play_pile)
+		all_piles.append_array(discard_pile)
+		all_piles.erase(card) #can't burn the death card
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, all_piles)
 	elif id == "136": #XIV Temperence
 		#Adds X chips. Multiply X by 2
 		if card.x_value == 0:
@@ -559,6 +566,26 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		if choice_made.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
 			choice_made.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
 		remove_child(choice_made)
+	elif id == "135": #XIII Death
+		#choice_made might not yet be a child since it could be in the draw pile
+		if choice_made.is_inside_tree(): #can't play burn animation if it's not yet a child
+			choice_made.start_burn_animation()
+			#wait for burn animation
+			yield(choice_made, "burn_complete")
+		#remove card burnt as children
+		if draw_pile.has(choice_made):
+			draw_pile.erase(choice_made)
+		if play_pile.has(choice_made):
+			play_pile.erase(choice_made)
+		if discard_pile.has(choice_made):
+			discard_pile.erase(choice_made)
+		cards_currently_moving.erase(choice_made)
+		if choice_made.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+			choice_made.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+		if choice_made.is_inside_tree(): #if its a child remove it
+			remove_child(choice_made)
+		#and now remove it from deck
+		get_parent().get_parent().player_deck.erase(choice_made.card_id)
 	elif id == "141": #XIX The Sun
 		draw_pile.erase(choice_made)
 		add_card_to_draw_pile_at_position(choice_made, 0)

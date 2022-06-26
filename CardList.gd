@@ -993,7 +993,9 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"burns": true,
+		"description": "choose a card from any player pile to permanently remove from deck. burns"
 	},
 		"136": {
 		"name": "XIV Temperance",
