@@ -1019,7 +1019,9 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"burns": true,
+		"description": "locks the first card in play for both players. burns"
 	},
 		"139": {
 		"name": "XVII The Star",
@@ -1058,7 +1060,8 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"description": "locks. after shuffle choose a random tarot cards to put on top of draw pile (excluding 21 The World)"
 	},
 		"144": {
 		"name": "0 The Fool",

@@ -472,6 +472,13 @@ func play_card_draw_effect(card, id):
 	elif id == "137": #XV The Devil
 		#if you get blackjack with this card in play pile it multiplies damage dealt by 6. if you do not get blackjack deals 6 damage to player
 		devil_effect_active = true
+	elif id == "138": #XVI The Tower
+		#locks the first card in play for both players
+		if play_pile.size() > 0:
+			play_pile[0].lock_card()
+		var opponent_play_pile = get_parent().get_node("Opponent").play_pile
+		if opponent_play_pile.size() > 0:
+			opponent_play_pile[0].lock_card()
 	elif id == "139": #XVII The Star
 		#heal self by 17, do double damage this round win
 		heal(17, card.position)
