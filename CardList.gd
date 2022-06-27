@@ -1068,7 +1068,9 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"burns": true,
+		"description": "swap play and discard piles with opponent. burns"
 	},
 		"145": {
 		"name": "Ace Up Your Sleeve",

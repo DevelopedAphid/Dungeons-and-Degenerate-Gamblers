@@ -1,6 +1,7 @@
 extends Node
 
 signal UI_update_completed
+signal swap_completed
 
 var deck = []
 var draw_pile = []
@@ -233,6 +234,12 @@ func move_cards_to(cards: Array, from_pile: String, to_pile: String):
 	elif to_pile == "other_play_pile":
 		target_position = other_player.play_pile_pos
 		card_spacing = play_pile_card_spacing
+	elif to_pile == "other_discard_pile":
+		target_position = other_player.discard_pile_pos
+		card_spacing = discard_pile_card_spacing * (-1)
+	elif to_pile == "other_draw_pile":
+		target_position = other_player.get_node("DeckDisplay").position
+		card_spacing = 0
 	elif to_pile == "sleeve_pile":
 		target_position = $SleevePilePosition.position
 		card_spacing = play_pile_card_spacing
@@ -257,6 +264,12 @@ func move_cards_to(cards: Array, from_pile: String, to_pile: String):
 			"other_play_pile":
 				other_player.play_pile.append(card)
 				card.get_node("MovementHandler").move_card_to(target_position + Vector2(-1 * card_spacing * (other_player.play_pile.size() - 1), 0))
+			"other_discard_pile":
+				other_player.discard_pile.append(card)
+				card.get_node("MovementHandler").move_card_to(target_position + Vector2(card_spacing * (other_player.discard_pile.size() - 1), 0))
+			"other_draw_pile":
+				other_player.draw_pile.append(card)
+				card.get_node("MovementHandler").move_card_to(target_position + Vector2(card_spacing * (other_player.draw_pile.size() - 1), 0))
 			"sleeve_pile":
 				sleeve_pile.append(card)
 				card.get_node("MovementHandler").move_card_to(target_position + Vector2(card_spacing * (sleeve_pile.size() - 1), 0))
@@ -270,6 +283,45 @@ func move_cards_to(cards: Array, from_pile: String, to_pile: String):
 				draw_pile.erase(card)
 			"sleeve_pile":
 				sleeve_pile.erase(card)
+
+func swap_piles(pile_type, pile_1, pile_2):
+	var other_player
+	if name == "Player":
+		other_player = get_parent().get_node("Opponent")
+	else:
+		other_player = get_parent().get_node("Player")
+	var this_player_pile = []
+	var other_player_pile = []
+	for card_to_swap in pile_1:
+		this_player_pile.append(card_to_swap)
+	for card_to_swap in pile_2:
+		other_player_pile.append(card_to_swap)
+	if this_player_pile.size() > 0:
+		for card_to_swap in this_player_pile:
+			#move card to other player
+			move_cards_to([card_to_swap], pile_type, "other_" + pile_type)
+			yield(self, "UI_update_completed")
+			#remove this card as a child and disconnect movement signal
+			if card_to_swap.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+				card_to_swap.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+			if is_a_parent_of(card_to_swap):
+				remove_child(card_to_swap)
+			#add this card as a child of the other player and connect movement signal
+			other_player.add_child(card_to_swap)
+			card_to_swap.get_node("MovementHandler").connect("movement_completed", other_player, "on_card_movement_completed")
+	if other_player_pile.size() > 0:
+		for card_to_swap in other_player_pile:
+			other_player.move_cards_to([card_to_swap], pile_type, "other_" + pile_type)
+			yield(other_player, "UI_update_completed")
+			#remove this card as a child and disconnect movement signal
+			if card_to_swap.get_node("MovementHandler").is_connected("movement_completed", other_player, "on_card_movement_completed"):
+				card_to_swap.get_node("MovementHandler").disconnect("movement_completed", other_player, "on_card_movement_completed")
+			if other_player.is_a_parent_of(card_to_swap):
+				other_player.remove_child(card_to_swap)
+			#add this card as a child of the other player and connect movement signal
+			add_child(card_to_swap)
+			card_to_swap.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
+	emit_signal("swap_completed")
 
 func on_card_movement_completed(card):
 	cards_currently_moving.erase(card)
@@ -330,36 +382,7 @@ func play_card_draw_effect(card, id):
 		get_parent().get_node("Opponent").draw_top_card()
 		yield(get_parent().get_node("Opponent"), "UI_update_completed")
 	elif id == "078": #Reverse Card
-		var opponent = get_parent().get_node("Opponent")
-		var player_play_pile = []
-		var opponent_play_pile = []
-		for card_to_swap in play_pile:
-			player_play_pile.append(card_to_swap)
-		for card_to_swap in opponent.play_pile:
-			opponent_play_pile.append(card_to_swap)
-		for card_to_swap in player_play_pile:
-			#move card to other player
-			move_cards_to([card_to_swap], "play_pile", "other_play_pile")
-			yield(self, "UI_update_completed")
-			#remove this card as a child and disconnect movement signal
-			if card_to_swap.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
-				card_to_swap.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
-			if is_a_parent_of(card_to_swap):
-				remove_child(card_to_swap)
-			#add this card as a child of the other player and connect movement signal
-			opponent.add_child(card_to_swap)
-			card_to_swap.get_node("MovementHandler").connect("movement_completed", opponent, "on_card_movement_completed")
-		for card_to_swap in opponent_play_pile:
-			opponent.move_cards_to([card_to_swap], "play_pile", "other_play_pile")
-			yield(opponent, "UI_update_completed")
-			#remove this card as a child and disconnect movement signal
-			if card_to_swap.get_node("MovementHandler").is_connected("movement_completed", opponent, "on_card_movement_completed"):
-				card_to_swap.get_node("MovementHandler").disconnect("movement_completed", opponent, "on_card_movement_completed")
-			if opponent.is_a_parent_of(card_to_swap):
-				opponent.remove_child(card_to_swap)
-			#add this card as a child of the other player and connect movement signal
-			add_child(card_to_swap)
-			card_to_swap.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
+		swap_piles("play_pile", play_pile, get_parent().get_node("Opponent").play_pile)
 	elif id == "079": #negative ace of spades
 		var choice_array = [id, "089"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
@@ -491,6 +514,9 @@ func play_card_draw_effect(card, id):
 		judgment_shield_active = true
 	elif id == "143": #XXI The World
 		card.lock_card()
+	elif id == "144": #0 The Fool
+		swap_piles("play_pile", play_pile, get_parent().get_node("Opponent").play_pile)
+		swap_piles("discard_pile", discard_pile, get_parent().get_node("Opponent").discard_pile)
 	elif id == "145": #ace up your sleeve
 		var ace_id
 		#creates an ace with random suit
