@@ -15,6 +15,7 @@ var card_sprite = ""
 var card_description = ""
 var card_does_burn = false
 var card_locked = false
+var card_shrouded = false
 var x_value = 0
 
 var score_before_played
@@ -100,6 +101,14 @@ func lock_card():
 	$LockIconSprite/FrameTween.start()
 	$LockIconSprite/PositionTween.interpolate_property($LockIconSprite, "position", Vector2(29, 65), Vector2(29, 77), 1.0)
 	$LockIconSprite/PositionTween.start()
+
+func shroud_card():
+	$ShroudSprite.visible = true
+	card_shrouded = true
+
+func reveal_card():
+	$ShroudSprite.visible = false
+	card_shrouded = false
 
 func start_burn_animation():
 	$CardArtSprite.activate_burn_shader()

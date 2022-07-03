@@ -1036,7 +1036,9 @@ var card_dictionary = {
 		"suit": "special",
 		"value": 0,
 		"effect": true,
-		"tarot": true
+		"tarot": true,
+		"locks": true,
+		"description": "Locks. shrouds cards opponent has played. You deal 3x damage"
 	},
 		"141": {
 		"name": "XIX The Sun",

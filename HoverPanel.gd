@@ -43,8 +43,13 @@ func find_and_focus_top_card():
 		top_card.set_z_index(1)
 	top_card.highlight_card(true)
 	
-	hover_label.text = top_card.card_name
-	hover_label.rect_size = font.get_string_size(top_card.card_name)
+	var card_name
+	if top_card.card_shrouded == true:
+		card_name = "???"
+	else:
+		card_name = top_card.card_name
+	hover_label.text = card_name
+	hover_label.rect_size = font.get_string_size(card_name)
 	hover_label.rect_position = top_card.position + hover_position
 	
 	#check if it fits on the screen and re-position if it doesn't
@@ -53,8 +58,13 @@ func find_and_focus_top_card():
 	if hover_label.rect_position.y + hover_label.rect_size.y > get_viewport_rect().size.y - 10:
 		hover_label.rect_position.y = get_viewport_rect().size.y - hover_label.rect_size.y - 10
 	
-	description_label.text = top_card.card_description
-	description_label.rect_size = description_font.get_string_size(top_card.card_description)
+	var card_desc
+	if top_card.card_shrouded == true:
+		card_desc = "???"
+	else:
+		card_desc = top_card.card_description
+	description_label.text = card_desc
+	description_label.rect_size = description_font.get_string_size(card_desc)
 	description_label.rect_position = hover_label.rect_position + Vector2(0, 11)
 	
 	#check if it fits on the screen and re-position if it doesn't
@@ -104,7 +114,8 @@ func find_and_focus_top_card():
 	
 	if not top_card.is_in_group("choices"): #choices and sleeve cards don't have a score contribution to highlight
 		if not top_card.is_in_group("sleeve_cards"):
-			top_card.get_parent().get_node("ScoreBar").highlight_scores(top_card.score_before_played + 1, top_card.score_before_played + top_card.get_card_value())
+			if not top_card.card_shrouded:
+				top_card.get_parent().get_node("ScoreBar").highlight_scores(top_card.score_before_played + 1, top_card.score_before_played + top_card.get_card_value())
 
 func _on_Card_hover_started(card):
 	hovered_cards.append(card)

@@ -55,6 +55,20 @@ func update_score():
 		new_sprite.add_to_group("suit_icons")
 		add_child(new_sprite)
 		new_sprite.position = Vector2(10, 230 - i * 11) #score bar image is 239 high so this will mean icons go bottom up
+	
+	if get_parent().moon_shroud_effect_active: 
+		#play pile shrouded so hide score too
+		$ScoreLabel.text = "?"
+		$ScoreLabel.rect_position = Vector2(6, -25)
+		if $ExcessLabel.text.length() > 0:
+			$ExcessLabel.text = "?"
+		var suit_icons_to_remove = []
+		for child in get_children():
+			if child.is_in_group("suit_icons"):
+				suit_icons_to_remove.append(child)
+		for child in suit_icons_to_remove:
+			child.queue_free()
+	
 
 func highlight_scores(start_score, end_score):
 	if end_score > 21:

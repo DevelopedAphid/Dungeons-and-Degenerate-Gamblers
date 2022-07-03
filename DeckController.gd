@@ -18,10 +18,13 @@ var current_card_effect_id
 var chips
 
 var rounds_to_skip = 0
+#todo: replace these with checks to see if card still in play as all these fail once I bring in a "unlock a card" mechanic
 var judgment_shield_active = false
 var chariot_effect_active = false
 var star_effect_active = false
 var devil_effect_active = false
+var moon_shroud_effect_active = false
+var moon_damage_effect_active = false
 var blackjack_cap_type = "none"
 
 #screen positions and spacing
@@ -219,6 +222,15 @@ func move_cards_to(cards: Array, from_pile: String, to_pile: String):
 		other_player = get_parent().get_node("Opponent")
 	else: 
 		other_player = get_parent().get_node("Player")
+	
+	if moon_shroud_effect_active: #shroud cards in play pile
+		if to_pile == "play_pile": #cads moving to play pile should be shrouded
+			for card in cards:
+				card.shroud_card()
+		elif from_pile == "play_pile": #moving out of play_pile we should reveal the card
+			for card in cards:
+				card.reveal_card()
+	
 	#change spacing of cards depending on to_pile
 	var target_position = Vector2(0, 0)
 	var card_spacing = 0
@@ -506,6 +518,11 @@ func play_card_draw_effect(card, id):
 		#heal self by 17, do double damage this round win
 		heal(17, card.position)
 		star_effect_active = true
+	elif id == "140": #XVIII The Moon
+		#Locks. shrouds cards opponent has played. You deal 3x damage
+		card.lock_card()
+		moon_damage_effect_active = true
+		get_parent().get_node("Opponent").moon_shroud_effect_active = true
 	elif id == "141": #XIX The Sun
 		#choose a card in your draw pile to put on top of draw pile.
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)

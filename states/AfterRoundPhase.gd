@@ -31,6 +31,12 @@ func compare_score_and_deal_damage():
 	var battle_scene = game_controller.get_node("BattleScene")
 	battle_scene.hide_shields()
 	
+	#reveal any shrouded cards in play piles before comparing scores
+	for card in player.play_pile:
+		card.reveal_card()
+	for card in opponent.play_pile:
+		card.reveal_card()
+	
 	var player_score = player.score
 	var opponent_score = opponent.score
 	
@@ -103,9 +109,14 @@ func compare_score_and_deal_damage():
 			if winner.devil_effect_active: #x6 damage if devil effect active and get a blackjack
 				damage = damage * 6
 				winner.devil_effect_active = false
-		#clubs deal double damage on 21
-		#shield (if earned last round) blocks damage
-		#cannot deal negative damage
+		
+		if winner.moon_damage_effect_active: #3x damage if moon effect active
+			damage = damage * 3
+		
+		#damage notes:
+		#  clubs deal double damage on 21
+		#  shield (if earned last round) blocks damage
+		#  cannot deal negative damage
 		loser.damage(max(0, (damage + clubs - loser.shieldpoints)))
 		winner.damage(negative_clubs) #negative clubs deal damage to the winner if involved in blackjack
 		if winner.name == "Player":
