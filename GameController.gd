@@ -23,22 +23,19 @@ func _ready():
 	
 	rng = RandomNumberGenerator.new()
 	rng.randomize()
-	
-	for n in macro_controller.player_deck:
-		player.add_card_to_deck(n)
-	
-	for n in macro_controller.opponent_deck:
-		opponent.add_card_to_deck(n)
-	
-	player.build_draw_pile()
-	opponent.build_draw_pile()
+
+	player.build_draw_pile_from_deck(macro_controller.player_deck, macro_controller.player_x_values)
+	opponent.build_draw_pile_from_deck(macro_controller.opponent_deck, macro_controller.opponent_x_values)
 	
 	current_turn = "player"
 	player_last_turn_result = "hit"
 	opponent_last_turn_result = "hit"
 	
-	player.get_node("ScoreBar").update_score(player.score)
-	opponent.get_node("ScoreBar").update_score(opponent.score)
+	update_scores()
+
+func update_scores():
+	player.get_node("ScoreBar").update_score()
+	opponent.get_node("ScoreBar").update_score()
 
 func transition_to(target_state: String, _data: Dictionary):
 #	print("attempting state transition from: " + current_state + " to: " + target_state)
@@ -51,6 +48,8 @@ func transition_to(target_state: String, _data: Dictionary):
 	if opponent.cards_currently_moving.size() > 0:
 		yield(opponent, "UI_update_completed")
 #	print("resuming after transition to " + target_state)
+	
+	update_scores()
 	
 	current_state = target_state
 	state_label.text = current_state

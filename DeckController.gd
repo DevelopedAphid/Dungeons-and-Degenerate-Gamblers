@@ -1,18 +1,31 @@
 extends Node
 
 signal UI_update_completed
+signal swap_completed
 
 var deck = []
 var draw_pile = []
 var play_pile = []
 var discard_pile = []
 var burn_pile = []
+var sleeve_pile = []
 var score = 0
 var hitpoints = 100
 var max_hitpoints
+var decaying_healing = 0
 var shieldpoints = 0
 var current_card_effect_id
 var chips
+
+var rounds_to_skip = 0
+#todo: replace these with checks to see if card still in play as all these fail once I bring in a "unlock a card" mechanic
+var judgment_shield_active = false
+var chariot_effect_active = false
+var star_effect_active = false
+var devil_effect_active = false
+var moon_shroud_effect_active = false
+var moon_damage_effect_active = false
+var blackjack_cap_type = "none"
 
 #screen positions and spacing
 onready var play_pile_pos = $PlayPilePosition.position
@@ -33,24 +46,41 @@ func _ready():
 		hitpoints = get_parent().get_parent().opponent_health_points
 		max_hitpoints = hitpoints
 
-func add_card_to_deck(card_id):
-	#add a defined card to the deck
+func instance_new_card(card_id) -> Object:
 	var new_card = Card.instance()
 	new_card.call_deferred("set_card_id", card_id)
-	deck.append(new_card)
 	
 	new_card.connect("card_hover_started", get_parent().get_node("HoverPanel"), "_on_Card_hover_started")
 	new_card.connect("card_hover_ended", get_parent().get_node("HoverPanel"), "_on_Card_hover_ended")
 	new_card.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
+	
+	return new_card
 
-func build_draw_pile():
-	#put deck list into draw pile
-	for cards in deck.size():
-		draw_pile.append(deck[cards])
-		deck[cards].position = $DeckDisplay.position
+func build_draw_pile_from_deck(deck_to_build, x_values):
+	var draw_pile_to_add = []
+	var i = 0
+	for n in deck_to_build:
+		var new_card = instance_new_card(n)
+		new_card.index_in_deck = i
+		new_card.x_value = x_values[i]
+		i += 1
+		draw_pile_to_add.append(new_card)
+	
+	add_cards_to_draw_pile(draw_pile_to_add)
+
+func add_cards_to_draw_pile(cards: Array):
+	#put array of cards into draw pile
+	for card in cards:
+		draw_pile.append(card)
+		card.position = $DeckDisplay.position
 	
 	$DeckDisplay.change_deck_size(draw_pile.size())
 	shuffle_draw_pile()
+
+func add_card_to_draw_pile_at_position(card: Object, pile_pos: int):
+	draw_pile.insert(pile_pos, card)
+	card.position = $DeckDisplay.position
+	$DeckDisplay.change_deck_size(draw_pile.size())
 
 func shuffle_draw_pile():
 	#randomise draw contents
@@ -82,7 +112,7 @@ func draw_top_card():
 	$DeckDisplay.change_deck_size(draw_pile.size())
 	
 	if top_card.has_special_effect():
-		play_card_effect(top_card, top_card.get_card_id())
+		play_card_draw_effect(top_card, top_card.get_card_id())
 
 func shuffle_discard_pile_into_draw_pile():
 	#put everything in discard pile into draw pile
@@ -103,6 +133,9 @@ func shuffle_discard_pile_into_draw_pile():
 		remove_child(card)
 	
 	shuffle_draw_pile()
+	
+	for card in play_pile: #play on shuffle effect for any cards locked in play
+		play_end_of_shuffle_effect(card, card.card_id)
 
 func discard_played_cards():
 	var cards_to_discard = []
@@ -111,7 +144,7 @@ func discard_played_cards():
 		if card.card_does_burn:
 			cards_to_burn.append(card)
 			card.start_burn_animation()
-		else: #card does not burn, so should be discarded
+		elif not card.card_locked: #card does not burn, so should be discarded
 			cards_to_discard.append(card)
 	if cards_to_burn.size() > 0:
 		#wait for burn animation
@@ -130,12 +163,18 @@ func discard_played_cards():
 		#wait for cards to finish moving
 		yield(self, "UI_update_completed")
 	
+	#move any remaining cards in play pile to starting positions (i.e. locked cards)
+	var card_spacing = play_pile_card_spacing
+	if name == "Opponent":
+		card_spacing = card_spacing * (-1)
+	var cards_moved = 0
+	for card in play_pile:
+		card.get_node("MovementHandler").move_card_to(play_pile_pos + Vector2(card_spacing * (cards_moved), 0))
+		#todo: track and reset score before played here
+		cards_moved += 1
+	
 	#set score to 0 since round is over
 	score = 0
-
-#func add_card_to_draw_pile(card, position):
-#	#add a defined card to the draw pile at a defined position
-#	pass
 
 func heal(heal_amount: int, heal_source_pos: Vector2):
 	if heal_amount > 0:
@@ -172,12 +211,26 @@ func damage(damage_amount: int):
 		hitpoints -= damage_amount
 		get_parent().get_node("BattleScene").play_damage_animation(self, damage_amount)
 
-func move_cards_to(cards, from_pile, to_pile):
+func add_chips(chips_to_add):
+	if name == "Player":
+		chips += chips_to_add
+		get_node("ChipCounter").change_chip_number(chips)
+
+func move_cards_to(cards: Array, from_pile: String, to_pile: String):
 	var other_player
 	if name == "Player":
 		other_player = get_parent().get_node("Opponent")
 	else: 
 		other_player = get_parent().get_node("Player")
+	
+	if moon_shroud_effect_active: #shroud cards in play pile
+		if to_pile == "play_pile": #cads moving to play pile should be shrouded
+			for card in cards:
+				card.shroud_card()
+		elif from_pile == "play_pile": #moving out of play_pile we should reveal the card
+			for card in cards:
+				card.reveal_card()
+	
 	#change spacing of cards depending on to_pile
 	var target_position = Vector2(0, 0)
 	var card_spacing = 0
@@ -192,6 +245,15 @@ func move_cards_to(cards, from_pile, to_pile):
 		card_spacing = 0
 	elif to_pile == "other_play_pile":
 		target_position = other_player.play_pile_pos
+		card_spacing = play_pile_card_spacing
+	elif to_pile == "other_discard_pile":
+		target_position = other_player.discard_pile_pos
+		card_spacing = discard_pile_card_spacing * (-1)
+	elif to_pile == "other_draw_pile":
+		target_position = other_player.get_node("DeckDisplay").position
+		card_spacing = 0
+	elif to_pile == "sleeve_pile":
+		target_position = $SleevePilePosition.position
 		card_spacing = play_pile_card_spacing
 	
 	if name == "Opponent":
@@ -214,6 +276,15 @@ func move_cards_to(cards, from_pile, to_pile):
 			"other_play_pile":
 				other_player.play_pile.append(card)
 				card.get_node("MovementHandler").move_card_to(target_position + Vector2(-1 * card_spacing * (other_player.play_pile.size() - 1), 0))
+			"other_discard_pile":
+				other_player.discard_pile.append(card)
+				card.get_node("MovementHandler").move_card_to(target_position + Vector2(card_spacing * (other_player.discard_pile.size() - 1), 0))
+			"other_draw_pile":
+				other_player.draw_pile.append(card)
+				card.get_node("MovementHandler").move_card_to(target_position + Vector2(card_spacing * (other_player.draw_pile.size() - 1), 0))
+			"sleeve_pile":
+				sleeve_pile.append(card)
+				card.get_node("MovementHandler").move_card_to(target_position + Vector2(card_spacing * (sleeve_pile.size() - 1), 0))
 		#remove cards from from_pile
 		match from_pile:
 			"play_pile":
@@ -222,16 +293,58 @@ func move_cards_to(cards, from_pile, to_pile):
 				discard_pile.erase(card)
 			"draw_pile":
 				draw_pile.erase(card)
+			"sleeve_pile":
+				sleeve_pile.erase(card)
+
+func swap_piles(pile_type, pile_1, pile_2):
+	var other_player
+	if name == "Player":
+		other_player = get_parent().get_node("Opponent")
+	else:
+		other_player = get_parent().get_node("Player")
+	var this_player_pile = []
+	var other_player_pile = []
+	for card_to_swap in pile_1:
+		this_player_pile.append(card_to_swap)
+	for card_to_swap in pile_2:
+		other_player_pile.append(card_to_swap)
+	if this_player_pile.size() > 0:
+		for card_to_swap in this_player_pile:
+			#move card to other player
+			move_cards_to([card_to_swap], pile_type, "other_" + pile_type)
+			yield(self, "UI_update_completed")
+			#remove this card as a child and disconnect movement signal
+			if card_to_swap.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+				card_to_swap.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+			if is_a_parent_of(card_to_swap):
+				remove_child(card_to_swap)
+			#add this card as a child of the other player and connect movement signal
+			other_player.add_child(card_to_swap)
+			card_to_swap.get_node("MovementHandler").connect("movement_completed", other_player, "on_card_movement_completed")
+	if other_player_pile.size() > 0:
+		for card_to_swap in other_player_pile:
+			other_player.move_cards_to([card_to_swap], pile_type, "other_" + pile_type)
+			yield(other_player, "UI_update_completed")
+			#remove this card as a child and disconnect movement signal
+			if card_to_swap.get_node("MovementHandler").is_connected("movement_completed", other_player, "on_card_movement_completed"):
+				card_to_swap.get_node("MovementHandler").disconnect("movement_completed", other_player, "on_card_movement_completed")
+			if other_player.is_a_parent_of(card_to_swap):
+				other_player.remove_child(card_to_swap)
+			#add this card as a child of the other player and connect movement signal
+			add_child(card_to_swap)
+			card_to_swap.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
+	emit_signal("swap_completed")
 
 func on_card_movement_completed(card):
 	cards_currently_moving.erase(card)
+	get_parent().update_scores() #since cards may have moved into or out of play piles and therefore changed scores
 	if cards_currently_moving.size() == 0:
 		emit_signal("UI_update_completed")
 
 func _on_Card_choice_to_make(choice_array, card):
 	emit_signal("card_choice_to_make", choice_array, card)
 
-func play_card_effect(card, id):
+func play_card_draw_effect(card, id):
 	if self.name == "Opponent": #currently this means opponents are unable to use special cards
 		return
 	
@@ -275,41 +388,13 @@ func play_card_effect(card, id):
 			get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
 	elif id == "076": #Get Well Soon card
 		get_parent().get_node("Player").heal(10, card.position)
-		get_parent().get_node("Opponent").heal(10, card.position)
 	elif id == "077": #+2 Card
 		get_parent().get_node("Opponent").draw_top_card()
+		yield(get_parent().get_node("Opponent"), "UI_update_completed")
 		get_parent().get_node("Opponent").draw_top_card()
+		yield(get_parent().get_node("Opponent"), "UI_update_completed")
 	elif id == "078": #Reverse Card
-		var opponent = get_parent().get_node("Opponent")
-		var player_play_pile = []
-		var opponent_play_pile = []
-		for card_to_swap in play_pile:
-			player_play_pile.append(card_to_swap)
-		for card_to_swap in opponent.play_pile:
-			opponent_play_pile.append(card_to_swap)
-		for card_to_swap in player_play_pile:
-			#move card to other player
-			move_cards_to([card_to_swap], "play_pile", "other_play_pile")
-			yield(self, "UI_update_completed")
-			#remove this card as a child and disconnect movement signal
-			if card_to_swap.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
-				card_to_swap.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
-			if is_a_parent_of(card_to_swap):
-				remove_child(card_to_swap)
-			#add this card as a child of the other player and connect movement signal
-			opponent.add_child(card_to_swap)
-			card_to_swap.get_node("MovementHandler").connect("movement_completed", opponent, "on_card_movement_completed")
-		for card_to_swap in opponent_play_pile:
-			opponent.move_cards_to([card_to_swap], "play_pile", "other_play_pile")
-			yield(opponent, "UI_update_completed")
-			#remove this card as a child and disconnect movement signal
-			if card_to_swap.get_node("MovementHandler").is_connected("movement_completed", opponent, "on_card_movement_completed"):
-				card_to_swap.get_node("MovementHandler").disconnect("movement_completed", opponent, "on_card_movement_completed")
-			if opponent.is_a_parent_of(card_to_swap):
-				opponent.remove_child(card_to_swap)
-			#add this card as a child of the other player and connect movement signal
-			add_child(card_to_swap)
-			card_to_swap.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
+		swap_piles("play_pile", play_pile, get_parent().get_node("Opponent").play_pile)
 	elif id == "079": #negative ace of spades
 		var choice_array = [id, "089"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
@@ -322,6 +407,163 @@ func play_card_effect(card, id):
 	elif id == "112": #negative ace of hearts
 		var choice_array = [id, "122"]
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "123": #I the Magician
+		var card_array = ["071", "071", "071", "001", "040", "145"]
+		var new_cards = []
+		for new_card_id in card_array:
+			var new_card = instance_new_card(new_card_id)
+			new_cards.append(new_card)
+		add_cards_to_draw_pile(new_cards)
+	elif id == "124": #II The High Priestess
+		#- reveal the next X cards in your draw pile in order
+		var i = 0
+		var choice_array = []
+		while draw_pile[i] != null and i < 3: #need to protect against checking a draw pile that has less than 3 items
+			choice_array.append(draw_pile[i].card_id)
+			i += 1
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "125": #III The Empress
+		# locks an 11 of hearts to players play pile
+		var eleven_of_hearts = instance_new_card("062")
+		add_child(eleven_of_hearts)
+		add_cards_to_draw_pile([eleven_of_hearts])
+		move_cards_to([eleven_of_hearts], "draw_pile", "play_pile")
+		eleven_of_hearts.score_before_played = score
+		eleven_of_hearts.lock_card()
+	elif id == "126": #IV The Emperer
+		#score over 21 this turn will instead be taken as damage to both players
+		blackjack_cap_type = "damage_both"
+	elif id == "127": #V The Hierophant
+		#score over 21 this turn will instead heal both players
+		blackjack_cap_type = "heal_both"
+	elif id == "128": #VI The Lovers
+		#choose from the following to add to draw pile: valentines card, ace of hearts, another 6 The Lovers
+		var choice_array = ["146", "040" ,"128"]
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "129": #VII The Chariot
+		chariot_effect_active = true
+	elif id == "130": #VIII Justice
+		#replaces all of your jacks with jack of all trades. Adds a jack of all trades to draw pile
+		#get all the jacks in all piles in an array
+		var jacks = []
+		var all_piles = []
+		all_piles.append_array(draw_pile)
+		all_piles.append_array(play_pile)
+		all_piles.append_array(discard_pile)
+		for card in all_piles:
+			if card.card_id == "011" or card.card_id == "024" or card.card_id == "037" or card.card_id == "050":
+				jacks.append(card)
+		#set jacks to be jack of all trades
+		for jack in jacks: 
+			jack.set_card_id("075")
+		#add a new jack of all trades to draw pile
+		var new_jack = instance_new_card("075")
+		add_cards_to_draw_pile([new_jack])
+	elif id == "131": #IX The Hermit
+		#add X decaying healing per turn, add 1 to X
+		if card.x_value == 0:
+			card.x_value = 1
+		decaying_healing += card.x_value
+		#change x value in array in macro_controller
+		get_parent().get_parent().player_x_values[card.index_in_deck] = card.x_value + 1
+	elif id == "132": #X Wheel of Fortune
+		var wheel = load("res://WheelOfFortune.tscn").instance()
+		wheel.position = Vector2(57/2, 89/2)
+		card.add_child(wheel)
+		yield(wheel, "spin_completed")
+		if wheel.wheel_frame < 5: # add chips
+			add_chips(5)
+		elif wheel.wheel_frame < 10: # burn a card in discard pile
+			if discard_pile.size() > 0:
+				get_node("ChoiceController")._on_Player_card_choice_to_make(card, discard_pile)
+		elif wheel.wheel_frame < 15: # heal
+			heal(5, card.position)
+		elif wheel.wheel_frame < 20: # add a random reward card to draw pile
+			var choice_array = []
+			for n in 5:
+				choice_array.append(CardList.get_random_reward_card_id())
+			get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+	elif id == "133": #XI Strength
+		#opponent cannot hit again this round
+		get_parent().get_node("Opponent").rounds_to_skip += 1
+	elif id == "134": #XII The Hanged Man
+		# burn a card in discard pile
+		if discard_pile.size() > 0:
+			get_node("ChoiceController")._on_Player_card_choice_to_make(card, discard_pile)
+	elif id == "135": #XIII Death
+		var all_piles = []
+		all_piles.append_array(draw_pile)
+		all_piles.append_array(play_pile)
+		all_piles.append_array(discard_pile)
+		all_piles.erase(card) #can't burn the death card
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, all_piles)
+	elif id == "136": #XIV Temperence
+		#Adds X chips. Multiply X by 2
+		if card.x_value == 0:
+			card.x_value = 1
+		add_chips(card.x_value)
+		#change x value in array in macro_controller
+		get_parent().get_parent().player_x_values[card.index_in_deck] = card.x_value * 2
+	elif id == "137": #XV The Devil
+		#if you get blackjack with this card in play pile it multiplies damage dealt by 6. if you do not get blackjack deals 6 damage to player
+		devil_effect_active = true
+	elif id == "138": #XVI The Tower
+		#locks the first card in play for both players
+		if play_pile.size() > 0:
+			play_pile[0].lock_card()
+		var opponent_play_pile = get_parent().get_node("Opponent").play_pile
+		if opponent_play_pile.size() > 0:
+			opponent_play_pile[0].lock_card()
+	elif id == "139": #XVII The Star
+		#heal self by 17, do double damage this round win
+		heal(17, card.position)
+		star_effect_active = true
+	elif id == "140": #XVIII The Moon
+		#Locks. shrouds cards opponent has played. You deal 3x damage
+		card.lock_card()
+		moon_damage_effect_active = true
+		get_parent().get_node("Opponent").moon_shroud_effect_active = true
+	elif id == "141": #XIX The Sun
+		#choose a card in your draw pile to put on top of draw pile.
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
+	elif id == "142": #XX Judgment
+		#take no damage from the next opponent blackjack
+		judgment_shield_active = true
+	elif id == "143": #XXI The World
+		card.lock_card()
+	elif id == "144": #0 The Fool
+		swap_piles("play_pile", play_pile, get_parent().get_node("Opponent").play_pile)
+		swap_piles("discard_pile", discard_pile, get_parent().get_node("Opponent").discard_pile)
+	elif id == "145": #ace up your sleeve
+		var ace_id
+		#creates an ace with random suit
+		var random_suit_id = randi() % 4 + 1
+		match random_suit_id:
+			1:
+				ace_id = "001"
+			2:
+				ace_id = "014"
+			3:
+				ace_id = "027"
+			4:
+				ace_id = "040"
+		move_cards_to([card], "play_pile", "discard_pile") #discard ace up your sleeve card
+		
+		#move the ace to sleeve pile
+		var new_card = Card.instance()
+		new_card.add_to_group("sleeve_cards")
+		add_child(new_card)
+		new_card.set_card_id(ace_id)
+		play_pile.append(new_card)
+		new_card.connect("card_hover_started", get_parent().get_node("HoverPanel"), "_on_Card_hover_started")
+		new_card.connect("card_hover_ended", get_parent().get_node("HoverPanel"), "_on_Card_hover_ended")
+		new_card.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
+		new_card.connect("card_clicked", self, "_on_SleeveCard_clicked", [new_card])
+		
+		move_cards_to([new_card], "play_pile", "sleeve_pile")
+	elif id == "146": #valentines card
+		get_parent().get_node("Player").heal(14, card.position)
+		get_parent().get_node("Opponent").heal(14, card.position)
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	var id = current_card_effect_id
@@ -345,9 +587,102 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		origin_card.set_card_value(choice_made.get_card_value())
 		origin_card.set_card_suit(choice_made.get_card_suit())
 		origin_card.set_card_art(choice_made.get_card_id())
-		call_deferred("play_card_effect", origin_card, choice_made.get_card_id())
+		call_deferred("play_card_draw_effect", origin_card, choice_made.get_card_id())
 	elif id == "079" || id == "090" || id == "101" || id == "112" : #negative aces
 		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
 		origin_card.set_card_art(choice_made)
 		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + str(origin_card.get_card_value()) + ")")
+	elif id == "124": #II The High Priestess
+		pass #literally do nothing since all we are doing is showing the order of the next few cards in draw pile and the choice UI is just a convenient way to do that
+	elif id == "128": #VI The Lovers
+		var new_card = instance_new_card(choice_made)
+		add_cards_to_draw_pile([new_card])
+	elif id == "132": #X Wheel of Fortune
+		if origin_card.get_node("WheelOfFortune").wheel_frame < 10:
+			choice_made.start_burn_animation()
+			#wait for burn animation
+			yield(choice_made, "burn_complete")
+			#remove card burnt as children
+			discard_pile.erase(choice_made)
+			cards_currently_moving.erase(choice_made)
+			if choice_made.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+				choice_made.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+			remove_child(choice_made)
+		elif origin_card.get_node("WheelOfFortune").wheel_frame < 20:
+			var new_card = instance_new_card(choice_made)
+			add_cards_to_draw_pile([new_card])
+	elif id == "134": #XII The Hanged Man
+		choice_made.start_burn_animation()
+		#wait for burn animation
+		yield(choice_made, "burn_complete")
+		#remove card burnt as children
+		discard_pile.erase(choice_made)
+		cards_currently_moving.erase(choice_made)
+		if choice_made.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+			choice_made.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+		remove_child(choice_made)
+	elif id == "135": #XIII Death
+		#choice_made might not yet be a child since it could be in the draw pile
+		if choice_made.is_inside_tree(): #can't play burn animation if it's not yet a child
+			choice_made.start_burn_animation()
+			#wait for burn animation
+			yield(choice_made, "burn_complete")
+		#remove card burnt as children
+		if draw_pile.has(choice_made):
+			draw_pile.erase(choice_made)
+		if play_pile.has(choice_made):
+			play_pile.erase(choice_made)
+		if discard_pile.has(choice_made):
+			discard_pile.erase(choice_made)
+		cards_currently_moving.erase(choice_made)
+		if choice_made.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+			choice_made.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+		if choice_made.is_inside_tree(): #if its a child remove it
+			remove_child(choice_made)
+		#and now remove it from deck
+		get_parent().get_parent().player_deck.erase(choice_made.card_id)
+	elif id == "141": #XIX The Sun
+		draw_pile.erase(choice_made)
+		add_card_to_draw_pile_at_position(choice_made, 0)
+	if id == "143": #XXI The World
+		var new_tarot_card = instance_new_card(choice_made)
+		add_card_to_draw_pile_at_position(new_tarot_card, 0)
+	
 	current_card_effect_id = null
+
+func _on_SleeveCard_clicked(card):
+	move_cards_to([card], "sleeve_pile", "play_pile")
+	play_card_draw_effect(card, card.card_id)
+
+func play_end_of_shuffle_effect(card, id):
+	if self.name == "Opponent": #currently this means opponents are unable to use special cards
+		return
+	
+	current_card_effect_id = id
+	
+	if id == "143": #XXI The World
+		var choice_array = []
+		for n in 3:
+			var tarot_id = CardList.get_random_tarot_card_id()
+			while choice_array.has(tarot_id) or tarot_id == "143": #don't allow it to pick an id already in list or the world card
+				tarot_id = CardList.get_random_tarot_card_id()
+			choice_array.append(tarot_id)
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
+
+#func play_card_start_of_turn_effect(card, id):
+#	if self.name == "Opponent": #currently this means opponents are unable to use special cards
+#		return
+#
+#	current_card_effect_id = id
+#
+#	if id == "":
+#		pass
+#
+#func play_card_discard_effect(card, id):
+#	if self.name == "Opponent": #currently this means opponents are unable to use special cards
+#		return
+#
+#	current_card_effect_id = id
+#
+#	if id == "":
+#		pass

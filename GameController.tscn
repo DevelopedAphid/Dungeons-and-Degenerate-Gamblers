@@ -179,6 +179,9 @@ position = Vector2( 42, 100 )
 [node name="DiscardPilePosition" type="Position2D" parent="Player"]
 position = Vector2( 46, 200 )
 
+[node name="SleevePilePosition" type="Position2D" parent="Player"]
+position = Vector2( 45, 265 )
+
 [node name="StateLabel" type="Label" parent="."]
 visible = false
 __meta__ = {

@@ -10,8 +10,9 @@ onready var font = Fonts.font_pixel_5_9
 
 func _ready():
 	$ScoreLabel.add_font_override("font", font)
+	$ExcessLabel.add_font_override("font", font)
 
-func update_score(score):
+func update_score():
 	#remove current icons
 	var sprite_array = []
 	for child in get_children():
@@ -20,7 +21,19 @@ func update_score(score):
 	for child in sprite_array:
 		child.queue_free()
 	
+	var score = 0
+	for card in get_parent().play_pile:
+		score = score + card.get_card_value()
+	get_parent().score = score
+	
 	$ScoreLabel.text = str(score)
+	$ExcessLabel.visible = false
+	if score > 21:
+		if get_parent().blackjack_cap_type != "none":
+			$ScoreLabel.text = str(21)
+			$ExcessLabel.text = str(score - 21)
+			$ExcessLabel.visible = true
+	
 	if $ScoreLabel.text.length() == 1:
 		$ScoreLabel.rect_position = Vector2(6, -25)
 	else: #doesn't handle 3 digit score but not sure if that matters
@@ -42,6 +55,20 @@ func update_score(score):
 		new_sprite.add_to_group("suit_icons")
 		add_child(new_sprite)
 		new_sprite.position = Vector2(10, 230 - i * 11) #score bar image is 239 high so this will mean icons go bottom up
+	
+	if get_parent().moon_shroud_effect_active: 
+		#play pile shrouded so hide score too
+		$ScoreLabel.text = "?"
+		$ScoreLabel.rect_position = Vector2(6, -25)
+		if $ExcessLabel.text.length() > 0:
+			$ExcessLabel.text = "?"
+		var suit_icons_to_remove = []
+		for child in get_children():
+			if child.is_in_group("suit_icons"):
+				suit_icons_to_remove.append(child)
+		for child in suit_icons_to_remove:
+			child.queue_free()
+	
 
 func highlight_scores(start_score, end_score):
 	if end_score > 21:

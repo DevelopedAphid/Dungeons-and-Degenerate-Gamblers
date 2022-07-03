@@ -18,6 +18,7 @@ func set_dialogue_text(dialogue_string):
 	dialogue_label.visible = true
 	$BubbleParts.visible = true
 	showing_dialogue = true
+	can_clear_dialogue = false
 	$StartUpDelay.start()
 	emit_signal("dialogue_set")
 

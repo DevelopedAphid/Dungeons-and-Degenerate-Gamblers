@@ -89,6 +89,17 @@ card_id = "027"
 position = Vector2( 305, 155 )
 card_id = "040"
 
+[node name="TestChoice" type="Node2D" parent="."]
+visible = false
+
+[node name="TestFinishedButton" type="Button" parent="TestChoice"]
+margin_left = 180.0
+margin_top = 276.0
+margin_right = 288.0
+margin_bottom = 296.0
+text = "Done shopping"
+
 [node name="HoverPanel" parent="." instance=ExtResource( 2 )]
 
 [connection signal="pressed" from="Shop/ShopFinishedButton" to="." method="_on_ShopFinishedButton_pressed"]
+[connection signal="pressed" from="TestChoice/TestFinishedButton" to="." method="_on_TestFinishedButton_pressed"]

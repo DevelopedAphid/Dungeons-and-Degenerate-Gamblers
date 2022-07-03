@@ -1,6 +1,12 @@
 extends Node
 
 var encounter_dictionary = {
+	"tavern.0": {
+		"name": "testing_room",
+		"type": "testing_room",
+		"start_dialogue": "welcome to the test room",
+		"end_dialogue": "come again soon"
+	},
 	"tavern.1": {
 		"name": "imp",
 		"type": "opponent",
@@ -23,7 +29,9 @@ var encounter_dictionary = {
 	},
 	"tavern.3": {
 		"name": "shop",
-		"type": "shop"
+		"type": "shop",
+		"start_dialogue": "welcome to the shop",
+		"end_dialogue": "come again soon"
 	},
 	"tavern.4": {
 		"name": "wizard",
@@ -34,5 +42,11 @@ var encounter_dictionary = {
 		"chip_reward": 100,
 		"start_dialogue": "well hello buddy, again, again",
 		"end_dialogue": "how rude buddy, again, again"
+	},
+	"tavern.5": {
+		"name": "fortune teller",
+		"type": "fortune_teller",
+		"start_dialogue": "Are you ready to have your fortune told?",
+		"end_dialogue": "Good fortunes... Fate knows you will need it"
 	}
 }

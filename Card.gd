@@ -3,7 +3,9 @@ extends Node2D
 signal card_clicked(card)
 signal card_hover_started(card)
 signal card_hover_ended(card)
-signal burn_complete
+signal burn_complete(card)
+
+var index_in_deck
 
 export var card_id = "073" #default to card back
 var card_name = ""
@@ -12,6 +14,9 @@ var card_value = 0
 var card_sprite = ""
 var card_description = ""
 var card_does_burn = false
+var card_locked = false
+var card_shrouded = false
+var x_value = 0
 
 var score_before_played
 var is_focused
@@ -88,11 +93,28 @@ func highlight_card(to_highlight: bool):
 	$HighlightSprite.visible = to_highlight
 	is_focused = to_highlight
 
+func lock_card():
+	card_locked = true
+	$LockIconSprite.visible = true
+	$LockIconSprite.is_moving = true
+	$LockIconSprite/FrameTween.interpolate_property($LockIconSprite, "frame", 0, 11, 1.0)
+	$LockIconSprite/FrameTween.start()
+	$LockIconSprite/PositionTween.interpolate_property($LockIconSprite, "position", Vector2(29, 65), Vector2(29, 77), 1.0)
+	$LockIconSprite/PositionTween.start()
+
+func shroud_card():
+	$ShroudSprite.visible = true
+	card_shrouded = true
+
+func reveal_card():
+	$ShroudSprite.visible = false
+	card_shrouded = false
+
 func start_burn_animation():
 	$CardArtSprite.activate_burn_shader()
 
 func on_burn_timer_ended():
-	emit_signal("burn_complete")
+	emit_signal("burn_complete", self)
 
 func _on_HoverArea_mouse_entered():
 	emit_signal("card_hover_started", self)

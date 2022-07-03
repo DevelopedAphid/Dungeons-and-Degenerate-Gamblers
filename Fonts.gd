@@ -7,7 +7,7 @@ var font_pixel_3_7
 var font_pixel_3_7_texture = preload("res://assets/fonts/font_sheet_3_7.png")
 
 func _ready():
-	var chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ.,() -:/+"
+	var chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ.,() -:/+?"
 	
 	font_pixel_5_9 = BitmapFont.new()
 	font_pixel_5_9.add_texture(font_pixel_5_9_texture)

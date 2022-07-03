@@ -31,24 +31,38 @@ func compare_score_and_deal_damage():
 	var battle_scene = game_controller.get_node("BattleScene")
 	battle_scene.hide_shields()
 	
+	#reveal any shrouded cards in play piles before comparing scores
+	for card in player.play_pile:
+		card.reveal_card()
+	for card in opponent.play_pile:
+		card.reveal_card()
+	
 	var player_score = player.score
 	var opponent_score = opponent.score
-	if player.score > 21: #busted
+	
+	var excess_score = 0
+	if player.blackjack_cap_type != "none":
+		excess_score = player_score - 21
+		player_score = 21
+	
+	if player_score > 21: #busted
 		player_score = 0
-	if opponent.score > 21: #busted
+	if opponent_score > 21: #busted
 		opponent_score = 0
 	
 	battle_scene.play_attack_animation(bool(player_score), bool(opponent_score))
 	
-	#todo: should be replaced by a "deal damage" method later in case we add damage multiplier effects or anything
 	var damage = player_score - opponent_score
 	var winner
 	var loser
+	var winner_score = 0
 	if damage > 0:
 		winner = player
+		winner_score = player_score
 		loser = opponent
 	elif damage < 0:
 		winner = opponent
+		winner_score = opponent_score
 		loser = player
 		damage = abs(damage)
 
@@ -60,8 +74,9 @@ func compare_score_and_deal_damage():
 	var negative_clubs = 0
 	var negative_diamonds = 0
 	var negative_hearts = 0
+	
 	if damage > 0: #if there is damage to apply then apply it
-		if winner.score == 21: #blackjacks trigger special effects
+		if winner_score == 21: #blackjacks trigger special effects
 			for card in winner.play_pile: #find which effects to trigger based on suits involved in the blackjack
 				if card.card_suit == "spades":
 					spades += card.card_value
@@ -84,9 +99,24 @@ func compare_score_and_deal_damage():
 					negative_diamonds -= card.card_value
 				elif card.card_suit == "negative_hearts":
 					negative_hearts -= card.card_value
-		#clubs deal double damage on 21
-		#shield (if earned last round) blocks damage
-		#cannot deal negative damage
+			if loser.judgment_shield_active: #if judgment shield active the loser takes no damamge from winners blackjack
+				damage = 0
+				clubs = 0
+				loser.judgment_shield_active = false #disable judgment shield once used once
+			if winner.star_effect_active: #double damage if the star effect active
+				damage = damage * 2
+				winner.star_effect_active = false #disable star effect once used once
+			if winner.devil_effect_active: #x6 damage if devil effect active and get a blackjack
+				damage = damage * 6
+				winner.devil_effect_active = false
+		
+		if winner.moon_damage_effect_active: #3x damage if moon effect active
+			damage = damage * 3
+		
+		#damage notes:
+		#  clubs deal double damage on 21
+		#  shield (if earned last round) blocks damage
+		#  cannot deal negative damage
 		loser.damage(max(0, (damage + clubs - loser.shieldpoints)))
 		winner.damage(negative_clubs) #negative clubs deal damage to the winner if involved in blackjack
 		if winner.name == "Player":
@@ -94,9 +124,30 @@ func compare_score_and_deal_damage():
 			winner.chips -= negative_diamonds
 		winner.heal(hearts, Vector2(240, 150)) #hearts heal the player on 21
 		loser.heal(negative_hearts, Vector2(240, 150)) #negative hearts heal opponent on player 21
-		#reset loser shiled to 0 and (if blackjacked with spades) set up winners shield
+		#reset loser shield to 0 and (if blackjacked with spades) set up winners shield
 		loser.shieldpoints = negative_spades #negative spades give the opponent a shield next round
 		winner.shieldpoints = spades
+		
+		#blackjack cap effects
+		match winner.blackjack_cap_type:
+			"damage_both":
+				winner.damage(excess_score)
+				loser.damage(excess_score)
+			"heal_both":
+				winner.heal(excess_score, Vector2(240, 150))
+				loser.heal(excess_score, Vector2(240, 150))
+	
+	#apply damage if devil effect still active (has already been set to false if winner got a 21)
+	if player.devil_effect_active:
+		player.damage(6)
+		player.devil_effect_active = false
+	if opponent.devil_effect_active:
+		opponent.damage(6)
+		opponent.devil_effect_active = false
+	
+	#remove blackjack effects
+	player.blackjack_cap_type = "none"
+	opponent.blackjack_cap_type = "none"
 	
 	#update the relevant UI elements
 	battle_scene.update_health_points()
