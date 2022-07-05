@@ -188,7 +188,8 @@ func heal(heal_amount: int, heal_source_pos: Vector2):
 		var skip_count = 3
 		var i = 0
 		while i < heal_amount: 
-			var heart = load("res://HealHeart.tscn").instance()
+			var heart = load("res://FlyingIcon.tscn").instance()
+			heart.set_icon("hearts")
 			heart.position = heal_source_pos
 			add_child(heart)
 			var target_pos
@@ -211,10 +212,32 @@ func damage(damage_amount: int):
 		hitpoints -= damage_amount
 		get_parent().get_node("BattleScene").play_damage_animation(self, damage_amount)
 
-func add_chips(chips_to_add):
+func add_chips(chips_to_add: int, chip_source_pos: Vector2):
 	if name == "Player":
 		chips += chips_to_add
 		get_node("ChipCounter").change_chip_number(chips)
+		#create diamonds and then send them toward the chips target
+		var skip_count = 3
+		var i = 0
+		while i < chips_to_add: 
+			var diamond = load("res://FlyingIcon.tscn").instance()
+			diamond.set_icon("diamonds")
+			diamond.position = chip_source_pos
+			add_child(diamond)
+			var target_pos
+			if name == "Player":
+				target_pos = get_parent().get_node("BattleScene/PlayerSprite").global_position
+			elif name == "Opponent":
+				target_pos = get_parent().get_node("BattleScene/OpponentSprite").global_position
+			diamond.set_target_position(target_pos)
+			diamond.start_tweening_to_target()
+			#delay to create spacing between
+			var timer = Timer.new()
+			add_child(timer)
+			timer.wait_time = 0.1
+			timer.start()
+			yield(timer, "timeout")
+			i += skip_count
 
 func move_cards_to(cards: Array, from_pile: String, to_pile: String):
 	var other_player
@@ -472,7 +495,7 @@ func play_card_draw_effect(card, id):
 		card.add_child(wheel)
 		yield(wheel, "spin_completed")
 		if wheel.wheel_frame < 5: # add chips
-			add_chips(5)
+			add_chips(5, card.position)
 		elif wheel.wheel_frame < 10: # burn a card in discard pile
 			if discard_pile.size() > 0:
 				get_node("ChoiceController")._on_Player_card_choice_to_make(card, discard_pile)
@@ -501,7 +524,7 @@ func play_card_draw_effect(card, id):
 		#Adds X chips. Multiply X by 2
 		if card.x_value == 0:
 			card.x_value = 1
-		add_chips(card.x_value)
+		add_chips(card.x_value, card.position)
 		#change x value in array in macro_controller
 		get_parent().get_parent().player_x_values[card.index_in_deck] = card.x_value * 2
 	elif id == "137": #XV The Devil

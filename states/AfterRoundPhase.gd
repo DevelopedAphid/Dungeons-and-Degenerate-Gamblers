@@ -120,7 +120,7 @@ func compare_score_and_deal_damage():
 		loser.damage(max(0, (damage + clubs - loser.shieldpoints)))
 		winner.damage(negative_clubs) #negative clubs deal damage to the winner if involved in blackjack
 		if winner.name == "Player":
-			winner.chips += diamonds
+			winner.add_chips(diamonds, Vector2(240, 150))
 			winner.chips -= negative_diamonds
 		winner.heal(hearts, Vector2(240, 150)) #hearts heal the player on 21
 		loser.heal(negative_hearts, Vector2(240, 150)) #negative hearts heal opponent on player 21
