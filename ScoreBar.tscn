@@ -154,10 +154,10 @@ margin_bottom = 18.0
 text = "21"
 
 [node name="ExcessLabel" type="Label" parent="."]
-margin_left = 32.0
-margin_top = -11.0
-margin_right = 72.0
-margin_bottom = 3.0
+margin_left = 59.0
+margin_top = 4.0
+margin_right = 99.0
+margin_bottom = 18.0
 
 [node name="CentrePosition2D" type="Position2D" parent="."]
 position = Vector2( 28, 44 )

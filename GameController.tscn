@@ -37,9 +37,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -44.5
-margin_top = 85.5
+margin_top = 75.0
 margin_right = 44.5
-margin_bottom = 142.5
+margin_bottom = 132.0
 mouse_filter = 1
 texture_normal = ExtResource( 26 )
 
@@ -49,32 +49,11 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -44.5
-margin_top = 30.5
+margin_top = 20.0
 margin_right = 44.5
-margin_bottom = 87.5
+margin_bottom = 77.0
 mouse_filter = 1
 texture_normal = ExtResource( 5 )
-
-[node name="Opponent" type="Node2D" parent="."]
-script = ExtResource( 9 )
-
-[node name="AI" type="Node2D" parent="Opponent"]
-script = ExtResource( 12 )
-
-[node name="ScoreBar" parent="Opponent" instance=ExtResource( 23 )]
-position = Vector2( 442, 50 )
-
-[node name="PlayPilePosition" type="Position2D" parent="Opponent"]
-position = Vector2( 314, 100 )
-
-[node name="DeckDisplay" parent="Opponent" instance=ExtResource( 24 )]
-position = Vector2( 381, 100 )
-
-[node name="DiscardPilePosition" type="Position2D" parent="Opponent"]
-position = Vector2( 376, 200 )
-
-[node name="IDCard" parent="Opponent" instance=ExtResource( 29 )]
-position = Vector2( 382, 8 )
 
 [node name="Player" type="Control" parent="."]
 anchor_right = 1.0
@@ -82,26 +61,47 @@ anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource( 9 )
 
-[node name="ScoreBar" parent="Player" instance=ExtResource( 23 )]
-position = Vector2( 19, 50 )
-
 [node name="ChoiceController" parent="Player" instance=ExtResource( 25 )]
 visible = false
 
-[node name="PlayPilePosition" type="Position2D" parent="Player"]
-position = Vector2( 109, 100 )
+[node name="IDCard" parent="Player" instance=ExtResource( 29 )]
+position = Vector2( 6, 6 )
+
+[node name="ScoreBar" parent="Player" instance=ExtResource( 23 )]
+position = Vector2( 97, 6 )
 
 [node name="DeckDisplay" parent="Player" instance=ExtResource( 24 )]
-position = Vector2( 42, 100 )
+position = Vector2( 6, 97 )
+
+[node name="PlayPilePosition" type="Position2D" parent="Player"]
+position = Vector2( 80, 97 )
 
 [node name="DiscardPilePosition" type="Position2D" parent="Player"]
-position = Vector2( 46, 200 )
+position = Vector2( 6, 188 )
 
 [node name="SleevePilePosition" type="Position2D" parent="Player"]
-position = Vector2( 45, 265 )
+position = Vector2( 90, 235 )
 
-[node name="IDCard" parent="Player" instance=ExtResource( 29 )]
-position = Vector2( 8, 8 )
+[node name="Opponent" type="Node2D" parent="."]
+script = ExtResource( 9 )
+
+[node name="AI" type="Node2D" parent="Opponent"]
+script = ExtResource( 12 )
+
+[node name="IDCard" parent="Opponent" instance=ExtResource( 29 )]
+position = Vector2( 385, 8 )
+
+[node name="ScoreBar" parent="Opponent" instance=ExtResource( 23 )]
+position = Vector2( 326, 6 )
+
+[node name="DeckDisplay" parent="Opponent" instance=ExtResource( 24 )]
+position = Vector2( 417, 97 )
+
+[node name="PlayPilePosition" type="Position2D" parent="Opponent"]
+position = Vector2( 343, 97 )
+
+[node name="DiscardPilePosition" type="Position2D" parent="Opponent"]
+position = Vector2( 417, 188 )
 
 [node name="StateLabel" type="Label" parent="."]
 visible = false

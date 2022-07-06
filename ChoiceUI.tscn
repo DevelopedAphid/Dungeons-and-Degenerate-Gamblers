@@ -93,10 +93,10 @@ card_id = "040"
 visible = false
 
 [node name="TestFinishedButton" type="Button" parent="TestChoice"]
-margin_left = 180.0
-margin_top = 276.0
-margin_right = 288.0
-margin_bottom = 296.0
+margin_left = 369.0
+margin_top = 248.0
+margin_right = 477.0
+margin_bottom = 268.0
 text = "Done shopping"
 
 [node name="HoverPanel" parent="." instance=ExtResource( 2 )]
