@@ -28,7 +28,6 @@ func find_and_focus_top_card():
 			if current_card.is_in_group("choices"):
 				current_card.set_z_index(2)
 			else: #choices don't have a score contribution to highlight
-				current_card.get_parent().get_node("ScoreBar").remove_highlights()
 				current_card.set_z_index(0)
 			var index = current_card.get_index()
 			if index > top_index:
@@ -115,7 +114,7 @@ func find_and_focus_top_card():
 	if not top_card.is_in_group("choices"): #choices and sleeve cards don't have a score contribution to highlight
 		if not top_card.is_in_group("sleeve_cards"):
 			if not top_card.card_shrouded:
-				top_card.get_parent().get_node("ScoreBar").highlight_scores(top_card.score_before_played + 1, top_card.score_before_played + top_card.get_card_value())
+				top_card.get_parent().get_node("ScoreBar").update_score()
 
 func _on_Card_hover_started(card):
 	hovered_cards.append(card)
@@ -129,7 +128,7 @@ func _on_Card_hover_ended(card):
 		card.set_z_index(0)
 	card.highlight_card(false)
 	if not card.is_in_group("choices"): #choices don't have a score contribution to highlight
-		card.get_parent().get_node("ScoreBar").remove_highlights()
+		card.get_parent().get_node("ScoreBar").update_score()
 	
 	if hovered_cards.size() == 0:
 		hover_label.visible = false
