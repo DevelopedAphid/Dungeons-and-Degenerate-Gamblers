@@ -27,10 +27,7 @@ func enter_state():
 func exit_state():
 	emit_signal("state_exited", play_should_continue)
 
-func compare_score_and_deal_damage():
-	var battle_scene = game_controller.get_node("BattleScene")
-	battle_scene.hide_shields()
-	
+func compare_score_and_deal_damage():	
 	#reveal any shrouded cards in play piles before comparing scores
 	for card in player.play_pile:
 		card.reveal_card()
@@ -49,8 +46,6 @@ func compare_score_and_deal_damage():
 		player_score = 0
 	if opponent_score > 21: #busted
 		opponent_score = 0
-	
-	battle_scene.play_attack_animation(bool(player_score), bool(opponent_score))
 	
 	var damage = player_score - opponent_score
 	var winner
@@ -120,10 +115,10 @@ func compare_score_and_deal_damage():
 		loser.damage(max(0, (damage + clubs - loser.shieldpoints)))
 		winner.damage(negative_clubs) #negative clubs deal damage to the winner if involved in blackjack
 		if winner.name == "Player":
-			winner.add_chips(diamonds, Vector2(240, 150))
+			winner.add_chips(diamonds, winner.get_node("ScoreBar/CentrePosition2D").position)
 			winner.chips -= negative_diamonds
-		winner.heal(hearts, Vector2(240, 150)) #hearts heal the player on 21
-		loser.heal(negative_hearts, Vector2(240, 150)) #negative hearts heal opponent on player 21
+		winner.heal(hearts, winner.get_node("ScoreBar/CentrePosition2D").position) #hearts heal the player on 21
+		loser.heal(negative_hearts, winner.get_node("ScoreBar/CentrePosition2D").position) #negative hearts heal opponent on player 21
 		#reset loser shield to 0 and (if blackjacked with spades) set up winners shield
 		loser.shieldpoints = negative_spades #negative spades give the opponent a shield next round
 		winner.shieldpoints = spades
@@ -134,8 +129,8 @@ func compare_score_and_deal_damage():
 				winner.damage(excess_score)
 				loser.damage(excess_score)
 			"heal_both":
-				winner.heal(excess_score, Vector2(240, 150))
-				loser.heal(excess_score, Vector2(240, 150))
+				winner.heal(excess_score, winner.get_node("ScoreBar/CentrePosition2D").position)
+				loser.heal(excess_score, winner.get_node("ScoreBar/CentrePosition2D").position)
 	
 	#apply damage if devil effect still active (has already been set to false if winner got a 21)
 	if player.devil_effect_active:
@@ -150,9 +145,8 @@ func compare_score_and_deal_damage():
 	opponent.blackjack_cap_type = "none"
 	
 	#update the relevant UI elements
-	battle_scene.update_health_points()
-	player.get_node("ChipCounter").change_chip_number(player.chips)
-	battle_scene.display_shields(player.shieldpoints, opponent.shieldpoints)
+	player.get_node("IDCard").change_hitpoints(player.hitpoints)
+	opponent.get_node("IDCard").change_hitpoints(opponent.hitpoints)
 	
 	if player.hitpoints <= 0:
 		get_parent().macro_controller.last_game_result = "lost"

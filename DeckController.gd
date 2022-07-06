@@ -182,7 +182,7 @@ func heal(heal_amount: int, heal_source_pos: Vector2):
 			hitpoints = max_hitpoints
 		else:
 			hitpoints += heal_amount
-		get_parent().get_node("BattleScene").update_health_points()
+		$IDCard.change_hitpoints(hitpoints)
 		
 		#create hearts and then send them toward the heal target
 		var skip_count = 3
@@ -210,12 +210,12 @@ func heal(heal_amount: int, heal_source_pos: Vector2):
 func damage(damage_amount: int):
 	if damage_amount > 0:
 		hitpoints -= damage_amount
-		get_parent().get_node("BattleScene").play_damage_animation(self, damage_amount)
+		$IDCard.change_hitpoints(hitpoints)
 
 func add_chips(chips_to_add: int, chip_source_pos: Vector2):
 	if name == "Player":
 		chips += chips_to_add
-		get_node("ChipCounter").change_chip_number(chips)
+		$IDCard.change_chips(chips)
 		#create diamonds and then send them toward the chips target
 		var skip_count = 3
 		var i = 0
@@ -225,10 +225,7 @@ func add_chips(chips_to_add: int, chip_source_pos: Vector2):
 			diamond.position = chip_source_pos
 			add_child(diamond)
 			var target_pos
-			if name == "Player":
-				target_pos = get_parent().get_node("BattleScene/PlayerSprite").global_position
-			elif name == "Opponent":
-				target_pos = get_parent().get_node("BattleScene/OpponentSprite").global_position
+			target_pos = $IDCard/ChipCounter.global_position
 			diamond.set_target_position(target_pos)
 			diamond.start_tweening_to_target()
 			#delay to create spacing between

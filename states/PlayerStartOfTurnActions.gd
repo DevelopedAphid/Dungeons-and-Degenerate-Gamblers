@@ -11,8 +11,6 @@ func enter_state():
 	
 	get_parent().update_scores() 
 	
-	game_controller.get_node("BattleScene").set_turn_indicator(true)
-	
 	exit_state()
 
 func exit_state():

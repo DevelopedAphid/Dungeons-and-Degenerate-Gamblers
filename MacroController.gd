@@ -55,6 +55,9 @@ func start_a_game():
 		game_controller.get_node("StayButton").connect("mouse_exited", $Cursor, "on_StayButton_mouse_exited")
 		add_child(game_controller)
 		
+		game_controller.get_node("Player").get_node("IDCard").initialise_id_card("Player", player_sprite, player_chips, player_hitpoints, player_max_hitpoints)
+		game_controller.get_node("Opponent").get_node("IDCard").initialise_id_card( $EncounterList.encounter_dictionary[encounter_key].name, opponent_sprite, $EncounterList.encounter_dictionary[encounter_key].chip_reward, opponent_health_points, opponent_health_points)
+		
 		$DialogueManager.set_dialogue_text($EncounterList.encounter_dictionary[encounter_key].start_dialogue)
 		dialogue_type = "start"
 	

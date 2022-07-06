@@ -158,3 +158,6 @@ margin_left = 32.0
 margin_top = -11.0
 margin_right = 72.0
 margin_bottom = 3.0
+
+[node name="CentrePosition2D" type="Position2D" parent="."]
+position = Vector2( 28, 44 )
