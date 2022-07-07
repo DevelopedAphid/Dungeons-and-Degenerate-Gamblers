@@ -1087,5 +1087,12 @@ var card_dictionary = {
 		"value": 14,
 		"effect": true,
 		"description": "Heals both players by 14"
+	},
+		"147": {
+		"name": "Kanban Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"description": "Select a card from draw pile and place this card into the draw pile above it"
 	}
 }

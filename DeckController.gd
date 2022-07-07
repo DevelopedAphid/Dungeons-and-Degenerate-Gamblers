@@ -581,6 +581,10 @@ func play_card_draw_effect(card, id):
 	elif id == "146": #valentines card
 		get_parent().get_node("Player").heal(14, card.position)
 		get_parent().get_node("Opponent").heal(14, card.position)
+	elif id == "147": #kanban card
+		#Select a card from draw pile and place this card into the draw pile above it
+		if draw_pile.size() > 1:
+			get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	var id = current_card_effect_id
@@ -661,9 +665,14 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	elif id == "141": #XIX The Sun
 		draw_pile.erase(choice_made)
 		add_card_to_draw_pile_at_position(choice_made, 0)
-	if id == "143": #XXI The World
+	elif id == "143": #XXI The World
 		var new_tarot_card = instance_new_card(choice_made)
 		add_card_to_draw_pile_at_position(new_tarot_card, 0)
+	elif id == "147": #kanban card
+		#Select a card from draw pile and place this card into the draw pile above it
+		add_card_to_draw_pile_at_position(origin_card, choice_index)
+		play_pile.erase(origin_card)
+		remove_child(origin_card)
 	
 	current_card_effect_id = null
 
