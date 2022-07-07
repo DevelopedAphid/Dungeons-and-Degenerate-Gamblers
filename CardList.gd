@@ -914,7 +914,7 @@ var card_dictionary = {
 		"description": "locks an 11 of hearts to players play pile. burns"
 	},
 		"126": {
-		"name": "IV The Emporer",
+		"name": "IV The Emperor",
 		"suit": "special",
 		"value": 0,
 		"effect": true,
@@ -922,7 +922,7 @@ var card_dictionary = {
 		"description": "score over 21 this turn will instead be taken as damage to both players"
 	},
 		"127": {
-		"name": "V The Heirophant",
+		"name": "V The Hierophant",
 		"suit": "special",
 		"value": 0,
 		"effect": true,

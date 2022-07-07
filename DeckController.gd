@@ -193,10 +193,7 @@ func heal(heal_amount: int, heal_source_pos: Vector2):
 			heart.position = heal_source_pos
 			add_child(heart)
 			var target_pos
-			if name == "Player":
-				target_pos = get_parent().get_node("BattleScene/PlayerSprite").global_position
-			elif name == "Opponent":
-				target_pos = get_parent().get_node("BattleScene/OpponentSprite").global_position
+			target_pos = $IDCard/ChipCounter.global_position
 			heart.set_target_position(target_pos)
 			heart.start_tweening_to_target()
 			#delay to create spacing between
