@@ -48,5 +48,9 @@ var encounter_dictionary = {
 		"type": "fortune_teller",
 		"start_dialogue": "Are you ready to have your fortune told?",
 		"end_dialogue": "Good fortunes... Fate knows you will need it"
+	},
+	"tavern.6": {
+		"name": "win screen",
+		"type": "win_screen"
 	}
 }

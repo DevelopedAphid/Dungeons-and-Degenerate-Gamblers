@@ -60,7 +60,6 @@ func show_shop():
 		
 		card.connect("card_clicked", self, "_on_Card_clicked", [card])
 	
-	$Shop/ChipCounter.change_chip_number(macro_controller.player_chips)
 	$Shop.visible = true
 
 func show_testing_room():
@@ -121,8 +120,7 @@ func _on_Card_clicked(card_choice):
 		if macro_controller.player_chips >= shop_card_price:
 			macro_controller.player_deck.append(card_choice.card_id)
 			macro_controller.player_x_values.append(0)
-			macro_controller.player_chips -= shop_card_price
-			$Shop/ChipCounter.change_chip_number(macro_controller.player_chips)
+			macro_controller.set_player_chips(macro_controller.player_chips - shop_card_price)
 			card_choice.visible = false
 	elif card_choice.get_parent().name == "TestChoice":
 		macro_controller.player_deck.append(card_choice.card_id)
