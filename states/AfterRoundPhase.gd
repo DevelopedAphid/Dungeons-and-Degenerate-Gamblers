@@ -115,13 +115,13 @@ func compare_score_and_deal_damage():
 		loser.damage(max(0, (damage + clubs - loser.shieldpoints)))
 		winner.damage(negative_clubs) #negative clubs deal damage to the winner if involved in blackjack
 		if winner.name == "Player":
-			winner.add_chips(diamonds, winner.get_node("ScoreBar/CentrePosition2D").position)
+			winner.add_chips(diamonds, winner.get_node("ScoreBar/CentrePosition2D").global_position)
 			winner.chips -= negative_diamonds
-		winner.heal(hearts, winner.get_node("ScoreBar/CentrePosition2D").position) #hearts heal the player on 21
-		loser.heal(negative_hearts, winner.get_node("ScoreBar/CentrePosition2D").position) #negative hearts heal opponent on player 21
+		winner.heal(hearts, winner.get_node("ScoreBar/CentrePosition2D").global_position) #hearts heal the player on 21
+		loser.heal(negative_hearts, winner.get_node("ScoreBar/CentrePosition2D").global_position) #negative hearts heal opponent on player 21
 		#reset loser shield to 0 and (if blackjacked with spades) set up winners shield
-		loser.shieldpoints = negative_spades #negative spades give the opponent a shield next round
-		winner.shieldpoints = spades
+		loser.add_spade_shield(negative_spades, winner.get_node("ScoreBar/CentrePosition2D").position) #negative spades give the opponent a shield next round
+		winner.add_spade_shield(spades, winner.get_node("ScoreBar/CentrePosition2D").global_position)
 		
 		#blackjack cap effects
 		match winner.blackjack_cap_type:
@@ -129,8 +129,8 @@ func compare_score_and_deal_damage():
 				winner.damage(excess_score)
 				loser.damage(excess_score)
 			"heal_both":
-				winner.heal(excess_score, winner.get_node("ScoreBar/CentrePosition2D").position)
-				loser.heal(excess_score, winner.get_node("ScoreBar/CentrePosition2D").position)
+				winner.heal(excess_score, winner.get_node("ScoreBar/CentrePosition2D").global_position)
+				loser.heal(excess_score, winner.get_node("ScoreBar/CentrePosition2D").global_position)
 	
 	#apply damage if devil effect still active (has already been set to false if winner got a 21)
 	if player.devil_effect_active:

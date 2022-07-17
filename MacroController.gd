@@ -130,3 +130,6 @@ func _on_DialogueManager_dialogue_cleared():
 func _on_DialogueManager_dialogue_set():
 	pass
 	#todo: unsure if this is needed
+
+func on_Card_x_value_changed(card):
+	player_x_values[card.index_in_deck] = card.x_value

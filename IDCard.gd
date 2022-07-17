@@ -5,6 +5,7 @@ onready var font_3_7 = Fonts.font_pixel_3_7
 
 var current_hitpoints: int
 var max_hitpoints: int
+var current_shieldpoints: int
 
 onready var hp_change_label_pos = $HPChangeLabel.rect_position
 
@@ -12,6 +13,7 @@ func _ready():
 	$NameLabel.add_font_override("font", font_5_9)
 	$HPLabel.add_font_override("font", font_5_9)
 	$HPChangeLabel.add_font_override("font", font_3_7)
+	$ShieldLabel.add_font_override("font", font_5_9)
 
 func initialise_id_card(name: String, portrait_path: String, 
 chips: int, starting_health: int, max_health: int):
@@ -44,3 +46,11 @@ func change_hitpoints(new_health):
 		add_child(pos_tween)
 		pos_tween.interpolate_property($HPChangeLabel, "rect_position", hp_change_label_pos, hp_change_label_pos + Vector2(0, -5), 0.5)
 		pos_tween.start()
+
+func change_shieldpoints(new_shield):
+	$ShieldCounter.visible = false
+	current_shieldpoints = new_shield
+	
+	if current_shieldpoints > 0:
+		$ShieldLabel.text = str(current_shieldpoints)
+		$ShieldCounter.visible = true

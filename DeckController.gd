@@ -53,6 +53,7 @@ func instance_new_card(card_id) -> Object:
 	new_card.connect("card_hover_started", get_parent().get_node("HoverPanel"), "_on_Card_hover_started")
 	new_card.connect("card_hover_ended", get_parent().get_node("HoverPanel"), "_on_Card_hover_ended")
 	new_card.get_node("MovementHandler").connect("movement_completed", self, "on_card_movement_completed")
+	new_card.connect("x_value_changed", get_parent().get_parent(), "on_Card_x_value_changed")
 	
 	return new_card
 
@@ -208,6 +209,29 @@ func damage(damage_amount: int):
 	if damage_amount > 0:
 		hitpoints -= damage_amount
 		$IDCard.change_hitpoints(hitpoints)
+
+func add_spade_shield(shield_amount: int, shield_source_pos: Vector2):
+	$IDCard.change_shieldpoints(shield_amount)
+	if shield_amount > 0:
+		#create diamond and then send them toward the ID Card
+		var skip_count = 3
+		var i = 0
+		while i < shield_amount:
+			var spade = load("res://FlyingIcon.tscn").instance()
+			spade.set_icon("spades")
+			spade.position = shield_source_pos
+			add_child(spade)
+			var target_pos
+			target_pos = $IDCard/ShieldCounter.global_position
+			spade.set_target_position(target_pos)
+			spade.start_tweening_to_target()
+			#delay to create spacing between
+			var timer = Timer.new()
+			add_child(timer)
+			timer.wait_time = 0.1
+			timer.start()
+			yield(timer, "timeout")
+			i += skip_count
 
 func add_chips(chips_to_add: int, chip_source_pos: Vector2):
 	if name == "Player":
@@ -479,10 +503,9 @@ func play_card_draw_effect(card, id):
 	elif id == "131": #IX The Hermit
 		#add X decaying healing per turn, add 1 to X
 		if card.x_value == 0:
-			card.x_value = 1
+			card.set_card_x_value(1)
 		decaying_healing += card.x_value
-		#change x value in array in macro_controller
-		get_parent().get_parent().player_x_values[card.index_in_deck] = card.x_value + 1
+		card.set_card_x_value(card.x_value + 1)
 	elif id == "132": #X Wheel of Fortune
 		var wheel = load("res://WheelOfFortune.tscn").instance()
 		wheel.position = Vector2(57/2, 89/2)
@@ -517,10 +540,9 @@ func play_card_draw_effect(card, id):
 	elif id == "136": #XIV Temperence
 		#Adds X chips. Multiply X by 2
 		if card.x_value == 0:
-			card.x_value = 1
+			card.set_card_x_value(1)
 		add_chips(card.x_value, card.position)
-		#change x value in array in macro_controller
-		get_parent().get_parent().player_x_values[card.index_in_deck] = card.x_value * 2
+		card.set_card_x_value(card.x_value * 2)
 	elif id == "137": #XV The Devil
 		#if you get blackjack with this card in play pile it multiplies damage dealt by 6. if you do not get blackjack deals 6 damage to player
 		devil_effect_active = true
