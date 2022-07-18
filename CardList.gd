@@ -540,12 +540,12 @@ var card_dictionary = {
 		"description": ""
 	},
 	"074": {
-		"name": "Rules Card",
+		"name": "Blank Card",
 		"suit": "special",
 		"value": 0,
-		"effect": false, #Todo
+		"effect": true,
 		"reward": true,
-		"description": ""
+		"description": "When played, choose the suit and value for the blank card to take"
 	},
 	"075": {
 		"name": "Jack of All Trades",
@@ -1094,5 +1094,19 @@ var card_dictionary = {
 		"value": 0,
 		"effect": true,
 		"description": "Select a card from draw pile and place this card into the draw pile above it"
+	},
+		"148": {
+		"name": "Dis-Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"description": "Select a card that is in play and discard it"
+	},
+		"149": {
+		"name": "Loyalty Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"description": "The tenth time this card is played it sets the players score to 21"
 	}
 }

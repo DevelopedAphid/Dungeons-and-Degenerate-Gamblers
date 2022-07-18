@@ -159,9 +159,7 @@ func discard_played_cards():
 			remove_child(card)
 	
 	if cards_to_discard.size() > 0:
-		move_cards_to(cards_to_discard, "play_pile", "discard_pile")
-	
-		#wait for cards to finish moving
+		discard_cards(cards_to_discard)
 		yield(self, "UI_update_completed")
 	
 	#move any remaining cards in play pile to starting positions (i.e. locked cards)
@@ -176,6 +174,11 @@ func discard_played_cards():
 	
 	#set score to 0 since round is over
 	score = 0
+
+func discard_cards(cards_to_discard: Array):
+	for card in cards_to_discard:
+		move_cards_to([card], "play_pile", "discard_pile")
+		play_card_discard_effect(card, card.card_id)
 
 func heal(heal_amount: int, heal_source_pos: Vector2):
 	if heal_amount > 0:
@@ -427,6 +430,14 @@ func play_card_draw_effect(card, id):
 	elif id == "072": #Red Joker
 		if draw_pile.size() > 0:
 			get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
+	elif id == "074": #blank card
+		#When played, choose the suit and value for the blank card to take
+		var choices = []
+		choices.append_array(["001", "002", "003", "004", "005", "006", "007", "008", "009", "010"])
+		choices.append_array(["014", "015", "016", "017", "018", "019", "020", "021", "022", "023"])
+		choices.append_array(["027", "028", "029", "030", "031", "032", "033", "034", "035", "036"])
+		choices.append_array(["040", "041", "042", "043", "044", "045", "046", "047", "048", "049"])
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choices)
 	elif id == "076": #Get Well Soon card
 		get_parent().get_node("Player").heal(10, card.position)
 	elif id == "077": #+2 Card
@@ -601,12 +612,43 @@ func play_card_draw_effect(card, id):
 		
 		move_cards_to([new_card], "play_pile", "sleeve_pile")
 	elif id == "146": #valentines card
-		get_parent().get_node("Player").heal(14, card.position)
+		heal(14, card.position)
 		get_parent().get_node("Opponent").heal(14, card.position)
 	elif id == "147": #kanban card
 		#Select a card from draw pile and place this card into the draw pile above it
 		if draw_pile.size() > 1:
 			get_node("ChoiceController")._on_Player_card_choice_to_make(card, draw_pile)
+	elif id == "148": #Dis-card
+		#Select a card that is in play and discard it
+		var both_play_piles = []
+		both_play_piles.append_array(play_pile)
+		both_play_piles.append_array(get_parent().get_node("Opponent").play_pile)
+		get_node("ChoiceController")._on_Player_card_choice_to_make(card, both_play_piles)
+	elif id == "149": #Loyalty card
+		#The tenth time this card is played it sets the players score to 21
+		#remove current stamps
+		for child in card.get_children():
+			if child.is_in_group("stamps"):
+				card.remove_child(child)
+		#increment x value
+		card.set_card_x_value(card.x_value + 1)
+		if card.x_value <= 9:
+			#add new stamps
+			for i in card.x_value:
+				var stamp_sprite = Sprite.new()
+				card.add_child(stamp_sprite)
+				stamp_sprite.texture = load("res://assets/art/suit_icons_all_11_11.png")
+				stamp_sprite.hframes = 26
+				stamp_sprite.frame = 11
+				var x = i % 3 #row
+				var y = floor(i / 3) #column
+				stamp_sprite.position = Vector2(x * 17 + 12, y * 17 + 13)
+				stamp_sprite.add_to_group("stamps")
+		elif card.x_value == 10:
+			#reset x value 
+			card.set_card_x_value(0)
+			#and set player score to 21 by changing the value of this card
+			card.set_card_value(21 - score)
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	var id = current_card_effect_id
@@ -631,6 +673,12 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		origin_card.set_card_suit(choice_made.get_card_suit())
 		origin_card.set_card_art(choice_made.get_card_id())
 		call_deferred("play_card_draw_effect", origin_card, choice_made.get_card_id())
+	elif id == "074": #blank card
+		#When played, choose the suit and value for the blank card to take
+		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
+		origin_card.set_card_art(choice_made)
+		origin_card.set_card_name(CardList.card_dictionary[id].name + " (" + str(origin_card.get_card_value()) + ")")
+		origin_card.set_card_suit(CardList.card_dictionary[choice_made].suit)
 	elif id == "079" || id == "090" || id == "101" || id == "112" : #negative aces
 		origin_card.set_card_value(CardList.card_dictionary[choice_made].value)
 		origin_card.set_card_art(choice_made)
@@ -695,6 +743,12 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		add_card_to_draw_pile_at_position(origin_card, choice_index)
 		play_pile.erase(origin_card)
 		remove_child(origin_card)
+	elif id == "148": #Dis-card
+		#Select a card that is in play and discard it
+		if self.is_a_parent_of(choice_made): #it is the players card that was chosen
+			discard_cards([choice_made])
+		else: #it is the opponents card
+			get_parent().get_node("Opponent").discard_cards([choice_made])
 	
 	current_card_effect_id = null
 
@@ -726,11 +780,25 @@ func play_end_of_shuffle_effect(card, id):
 #	if id == "":
 #		pass
 #
-#func play_card_discard_effect(card, id):
-#	if self.name == "Opponent": #currently this means opponents are unable to use special cards
-#		return
-#
-#	current_card_effect_id = id
-#
-#	if id == "":
-#		pass
+func play_card_discard_effect(card, id):
+	if self.name == "Opponent": #currently this means opponents are unable to use special cards
+		return
+
+	current_card_effect_id = id
+
+	if id == "001" || id == "014" || id == "027" || id == "040" : #aces
+		#reset card to how it was before played
+		card.set_card_value(CardList.card_dictionary[id].value)
+		card.set_card_art(id)
+		card.set_card_name(CardList.card_dictionary[id].name)
+		card.set_card_suit(CardList.card_dictionary[id].suit)
+	elif id == "074": #blank card
+		#reset card to how it was before played
+		card.set_card_value(CardList.card_dictionary[id].value)
+		card.set_card_art(id)
+		card.set_card_name(CardList.card_dictionary[id].name)
+		card.set_card_suit(CardList.card_dictionary[id].suit)
+	elif id == "149": #Loyalty card
+		#reset the value of the card since it should only set score to 21 for one round
+		card.set_card_value(CardList.card_dictionary[id].value)
+		
