@@ -4,6 +4,7 @@ signal card_clicked(card)
 signal card_hover_started(card)
 signal card_hover_ended(card)
 signal burn_complete(card)
+signal x_value_changed(card)
 
 var index_in_deck
 
@@ -109,6 +110,11 @@ func shroud_card():
 func reveal_card():
 	$ShroudSprite.visible = false
 	card_shrouded = false
+
+func set_card_x_value(new_value: int):
+	x_value = new_value
+	set_card_name(CardList.card_dictionary[card_id].name + " (" + str(new_value) + ")")
+	emit_signal("x_value_changed", self)
 
 func start_burn_animation():
 	$CardArtSprite.activate_burn_shader()

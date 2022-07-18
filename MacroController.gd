@@ -27,6 +27,8 @@ var dialogue_type = ""
 func _ready():
 	allow_choices()
 	choice_UI.change_choices_visibility(true)
+	
+	$IDCard.initialise_id_card("Player", player_sprite, player_chips, player_hitpoints, player_max_hitpoints)
 
 func allow_choices():
 	choice_UI = load	("res://ChoiceUI.tscn").instance()
@@ -37,10 +39,15 @@ func allow_choices():
 	add_child(choice_UI)
 
 func start_a_game():
+	$IDCard.visible = true
+	$IDCard.initialise_id_card("Player", player_sprite, player_chips, player_hitpoints, player_max_hitpoints)
+	
 	var encounter_key = get_encounter_key()
 	var encounter_type = $EncounterList.encounter_dictionary[encounter_key].type
 	
 	if encounter_type == "opponent":
+		$IDCard.visible = false
+		
 		opponent_sprite = $EncounterList.encounter_dictionary[encounter_key].sprite
 		opponent_health_points = $EncounterList.encounter_dictionary[encounter_key].healthpoints
 		opponent_deck = $EncounterList.encounter_dictionary[encounter_key].deck
@@ -54,6 +61,9 @@ func start_a_game():
 		game_controller.get_node("StayButton").connect("mouse_entered", $Cursor, "on_StayButton_mouse_entered")
 		game_controller.get_node("StayButton").connect("mouse_exited", $Cursor, "on_StayButton_mouse_exited")
 		add_child(game_controller)
+		
+		game_controller.get_node("Player").get_node("IDCard").initialise_id_card("Player", player_sprite, player_chips, player_hitpoints, player_max_hitpoints)
+		game_controller.get_node("Opponent").get_node("IDCard").initialise_id_card( $EncounterList.encounter_dictionary[encounter_key].name, opponent_sprite, $EncounterList.encounter_dictionary[encounter_key].chip_reward, opponent_health_points, opponent_health_points)
 		
 		$DialogueManager.set_dialogue_text($EncounterList.encounter_dictionary[encounter_key].start_dialogue)
 		dialogue_type = "start"
@@ -76,6 +86,9 @@ func start_a_game():
 		choice_UI.show_testing_room()
 		
 		$DialogueManager.set_dialogue_text($EncounterList.encounter_dictionary[encounter_key].start_dialogue)
+	
+	elif encounter_type == "win_screen":
+		$DialogueManager.set_dialogue_text("you win!")
 
 func get_encounter_key() -> String:
 	var encounter_key = floor_name + "." + str(encounter_count)
@@ -127,3 +140,10 @@ func _on_DialogueManager_dialogue_cleared():
 func _on_DialogueManager_dialogue_set():
 	pass
 	#todo: unsure if this is needed
+
+func on_Card_x_value_changed(card):
+	player_x_values[card.index_in_deck] = card.x_value
+
+func set_player_chips(chip_number):
+	player_chips = chip_number
+	$IDCard.change_chips(chip_number)

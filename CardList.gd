@@ -540,12 +540,12 @@ var card_dictionary = {
 		"description": ""
 	},
 	"074": {
-		"name": "Rules Card",
+		"name": "Blank Card",
 		"suit": "special",
 		"value": 0,
-		"effect": false, #Todo
+		"effect": true,
 		"reward": true,
-		"description": ""
+		"description": "When played, choose the suit and value for the blank card to take"
 	},
 	"075": {
 		"name": "Jack of All Trades",
@@ -914,7 +914,7 @@ var card_dictionary = {
 		"description": "locks an 11 of hearts to players play pile. burns"
 	},
 		"126": {
-		"name": "IV The Emporer",
+		"name": "IV The Emperor",
 		"suit": "special",
 		"value": 0,
 		"effect": true,
@@ -922,7 +922,7 @@ var card_dictionary = {
 		"description": "score over 21 this turn will instead be taken as damage to both players"
 	},
 		"127": {
-		"name": "V The Heirophant",
+		"name": "V The Hierophant",
 		"suit": "special",
 		"value": 0,
 		"effect": true,
@@ -1087,5 +1087,26 @@ var card_dictionary = {
 		"value": 14,
 		"effect": true,
 		"description": "Heals both players by 14"
+	},
+		"147": {
+		"name": "Kanban Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"description": "Select a card from draw pile and place this card into the draw pile above it"
+	},
+		"148": {
+		"name": "Dis-Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"description": "Select a card that is in play and discard it"
+	},
+		"149": {
+		"name": "Loyalty Card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"description": "The tenth time this card is played it sets the players score to 21"
 	}
 }

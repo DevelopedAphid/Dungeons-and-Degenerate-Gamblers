@@ -12,9 +12,6 @@ func _ready():
 
 func enter_state():
 	game_controller.current_state = self.name
-	#update the relevant UI elements
-	get_parent().get_node("BattleScene").update_health_points()
-	player.get_node("ChipCounter").change_chip_number(player.chips)
 	exit_state() 
 
 func exit_state():

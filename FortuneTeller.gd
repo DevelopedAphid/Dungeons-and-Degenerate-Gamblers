@@ -26,7 +26,6 @@ func _on_CardBack_clicked(card):
 		macro_controller.player_deck.append(card.card_id)
 		card_id_array.clear()
 		emit_signal("tarot_card_chosen")
-		print("all flipped")
 	
 	var index = card.get_index()
 	match index: #check if card already flipped and skip if it is, otherwise mark it as flipped
