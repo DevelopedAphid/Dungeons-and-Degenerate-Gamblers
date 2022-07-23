@@ -4,7 +4,7 @@ var encounter_dictionary = {
 	"tavern.0": {
 		"name": "testing_room",
 		"type": "testing_room",
-		"start_dialogue": "welcome to the test room",
+		"start_dialogue": "welcome to the test room - itch CI test",
 		"end_dialogue": "come again soon"
 	},
 	"tavern.1": {
