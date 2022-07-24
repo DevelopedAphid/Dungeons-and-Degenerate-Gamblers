@@ -31,7 +31,7 @@ func _ready():
 	$IDCard.initialise_id_card("Player", player_sprite, player_chips, player_hitpoints, player_max_hitpoints)
 
 func allow_choices():
-	choice_UI = load	("res://ChoiceUI.tscn").instance()
+	choice_UI = load("res://ChoiceUI.tscn").instance()
 	choice_UI.connect("starting_suit_chosen", self, "_on_ChoiceUI_starting_suit_chosen")
 	choice_UI.connect("reward_card_chosen", self, "_on_ChoiceUI_reward_card_chosen")
 	choice_UI.connect("shop_card_chosen", self, "_on_ChoiceUI_shop_card_chosen")

@@ -22,7 +22,17 @@ func _ready():
 		card.connect("card_clicked", self, "_on_Card_clicked", [card])
 		
 		card.set_card_name(card.card_suit)
-		card.card_description = "Choose the " + card.card_suit + " suit as your starter deck"
+		card.card_description = "Choose the " + card.card_suit + " suit as your starter deck. "
+		var current_description = card.card_description
+		match card.card_suit:
+			"spades":
+				card.card_description = current_description + "On blackjack, spades grant you a shield for the next round."
+			"clubs":
+				card.card_description = current_description + "On blackjack, clubs deal double damage."
+			"diamonds":
+				card.card_description = current_description + "On blackjack, diamonds grant you chips."
+			"hearts":
+				card.card_description = current_description + "On blackjack, hearts heal you."
 
 func change_choices_visibility(visibility: bool):
 	$StartingSuitChoice.visible = visibility

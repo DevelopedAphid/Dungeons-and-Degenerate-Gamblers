@@ -1037,7 +1037,6 @@ var card_dictionary = {
 		"value": 0,
 		"effect": true,
 		"tarot": true,
-		"locks": true,
 		"description": "Locks. shrouds cards opponent has played. You deal 3x damage"
 	},
 		"141": {
@@ -1108,5 +1107,12 @@ var card_dictionary = {
 		"value": 0,
 		"effect": true,
 		"description": "The tenth time this card is played it sets the players score to 21"
+	},
+		"150": {
+		"name": "Four Mana Seven Seven",
+		"suit": "special",
+		"value": 2,
+		"effect": true,
+		"description": "Locks. Has a value of 2 clubs. At the start of your turn adds a 4 of clubs to your side and a 7 of clubs to your opponent"
 	}
 }

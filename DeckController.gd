@@ -159,7 +159,9 @@ func discard_played_cards():
 			remove_child(card)
 	
 	if cards_to_discard.size() > 0:
+		print(self.name + ": " + str(cards_to_discard))
 		discard_cards(cards_to_discard)
+		print(self.name + ": now yielding on UI update")
 		yield(self, "UI_update_completed")
 	
 	#move any remaining cards in play pile to starting positions (i.e. locked cards)
@@ -174,11 +176,13 @@ func discard_played_cards():
 	
 	#set score to 0 since round is over
 	score = 0
+	print("finished discarding " + self.name)
 
 func discard_cards(cards_to_discard: Array):
 	for card in cards_to_discard:
 		move_cards_to([card], "play_pile", "discard_pile")
 		play_card_discard_effect(card, card.card_id)
+		print("just discarded: " + card.card_name)
 
 func heal(heal_amount: int, heal_source_pos: Vector2):
 	if heal_amount > 0:
@@ -649,6 +653,8 @@ func play_card_draw_effect(card, id):
 			card.set_card_x_value(0)
 			#and set player score to 21 by changing the value of this card
 			card.set_card_value(21 - score)
+	elif id == "150": #Four mana seven seven
+		card.lock_card()
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	var id = current_card_effect_id
@@ -771,7 +777,28 @@ func play_end_of_shuffle_effect(card, id):
 			choice_array.append(tarot_id)
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 
-#func play_card_start_of_turn_effect(card, id):
+func play_card_start_of_turn_effect(card, id):
+	if self.name == "Opponent": #currently this means opponents are unable to use special cards
+		return
+
+	current_card_effect_id = id
+
+	if id == "150": #Four mana seven seven
+		#At the start of your turn adds a 4 of clubs to your side and a 7 of clubs to your opponent
+		var four_of_clubs = instance_new_card("017")
+		add_child(four_of_clubs)
+		add_cards_to_draw_pile([four_of_clubs])
+		move_cards_to([four_of_clubs], "draw_pile", "play_pile")
+		yield(self, "UI_update_completed")
+		
+		var opponent = get_parent().get_node("Opponent")
+		var seven_of_clubs = opponent.instance_new_card("020")
+		opponent.add_child(seven_of_clubs)
+		opponent.add_cards_to_draw_pile([seven_of_clubs])
+		opponent.move_cards_to([seven_of_clubs], "draw_pile", "play_pile")
+		yield(opponent, "UI_update_completed")
+
+#func play_card_end_of_turn_effect(card, id):
 #	if self.name == "Opponent": #currently this means opponents are unable to use special cards
 #		return
 #
