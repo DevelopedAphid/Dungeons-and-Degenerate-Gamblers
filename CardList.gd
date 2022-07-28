@@ -1114,5 +1114,12 @@ var card_dictionary = {
 		"value": 2,
 		"effect": true,
 		"description": "Locks. Has a value of 2 clubs. At the start of your turn adds a 4 of clubs to your side and a 7 of clubs to your opponent"
+	},
+		"151": {
+		"name": "Trap card",
+		"suit": "special",
+		"value": 0,
+		"effect": true,
+		"description": "Locks. When the player is damaged while this card is in play that damage is negated and dealt to the opponent instead, then this card is unlocked and discarded."
 	}
 }

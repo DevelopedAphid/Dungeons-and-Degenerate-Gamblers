@@ -159,9 +159,7 @@ func discard_played_cards():
 			remove_child(card)
 	
 	if cards_to_discard.size() > 0:
-		print(self.name + ": " + str(cards_to_discard))
 		discard_cards(cards_to_discard)
-		print(self.name + ": now yielding on UI update")
 		yield(self, "UI_update_completed")
 	
 	#move any remaining cards in play pile to starting positions (i.e. locked cards)
@@ -176,13 +174,11 @@ func discard_played_cards():
 	
 	#set score to 0 since round is over
 	score = 0
-	print("finished discarding " + self.name)
 
 func discard_cards(cards_to_discard: Array):
 	for card in cards_to_discard:
 		move_cards_to([card], "play_pile", "discard_pile")
 		play_card_discard_effect(card, card.card_id)
-		print("just discarded: " + card.card_name)
 
 func heal(heal_amount: int, heal_source_pos: Vector2):
 	if heal_amount > 0:
@@ -214,8 +210,20 @@ func heal(heal_amount: int, heal_source_pos: Vector2):
 
 func damage(damage_amount: int):
 	if damage_amount > 0:
-		hitpoints -= damage_amount
-		$IDCard.change_hitpoints(hitpoints)
+		var trap_card_active = false
+		for card in play_pile:
+			if card.card_id == "151": #trap card
+				trap_card_active = true
+				card.unlock_card()
+				discard_cards([card])
+		if trap_card_active:
+			if self.name == "Player":
+				get_parent().get_node("Opponent").damage(damage_amount)
+			elif self.name == "Opponent":
+				get_parent().get_node("Player").damage(damage_amount)
+		else: 
+			hitpoints -= damage_amount
+			$IDCard.change_hitpoints(hitpoints)
 
 func add_spade_shield(shield_amount: int, shield_source_pos: Vector2):
 	$IDCard.change_shieldpoints(shield_amount)
@@ -654,6 +662,9 @@ func play_card_draw_effect(card, id):
 			#and set player score to 21 by changing the value of this card
 			card.set_card_value(21 - score)
 	elif id == "150": #Four mana seven seven
+		card.lock_card()
+	elif id == "151": #trap card
+		#Locks. When the player is damaged while this card is in play that damage is negated and dealt to the opponent instead, then this card is unlocked and discarded.
 		card.lock_card()
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):

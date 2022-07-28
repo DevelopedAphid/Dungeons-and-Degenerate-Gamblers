@@ -103,6 +103,10 @@ func lock_card():
 	$LockIconSprite/PositionTween.interpolate_property($LockIconSprite, "position", Vector2(29, 65), Vector2(29, 77), 1.0)
 	$LockIconSprite/PositionTween.start()
 
+func unlock_card():
+	card_locked = false
+	$LockIconSprite.visible = false
+
 func shroud_card():
 	$ShroudSprite.visible = true
 	card_shrouded = true
