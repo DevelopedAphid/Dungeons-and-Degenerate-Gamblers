@@ -139,25 +139,15 @@ func shuffle_discard_pile_into_draw_pile():
 		play_end_of_shuffle_effect(card, card.card_id)
 
 func discard_played_cards():
+	#find cards in play pile to be discarded and to be burned
 	var cards_to_discard = []
-	var cards_to_burn = []
 	for card in play_pile:
 		if card.card_does_burn:
-			cards_to_burn.append(card)
-			card.start_burn_animation()
+			burn_card(card)
 		elif not card.card_locked: #card does not burn, so should be discarded
 			cards_to_discard.append(card)
-	if cards_to_burn.size() > 0:
-		#wait for burn animation
-		yield(cards_to_burn[0], "burn_complete")
-		#remove cards to burn as children
-		for card in cards_to_burn:
-			play_pile.erase(card)
-			cards_currently_moving.erase(card)
-			if card.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
-				card.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
-			remove_child(card)
 	
+	#discard cards left in play pile
 	if cards_to_discard.size() > 0:
 		discard_cards(cards_to_discard)
 		yield(self, "UI_update_completed")
@@ -179,6 +169,47 @@ func discard_cards(cards_to_discard: Array):
 	for card in cards_to_discard:
 		move_cards_to([card], "play_pile", "discard_pile")
 		play_card_discard_effect(card, card.card_id)
+
+func burn_card(card_to_burn: Object):
+	if card_to_burn.is_inside_tree(): #can't play burn animation if it's not yet a child (i.e. in draw pile)
+		card_to_burn.start_burn_animation()
+		#wait for burn animation
+		yield(card_to_burn, "burn_complete")
+	var pile_burning_from: Array
+	var resort_pile: bool
+	var card_spacing: int
+	var pile_pos: Vector2
+	#remove card burnt as children
+	if draw_pile.has(card_to_burn):
+		draw_pile.erase(card_to_burn)
+		pile_burning_from = draw_pile
+		resort_pile = false
+	if play_pile.has(card_to_burn):
+		play_pile.erase(card_to_burn)
+		pile_burning_from = play_pile
+		resort_pile = true
+		card_spacing = play_pile_card_spacing
+		pile_pos = play_pile_pos
+	if discard_pile.has(card_to_burn):
+		discard_pile.erase(card_to_burn)
+		pile_burning_from = discard_pile
+		resort_pile = true
+		card_spacing = discard_pile_card_spacing
+		pile_pos = discard_pile_pos
+	cards_currently_moving.erase(card_to_burn)
+	if card_to_burn.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
+		card_to_burn.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
+	if card_to_burn.is_inside_tree(): #if its a child remove it
+		remove_child(card_to_burn)
+	
+	#resort pile
+	if resort_pile == true:
+		if name == "Opponent":
+			card_spacing = card_spacing * (-1)
+		var cards_moved = 0
+		for card in pile_burning_from:
+			card.get_node("MovementHandler").move_card_to(pile_pos + Vector2(card_spacing * (cards_moved), 0))
+			cards_moved += 1
 
 func heal(heal_amount: int, heal_source_pos: Vector2):
 	if heal_amount > 0:
@@ -316,6 +347,10 @@ func move_cards_to(cards: Array, from_pile: String, to_pile: String):
 		card_spacing = card_spacing * (-1) #stack in reverse for opponent
 	
 	for card in cards:
+		#remove and add as a child to reset the z index
+		if self.is_a_parent_of(card):
+			remove_child(card)
+			add_child(card)
 		#add card to an array tracking the cards that are currently moving (to be checked by on_card_movement_completed function
 		cards_currently_moving.append(card)
 		#add cards to to_pile and move them there
@@ -707,46 +742,14 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 		add_cards_to_draw_pile([new_card])
 	elif id == "132": #X Wheel of Fortune
 		if origin_card.get_node("WheelOfFortune").wheel_frame < 10:
-			choice_made.start_burn_animation()
-			#wait for burn animation
-			yield(choice_made, "burn_complete")
-			#remove card burnt as children
-			discard_pile.erase(choice_made)
-			cards_currently_moving.erase(choice_made)
-			if choice_made.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
-				choice_made.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
-			remove_child(choice_made)
+			burn_card(choice_made)
 		elif origin_card.get_node("WheelOfFortune").wheel_frame < 20:
 			var new_card = instance_new_card(choice_made)
 			add_cards_to_draw_pile([new_card])
 	elif id == "134": #XII The Hanged Man
-		choice_made.start_burn_animation()
-		#wait for burn animation
-		yield(choice_made, "burn_complete")
-		#remove card burnt as children
-		discard_pile.erase(choice_made)
-		cards_currently_moving.erase(choice_made)
-		if choice_made.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
-			choice_made.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
-		remove_child(choice_made)
+		burn_card(choice_made)
 	elif id == "135": #XIII Death
-		#choice_made might not yet be a child since it could be in the draw pile
-		if choice_made.is_inside_tree(): #can't play burn animation if it's not yet a child
-			choice_made.start_burn_animation()
-			#wait for burn animation
-			yield(choice_made, "burn_complete")
-		#remove card burnt as children
-		if draw_pile.has(choice_made):
-			draw_pile.erase(choice_made)
-		if play_pile.has(choice_made):
-			play_pile.erase(choice_made)
-		if discard_pile.has(choice_made):
-			discard_pile.erase(choice_made)
-		cards_currently_moving.erase(choice_made)
-		if choice_made.get_node("MovementHandler").is_connected("movement_completed", self, "on_card_movement_completed"):
-			choice_made.get_node("MovementHandler").disconnect("movement_completed", self, "on_card_movement_completed")
-		if choice_made.is_inside_tree(): #if its a child remove it
-			remove_child(choice_made)
+		burn_card(choice_made)
 		#and now remove it from deck
 		get_parent().get_parent().player_deck.erase(choice_made.card_id)
 	elif id == "141": #XIX The Sun
@@ -788,7 +791,7 @@ func play_end_of_shuffle_effect(card, id):
 			choice_array.append(tarot_id)
 		get_node("ChoiceController")._on_Player_card_choice_to_make(card, choice_array)
 
-func play_card_start_of_turn_effect(card, id):
+func play_card_start_of_turn_effect(_card, id):
 	if self.name == "Opponent": #currently this means opponents are unable to use special cards
 		return
 
