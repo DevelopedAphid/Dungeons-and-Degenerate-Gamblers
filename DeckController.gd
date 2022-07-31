@@ -701,6 +701,13 @@ func play_card_draw_effect(card, id):
 	elif id == "151": #trap card
 		#Locks. When the player is damaged while this card is in play that damage is negated and dealt to the opponent instead, then this card is unlocked and discarded.
 		card.lock_card()
+	elif id == "152": #Dark mage
+		#Adds to your hand. When played from your hand select a card in play pile with a value of 7 or higher to burn.
+		card.connect("card_clicked", self, "_on_SleeveCard_clicked", [card])
+		move_cards_to([card], "play_pile", "sleeve_pile")
+	elif id == "153": #Charred lizard
+		#Choose to keep in play or sell to opponents discard pile for 25 chips
+		get_node("ChoiceController")._on_Player_action_choice_to_make(card, ["keep", "sell"])
 
 func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 	var id = current_card_effect_id
@@ -769,12 +776,26 @@ func _on_ChoiceController_choice_made_(origin_card, choice_array, choice_index):
 			discard_cards([choice_made])
 		else: #it is the opponents card
 			get_parent().get_node("Opponent").discard_cards([choice_made])
-	
+	elif id == "152": #Dark Mage
+		#Adds to your hand. When played from your hand select a card in play pile with a value of 7 or higher to burn.
+		burn_card(choice_made)
+		move_cards_to([origin_card], "sleeve_pile", "play_pile")
 	current_card_effect_id = null
 
 func _on_SleeveCard_clicked(card):
-	move_cards_to([card], "sleeve_pile", "play_pile")
-	play_card_draw_effect(card, card.card_id)
+	#cards with special played from hand effects
+	if card.card_id == "152": #Dark Mage
+		#Adds to your hand. When played from your hand select a card in play pile with a value of 7 or higher to burn.
+		current_card_effect_id = card.card_id
+		var card_above_seven_value = []
+		for card in play_pile:
+			if card.card_value >= 7:
+				card_above_seven_value.append(card)
+		if card_above_seven_value.size() > 0:
+			get_node("ChoiceController")._on_Player_card_choice_to_make(card, card_above_seven_value)
+	else: #cards without special played from hand effects
+		move_cards_to([card], "sleeve_pile", "play_pile")
+		play_card_draw_effect(card, card.card_id)
 
 func play_end_of_shuffle_effect(card, id):
 	if self.name == "Opponent": #currently this means opponents are unable to use special cards
@@ -842,4 +863,15 @@ func play_card_discard_effect(card, id):
 	elif id == "149": #Loyalty card
 		#reset the value of the card since it should only set score to 21 for one round
 		card.set_card_value(CardList.card_dictionary[id].value)
-		
+
+
+func _on_ChoiceController_action_choice_made(origin_card, choice_array, choice_index):
+	var id = current_card_effect_id
+	var choice_made = choice_array[choice_index]
+	
+	if id == "153": #charred lizard
+		if choice_made == "keep":
+			pass #carry on since it is staying in pkay pile
+		elif choice_made == "sell":
+			add_chips(25, origin_card.position)
+			move_cards_to([origin_card], "play_pile", "other_discard_pile")

@@ -149,6 +149,7 @@ script = ExtResource( 10 )
 
 [connection signal="pressed" from="StayButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_StayButton_pressed"]
 [connection signal="pressed" from="HitButton" to="PlayerWaitForFirstPlayAreaInput" method="_on_HitButton_pressed"]
+[connection signal="action_choice_made" from="Player/ChoiceController" to="Player" method="_on_ChoiceController_action_choice_made"]
 [connection signal="choice_made_" from="Player/ChoiceController" to="Player" method="_on_ChoiceController_choice_made_"]
 [connection signal="state_exited" from="PlayerPreGameChoice" to="." method="_on_PlayerPreGameChoice_state_exited"]
 [connection signal="state_exited" from="OpponentPreGameChoice" to="." method="_on_OpponentPreGameChoice_state_exited"]

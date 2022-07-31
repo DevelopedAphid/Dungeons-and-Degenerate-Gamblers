@@ -1121,5 +1121,19 @@ var card_dictionary = {
 		"value": 0,
 		"effect": true,
 		"description": "Locks. When the player is damaged while this card is in play that damage is negated and dealt to the opponent instead, then this card is unlocked and discarded."
+	},
+		"152": {
+		"name": "Dark Mage",
+		"suit": "special",
+		"value": 21,
+		"effect": true,
+		"description": "Adds to your hand. When played from your hand select a card with a value higher than 7 to burn."
+	},
+		"153": {
+		"name": "Charred Lizard",
+		"suit": "special",
+		"value": 10,
+		"effect": true,
+		"description": "Choose to keep in play or sell to opponents discard pile for 25 chips"
 	}
 }
